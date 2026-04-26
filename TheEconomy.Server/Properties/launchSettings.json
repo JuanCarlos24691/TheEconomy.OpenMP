@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "omp-server.exe": {
+      "commandName": "Executable",
+      "executablePath": "C:/Users/juanc/OneDrive/Documents/TheEconomy/OpenMP/omp-server.exe",
+      "workingDirectory": "C:/Users/juanc/OneDrive/Documents/TheEconomy/OpenMP"
+    }
+  }
+}
