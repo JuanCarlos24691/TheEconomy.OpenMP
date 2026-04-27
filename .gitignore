@@ -67,7 +67,7 @@ OpenMP/**/*.tmp
 OpenMP/**/*.cache
 OpenMP/gamemodes/Debug/*
 OpenMP/runtime/*
-
+OpenMP/gamemodes/Debug/net10.0/TheEconomy.Server.exe
 
 # Pawn / SA-MP scripting
 *.amx
