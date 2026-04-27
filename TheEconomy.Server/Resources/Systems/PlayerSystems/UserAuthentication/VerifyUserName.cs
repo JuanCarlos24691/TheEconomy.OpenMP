@@ -2,11 +2,12 @@
 using System.Linq;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.Services;
+using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
+using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 
 namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 {
-    public class VerifyUserName(IWorldService worldService, Services.VerifyUserName verifyUserName, CorrectTextStrings correctTextStrings) : ISystem
+    public class VerifyUserName(IWorldService worldService, IVerifyUserName verifyUserName, ICorrectTextStrings correctTextStrings) : ISystem
     {
         public bool ObtainVerification(Player player)
         {

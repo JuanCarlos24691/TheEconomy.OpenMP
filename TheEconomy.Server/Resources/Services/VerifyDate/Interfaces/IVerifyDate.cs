@@ -1,4 +1,4 @@
-﻿namespace TheEconomy.Server.Resources.Services.Interfaces
+﻿namespace TheEconomy.Server.Resources.Services.VerifyDate.Interfaces
 {
     public interface IVerifyDate
     {

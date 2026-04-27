@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TheEconomy.Server.Resources.Services.Interfaces
+namespace TheEconomy.Server.Resources.Services.ServerInformation.Interfaces
 {
     public interface IServerInformation
     {

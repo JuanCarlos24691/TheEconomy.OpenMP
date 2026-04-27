@@ -5,11 +5,11 @@ using System.Threading;
 using TheEconomy.Database;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.Services;
+using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 
 namespace TheEconomy.Server.Resources.Systems.ServerSystems
 {
-    public class ServerConfiguration(ServerInformation serverInformation, DatabaseContext databaseContext) : ISystem
+    public class ServerConfiguration(IServerInformation serverInformation, DatabaseContext databaseContext) : ISystem
     {
         private readonly int numberOfReconnectionAttempts = 3;
         private int reconnectionAttempts = 0;

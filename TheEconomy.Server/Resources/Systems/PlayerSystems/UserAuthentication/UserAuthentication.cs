@@ -1,16 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using TheEconomy.Database;
-using TheEconomy.Database.Entity.Account;
-using TheEconomy.Database.Entity.Prohibitions;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.Components;
-using TheEconomy.Server.Resources.Services;
+using TheEconomy.Server.Resources.Services.DeleteConversation.Interfaces;
 
 namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 {
-    public class UserAuthentication(DatabaseContext databaseContext, DeleteConversation deleteConversation, VerifyUserName verifyUserName, VerifyProhibition verifyProhibition, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
+    public class UserAuthentication(DatabaseContext databaseContext, IDeleteConversation deleteConversation, VerifyUserName verifyUserName, VerifyProhibition verifyProhibition, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
     {
         [Event]
         public async Task OnPlayerConnect(Player player)

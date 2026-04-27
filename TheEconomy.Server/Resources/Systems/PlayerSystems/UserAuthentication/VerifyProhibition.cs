@@ -2,12 +2,13 @@
 using System.Linq;
 using SampSharp.Entities.SAMP;
 using SampSharp.Entities;
-using TheEconomy.Server.Resources.Services;
 using TheEconomy.Server.Resources.Components;
+using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
+using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 
 namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 {
-    public class VerifyProhibition(IWorldService worldService, ServerInformation serverInformation, CorrectTextStrings correctTextStrings) : ISystem
+    public class VerifyProhibition(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings) : ISystem
     {
         public bool ObtainVerification(Player player)
         {

@@ -4,11 +4,13 @@ using System.Linq;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Components;
-using TheEconomy.Server.Resources.Services;
+using TheEconomy.Server.Resources.Services.Colors.Interfaces;
+using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
+using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 
 namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 {
-    public class RegisterAccount(IWorldService worldService, ServerInformation serverInformation, Colors color, CorrectTextStrings correctTextStrings) : ISystem
+    public class RegisterAccount(IWorldService worldService, IServerInformation serverInformation, IColors color, ICorrectTextStrings correctTextStrings) : ISystem
     {
         private string registerAccountPassword;
         private string registerAccountEmail;

@@ -1,4 +1,4 @@
-﻿namespace TheEconomy.Server.Resources.Services.Interfaces
+﻿namespace TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces
 {
     public interface ICorrectTextStrings
     {

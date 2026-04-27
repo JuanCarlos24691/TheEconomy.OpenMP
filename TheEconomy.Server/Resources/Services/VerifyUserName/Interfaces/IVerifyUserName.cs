@@ -1,4 +1,4 @@
-﻿namespace TheEconomy.Server.Resources.Services.Interfaces
+﻿namespace TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces
 {
     public interface IVerifyUserName
     {
