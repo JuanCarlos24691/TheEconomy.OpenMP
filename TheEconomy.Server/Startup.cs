@@ -33,6 +33,7 @@ namespace TheEconomy.Server
             services.AddSingleton<ICorrectTextStrings, CorrectTextStrings>();
             services.AddSingleton<IDeleteConversation, DeleteConversation>();
             services.AddSingleton<IColors, Colors>();
+
             services.AddTransient<KnowledgeTest>();
 
             services.AddSystemsInAssembly();
@@ -42,6 +43,11 @@ namespace TheEconomy.Server
         {
             builder.EnableSampEvents();
             builder.EnablePlayerCommands();
+            builder.EnableActorEvents();
+            builder.EnablePlayerEvents();
+            builder.EnableObjectEvents();
+            builder.EnableVehicleEvents();
+            builder.EnableRconEvents();
             builder.EnableRconCommands();
         }
     }
