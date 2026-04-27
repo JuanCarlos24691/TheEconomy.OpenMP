@@ -3,6 +3,7 @@ using TheEconomy.Database;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Services;
+using TheEconomy.Server.Resources.KnowledgeTest;
 
 namespace TheEconomy.Server
 {
@@ -18,6 +19,7 @@ namespace TheEconomy.Server
             services.AddSingleton<VerifyEmail>();
             services.AddSingleton<VerifyDate>();
             services.AddSingleton<DeleteConversation>();
+            services.AddTransient<KnowledgeTest>();
             services.AddSystemsInAssembly();
         }
 

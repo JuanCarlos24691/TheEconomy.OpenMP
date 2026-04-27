@@ -10,13 +10,24 @@ using TheEconomy.Server.Resources.Services;
 
 namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 {
-    public class UserAuthentication(DatabaseContext databaseContext, DeleteConversation deleteConversation, VerifyUserName verifyUserName, VerifyProhibition verifyProhibition, KnowledgeTest knowledgeTest) : ISystem
+    public class UserAuthentication(DatabaseContext databaseContext, DeleteConversation deleteConversation, VerifyUserName verifyUserName, VerifyProhibition verifyProhibition, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
     {
         [Event]
         public async Task OnPlayerConnect(Player player)
         {
             await Task.Delay(1);
-            deleteConversation.DeleteTheGlobalConversation();
+            bool resultado = await knowledgeTest.Start(player);
+
+            if (resultado)
+            {
+                player.SendClientMessage($"¡Has aprobado el test de conocimiento! Bienvenido al servidor.");
+            }
+            else
+            {
+                player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
+            }
+
+            /* deleteConversation.DeleteTheGlobalConversation();
 
             if (verifyUserName.ObtainVerification(player) is true)
             {
@@ -41,7 +52,7 @@ namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
                     else
                         _ = knowledgeTest.StartRoleTest(player);
                 }
-            }
+            } */
         }
     }
 }

@@ -66,6 +66,8 @@ OpenMP/**/*.log
 OpenMP/**/*.tmp
 OpenMP/**/*.cache
 OpenMP/gamemodes/Debug/*
+OpenMP/runtime/*
+
 
 # Pawn / SA-MP scripting
 *.amx

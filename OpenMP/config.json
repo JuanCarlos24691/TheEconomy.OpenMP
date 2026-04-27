@@ -91,14 +91,12 @@
         "time_sync_rate": 30000,
         "use_lan_mode": false
     },
-    "gamemode": "TheEconomy.Server",
-    "gamemode_base": "C:\\Users\\juanc\\OneDrive\\Documents\\TheEconomy.Server\\OpenMP",
     "pawn": {
         "legacy_plugins": [
-            "SampSharp.dll"
+            "SampSharp"
         ],
         "main_scripts": [
-            "empty"
+            "empty 1"
         ],
         "side_scripts": []
     },

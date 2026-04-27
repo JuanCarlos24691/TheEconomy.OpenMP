@@ -8,10 +8,9 @@
     ".NETCoreApp,Version=v10.0": {
       "TheEconomy.Server/1.0.0": {
         "dependencies": {
+          "SampSharp.Entities": "0.11.1",
           "System.Configuration.ConfigurationManager": "9.0.15",
-          "TheEconomy.Database": "1.0.0",
-          "SampSharp.Core": "0.0.0.0",
-          "SampSharp.Entities": "0.0.0.0"
+          "TheEconomy.Database": "1.0.0"
         },
         "runtime": {
           "TheEconomy.Server.dll": {}
@@ -176,6 +175,26 @@
           }
         }
       },
+      "SampSharp.Core/0.11.1": {
+        "runtime": {
+          "lib/net6.0/SampSharp.Core.dll": {
+            "assemblyVersion": "0.11.1.0",
+            "fileVersion": "0.11.1.0"
+          }
+        }
+      },
+      "SampSharp.Entities/0.11.1": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "9.0.15",
+          "SampSharp.Core": "0.11.1"
+        },
+        "runtime": {
+          "lib/net6.0/SampSharp.Entities.dll": {
+            "assemblyVersion": "0.11.1.0",
+            "fileVersion": "0.11.1.0"
+          }
+        }
+      },
       "System.Configuration.ConfigurationManager/9.0.15": {
         "dependencies": {
           "System.Diagnostics.EventLog": "9.0.15",
@@ -222,28 +241,13 @@
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "9.0.15",
           "Pomelo.EntityFrameworkCore.MySql": "9.0.0",
+          "SampSharp.Entities": "0.11.1",
           "System.Configuration.ConfigurationManager": "9.0.15"
         },
         "runtime": {
           "TheEconomy.Database.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
-          }
-        }
-      },
-      "SampSharp.Core/0.0.0.0": {
-        "runtime": {
-          "SampSharp.Core.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "SampSharp.Entities/0.0.0.0": {
-        "runtime": {
-          "SampSharp.Entities.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
           }
         }
       }
@@ -353,6 +357,20 @@
       "path": "pomelo.entityframeworkcore.mysql/9.0.0",
       "hashPath": "pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512"
     },
+    "SampSharp.Core/0.11.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3NjlYCWZK4my7EU3mUj1OgphCNJ6azF13UNPqgq9ec2ibxCM2P9AKo1Cgv7Cq1djSIf5jorxib145mVCxMZ7Ig==",
+      "path": "sampsharp.core/0.11.1",
+      "hashPath": "sampsharp.core.0.11.1.nupkg.sha512"
+    },
+    "SampSharp.Entities/0.11.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Dy2xffyeXdDBLwQyQ8rbcgI8oU8CBicPKTrmk964kXkF2vWaW7qlHC5MxlF1rba6+ZZOuR3S7nTpbIiDhgD1mw==",
+      "path": "sampsharp.entities/0.11.1",
+      "hashPath": "sampsharp.entities.0.11.1.nupkg.sha512"
+    },
     "System.Configuration.ConfigurationManager/9.0.15": {
       "type": "package",
       "serviceable": true,
@@ -376,16 +394,6 @@
     },
     "TheEconomy.Database/1.0.0": {
       "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "SampSharp.Core/0.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "SampSharp.Entities/0.0.0.0": {
-      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

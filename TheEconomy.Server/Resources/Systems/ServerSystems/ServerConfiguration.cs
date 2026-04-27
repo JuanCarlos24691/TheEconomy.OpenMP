@@ -54,7 +54,7 @@ namespace TheEconomy.Server.Resources.Systems.ServerSystems
                     builder.AppendLine("\tBase de datos: La conexión a la base de datos se realizó correctamente");
                     builder.AppendLine();
                     builder.AppendLine("\t+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    builder.AppendLine("\t+++++ Desarrollador: Juan Carlos | JuanCarlo24691 ++++");
+                    builder.AppendLine("\t++++ Desarrollador: Juan Carlos | JuanCarlo24691 ++++");
                     builder.AppendLine("\t+++++++++++++++++++++++++++++++++++++++++++++++++++++");
                     builder.AppendLine();
                     builder.AppendLine("---------------------------------------------------------------------------\n");
