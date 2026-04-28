@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace TheEconomy.Database.Entity.ServerInformation.Settings
 {
-    public class ServerInformationSettings : IEntityTypeConfiguration<ServerInformation>
+    public class ServerInformationSettings : IEntityTypeConfiguration<ServerInformationEntity>
     {
-        public void Configure(EntityTypeBuilder<ServerInformation> builder)
+        public void Configure(EntityTypeBuilder<ServerInformationEntity> builder)
         {
             builder.HasKey(a => a.UUID);
             builder.HasIndex(a => a.UUID).IsUnique();

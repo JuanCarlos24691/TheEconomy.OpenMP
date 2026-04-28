@@ -1,6 +1,6 @@
 ﻿namespace TheEconomy.Database.Entity.Prohibitions
 {
-    public class Prohibition
+    public class ProhibitionEntity
     {
         public Guid UUID { get; set; }
         public required string IP { get; set; }

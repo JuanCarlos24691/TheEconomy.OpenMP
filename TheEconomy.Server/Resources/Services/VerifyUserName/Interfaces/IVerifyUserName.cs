@@ -2,6 +2,6 @@
 {
     public interface IVerifyUserName
     {
-        public bool ObtainVerification(string userName);
+        public bool Verify(string userName);
     }
 }

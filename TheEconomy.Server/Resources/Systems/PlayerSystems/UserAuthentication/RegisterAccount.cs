@@ -10,7 +10,7 @@ using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 
 namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 {
-    public class RegisterAccount(IWorldService worldService, IServerInformation serverInformation, IColors color, ICorrectTextStrings correctTextStrings) : ISystem
+    /* public class RegisterAccount(IWorldService worldService, IServerInformation serverInformation, IColors color, ICorrectTextStrings correctTextStrings) : ISystem
     {
         private string registerAccountPassword;
         private string registerAccountEmail;
@@ -377,7 +377,7 @@ namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
         public void OnPlayerClickTextDraw(Player player)
         {
             player.SendClientMessage("200");
-        }
+        } */
 
         /* public virtual void RegisterEvents(BaseMode gameMode) =>
             gameMode.PlayerClickPlayerTextDraw += PlayerClickPlayerTextDraw;
@@ -701,6 +701,6 @@ namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 
                 e.Player.PlaySound(1058);
             }
-        } */
-    }
+        } 
+    } */
 }

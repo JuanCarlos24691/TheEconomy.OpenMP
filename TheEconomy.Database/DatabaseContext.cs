@@ -25,9 +25,9 @@ namespace TheEconomy.Database
                 optionsBuilder.UseMySql(new ConectionString().ConnectionStrings, new MySqlServerVersion(new Version(9, 0, 0)));
         }
 
-        public DbSet<ServerInformation> ServerInformation => Set<ServerInformation>();
-        public DbSet<Prohibition> Prohibitions => Set<Prohibition>();
-        public DbSet<Account> Accounts => Set<Account>();
-        public DbSet<Character> Characters => Set<Character>();
+        public DbSet<ServerInformationEntity> ServerInformation => Set<ServerInformationEntity>();
+        public DbSet<ProhibitionEntity> Prohibitions => Set<ProhibitionEntity>();
+        public DbSet<AccountEntity> Accounts => Set<AccountEntity>();
+        public DbSet<CharacterEntity> Characters => Set<CharacterEntity>();
     }
 }

@@ -34,7 +34,7 @@ public class ServerInformation : IServerInformation
 
     public ServerInformation(DatabaseContext databaseContext)
     {
-        List<Database.Entity.ServerInformation.ServerInformation> serverInformation = [.. databaseContext.ServerInformation];
+        List<Database.Entity.ServerInformation.ServerInformationEntity> serverInformation = [.. databaseContext.ServerInformation];
 
         if (serverInformation.Count is not 0)
         {
@@ -58,7 +58,7 @@ public class ServerInformation : IServerInformation
             Forum = GetAppSetting("forum", "forum.unknown.com");
             Discord = GetAppSetting("discord", "www.discord.gg/unknown");
 
-            Database.Entity.ServerInformation.ServerInformation InsertServerInformationRecord = new()
+            Database.Entity.ServerInformation.ServerInformationEntity InsertServerInformationRecord = new()
             {
                 Name = Name,
                 Mode = Mode,

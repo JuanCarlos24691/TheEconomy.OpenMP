@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace TheEconomy.Database.Entity.Account.Settings
 {
-    internal class AccountSettings : IEntityTypeConfiguration<Account>
+    internal class AccountSettings : IEntityTypeConfiguration<AccountEntity>
     {
-        public void Configure(EntityTypeBuilder<Account> builder)
+        public void Configure(EntityTypeBuilder<AccountEntity> builder)
         {
             // Account
             builder.HasKey(a => a.UUID);

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace TheEconomy.Database.Entity.Character.Settings
 {
-    internal class CharacterSettings : IEntityTypeConfiguration<Character>
+    internal class CharacterSettings : IEntityTypeConfiguration<CharacterEntity>
     {
-        public void Configure(EntityTypeBuilder<Character> builder)
+        public void Configure(EntityTypeBuilder<CharacterEntity> builder)
         {
             // Character
             builder.HasKey(c => c.UUID);

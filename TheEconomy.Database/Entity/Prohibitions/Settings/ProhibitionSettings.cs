@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace TheEconomy.Database.Entity.Prohibitions.Settings
 {
-    internal class ProhibitionSettings : IEntityTypeConfiguration<Prohibition>
+    internal class ProhibitionSettings : IEntityTypeConfiguration<ProhibitionEntity>
     {
-        public void Configure(EntityTypeBuilder<Prohibition> builder)
+        public void Configure(EntityTypeBuilder<ProhibitionEntity> builder)
         {
             // Prohibition
             builder.HasKey(p => p.UUID);

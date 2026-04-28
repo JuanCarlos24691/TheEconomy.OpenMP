@@ -5,7 +5,7 @@ namespace TheEconomy.Server.Resources.Services.VerifyUserName;
 
 public class VerifyUserName : IVerifyUserName
 {
-    public bool ObtainVerification(string userName)
+    public bool Verify(string userName)
     {
         if (!userName.All(c => c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9'))
             return false;

@@ -1,6 +1,6 @@
 ﻿namespace TheEconomy.Database.Entity.Account
 {
-    public class Account
+    public class AccountEntity
     {
         public Guid UUID { get; set; }
         public required string Name { get; set; }

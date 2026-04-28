@@ -8,7 +8,7 @@ using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 
 namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
 {
-    public class VerifyProhibition(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings) : ISystem
+    /* public class VerifyProhibition(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings) : ISystem
     {
         public bool ObtainVerification(Player player)
         {
@@ -158,5 +158,5 @@ namespace TheEconomy.Server.Resources.Systems.PlayerSystems.UserAuthentication
             if (player.IsSelectingTextDraw is false)
                 player.SelectTextDraw(0x393939ff);
         }
-    }
+    } */
 }

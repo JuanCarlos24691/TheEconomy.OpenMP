@@ -1,6 +1,6 @@
 ﻿namespace TheEconomy.Database.Entity.Character
 {
-    public class Character
+    public class CharacterEntity
     {
         public Guid UUID { get; set; }
         public bool Online { get; set; }

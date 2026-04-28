@@ -43,11 +43,11 @@ namespace TheEconomy.Server
         {
             builder.EnableSampEvents();
             builder.EnablePlayerCommands();
-            builder.EnableActorEvents();
-            builder.EnablePlayerEvents();
-            builder.EnableObjectEvents();
-            builder.EnableVehicleEvents();
-            builder.EnableRconEvents();
+            // builder.EnableActorEvents();
+            // builder.EnablePlayerEvents();
+            // builder.EnableObjectEvents();
+            // builder.EnableVehicleEvents();
+            // builder.EnableRconEvents();
             builder.EnableRconCommands();
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace TheEconomy.Database.Entity.ServerInformation
 {
-    public class ServerInformation
+    public class ServerInformationEntity
     {
         public Guid UUID { get; set; }
         public required string Name { get; set; }
