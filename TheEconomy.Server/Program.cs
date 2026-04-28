@@ -13,7 +13,6 @@ public class Program
         new GameModeBuilder()
             .UseEcs<Startup>()
             .UseEncoding(Encoding.GetEncoding("iso-8859-1"))
-            .RedirectConsoleOutput()
             .Run();
     }
 }

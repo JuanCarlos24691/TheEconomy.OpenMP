@@ -21,7 +21,7 @@ namespace TheEconomy.Server.Resources.Authenticator
             {
                 Console.WriteLine($"El jugador {player.Name} ha sido expulsado por tener un nombre de usuario no válido.");
 
-                player.AddComponent<VerifyUserNameView>(player);
+                player.AddComponent<VerifyUserNameView>();
                 // player.GetComponent<VerifyUserNameView>()?.Show();
                 Console.WriteLine($"El jugador {player.Name} ha sido expulsado por tener un nombre de usuario no válido.");
                 // player.Kick();
