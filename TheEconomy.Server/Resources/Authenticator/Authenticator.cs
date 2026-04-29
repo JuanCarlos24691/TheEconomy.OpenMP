@@ -4,33 +4,30 @@ using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Services.DeleteConversation.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
-using TheEconomy.Server.Resources.Services.VerifyUserName.Components;
-using System;
 
 namespace TheEconomy.Server.Resources.Authenticator
 {
-    public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, /* IVerifyProhibition verifyProhibition, */ KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
+    public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameUI VerifyUserNameUI, /* IVerifyProhibition verifyProhibition, */ KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
     {
         [Event]
         public async Task OnPlayerConnect(Player player)
         {
-            // await Task.Delay(1700);
-            // deleteConversation.DeleteTheGlobalConversation();
+            await Task.Delay(1700);
+            deleteConversation.DeleteTheGlobalConversation();
 
             if (verifyUserName.Verify(player.Name) is false)
             {
-                Console.WriteLine($"El jugador {player.Name} ha sido expulsado por tener un nombre de usuario no válido.");
-
-                player.AddComponent<VerifyUserNameView>();
-                // player.GetComponent<VerifyUserNameView>()?.Show();
-                Console.WriteLine($"El jugador {player.Name} ha sido expulsado por tener un nombre de usuario no válido.");
-                // player.Kick();
+                VerifyUserNameUI.CreatePlayerTextDrawings(player);
+                VerifyUserNameUI.Show(player);
+                
+                await Task.Delay(1700);
+                player.Kick();
                 return;
             }
 
-            /* bool resultKnowledgeTest = await knowledgeTest.Start(player);
+            bool resultKnowledgeTest = await knowledgeTest.Start(player);
 
-            if (resultKnowledgeTest)
+            /* if (resultKnowledgeTest)
             {
                 player.SendClientMessage($"¡Has aprobado el test de conocimiento! Bienvenido al servidor.");
             }

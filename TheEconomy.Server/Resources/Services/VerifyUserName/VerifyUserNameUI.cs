@@ -1,29 +1,30 @@
-using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using System;
 using System.Linq;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
+using TheEconomy.Server.Resources.Services.VerifyUserName.Components;
+using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 
-namespace TheEconomy.Server.Resources.Services.VerifyUserName.Components;
+namespace TheEconomy.Server.Resources.Services.VerifyUserName;
 
-public class VerifyUserNameView : Component
+public class VerifyUserNameUI(IWorldService worldService, ICorrectTextStrings correctTextStrings) : IVerifyUserNameUI
 {
-    private readonly PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[8];
-
-    public VerifyUserNameView(IWorldService worldService, ICorrectTextStrings correctTextStrings, Player player)
+    public void CreatePlayerTextDrawings(Player player)
     {
-        if (player is null)
-            throw new ArgumentNullException(nameof(player), "La entidad player no puede ser nula. Por favor, asegúrese de que se haya inicializado correctamente.");
+        ArgumentNullException.ThrowIfNull(player);
 
-        Console.WriteLine($"El jugador {player.Name}.");
+        if (player.GetComponent<VerifyUserNameUIComp>() is not null)
+            return;
 
-        playerTextDraw[0] = worldService.CreatePlayerTextDraw(player, position: new Vector2(319.438100, 0.000000), "_");
+        PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[8];
+
+        playerTextDraw[0] = worldService.CreatePlayerTextDraw(player, position: new Vector2(-5.0f, -5.0f), "_"); // Un poco fuera para asegurar
         playerTextDraw[0].Font = TextDrawFont.Normal;
-        playerTextDraw[0].LetterSize = new Vector2(0.612500, 49.565000);
-        playerTextDraw[0].TextSize = new Vector2(389.500, 638.083);
-        playerTextDraw[0].Outline = 1;
+        playerTextDraw[0].LetterSize = new Vector2(0.0f, 55.0f);
+        playerTextDraw[0].TextSize = new Vector2(645.0f, 0.0f);
+        playerTextDraw[0].Outline = 0;
         playerTextDraw[0].Shadow = 0;
-        playerTextDraw[0].Alignment = TextDrawAlignment.Center;
+        playerTextDraw[0].Alignment = TextDrawAlignment.Left;
         playerTextDraw[0].ForeColor = -1;
         playerTextDraw[0].BackColor = 255;
         playerTextDraw[0].BoxColor = 320018163;
@@ -120,23 +121,42 @@ public class VerifyUserNameView : Component
         playerTextDraw[7].BoxColor = 50;
         playerTextDraw[7].UseBox = false;
         playerTextDraw[7].Proportional = true;
+
+        player.AddComponent<VerifyUserNameUIComp>((object)playerTextDraw);
     }
 
-    public void Show()
+    public void Show(Player player)
     {
-        foreach (PlayerTextDraw i in playerTextDraw.Where(t => t is not null))
-            i.Show();
+        ArgumentNullException.ThrowIfNull(player);
+
+        VerifyUserNameUIComp verifyUserNameUIComp = GetTextDrawOrThrow(player);
+
+        foreach (PlayerTextDraw playerTextdraw in verifyUserNameUIComp.PlayerTextDrawings.Where(t => t is not null))
+            playerTextdraw.Show();
     }
 
-    public void Hide()
+    public void Hide(Player player)
     {
-        foreach (PlayerTextDraw i in playerTextDraw.Where(t => t is not null))
-            i.Hide();
+        ArgumentNullException.ThrowIfNull(player);
+
+        VerifyUserNameUIComp verifyUserNameUIComp = GetTextDrawOrThrow(player);
+
+        foreach (PlayerTextDraw playerTextdraw in verifyUserNameUIComp.PlayerTextDrawings.Where(t => t is not null))
+            playerTextdraw.Hide();
     }
 
-    /* public new void Destroy()
+    public void Destroy(Player player)
     {
-        foreach (PlayerTextDraw i in playerTextDraw.Where(t => t is not null))
-            i.Destroy();
-    } */
+        ArgumentNullException.ThrowIfNull(player);
+
+        VerifyUserNameUIComp verifyUserNameUIComp = GetTextDrawOrThrow(player);
+
+        foreach (PlayerTextDraw playerTextdraw in verifyUserNameUIComp.PlayerTextDrawings.Where(t => t is not null))
+            playerTextdraw.Destroy();
+    }
+
+    private VerifyUserNameUIComp GetTextDrawOrThrow(Player player)
+    {
+        return player.GetComponent<VerifyUserNameUIComp>() ?? throw new InvalidOperationException($"The '{nameof(VerifyUserNameUIComp)}' component is not attached to the player");
+    }
 }

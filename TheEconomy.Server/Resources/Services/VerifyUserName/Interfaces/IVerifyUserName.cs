@@ -1,7 +1,6 @@
-﻿namespace TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces
+﻿namespace TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
+
+public interface IVerifyUserName
 {
-    public interface IVerifyUserName
-    {
-        public bool Verify(string userName);
-    }
+    public bool Verify(string userName);
 }

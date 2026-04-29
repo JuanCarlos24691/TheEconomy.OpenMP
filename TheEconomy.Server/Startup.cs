@@ -26,6 +26,7 @@ namespace TheEconomy.Server
         {
             services.AddDbContext<DatabaseContext>();
 
+            services.AddSingleton<IVerifyUserNameUI, VerifyUserNameUI>();
             services.AddSingleton<IServerInformation, ServerInformation>();
             services.AddSingleton<IVerifyUserName, VerifyUserName>();
             services.AddSingleton<IVerifyMail, VerifyMail>();
