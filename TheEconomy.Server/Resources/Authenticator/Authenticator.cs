@@ -4,64 +4,56 @@ using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Services.DeleteConversation.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
+using TheEconomy.Server.Resources.Services.Colors.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 
-namespace TheEconomy.Server.Resources.Authenticator
+namespace TheEconomy.Server.Resources.Authenticator;
+
+public class Authenticator(DatabaseContext databaseContext, IColors colors, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameView verifyUserNameView, IVerifyProhibition verifyProhibition, IVerifyProhibitionView verifyProhibitionView, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
 {
-    public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameUI VerifyUserNameUI, /* IVerifyProhibition verifyProhibition, */ KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
+    [Event]
+    public async Task OnPlayerConnect(Player player)
     {
-        [Event]
-        public async Task OnPlayerConnect(Player player)
+        await Task.Delay(1700);
+        deleteConversation.DeleteTheGlobalConversation();
+
+        if (verifyUserName.Verify(player.Name) is false)
         {
+            verifyUserNameView.CreatePlayerTextDrawings(player);
+            verifyUserNameView.Show(player);
+
             await Task.Delay(1700);
-            deleteConversation.DeleteTheGlobalConversation();
+            player.Kick();
+            return;
+        }
 
-            if (verifyUserName.Verify(player.Name) is false)
-            {
-                VerifyUserNameUI.CreatePlayerTextDrawings(player);
-                VerifyUserNameUI.Show(player);
-                
-                await Task.Delay(1700);
-                player.Kick();
-                return;
-            }
+        AccountInformation accountInformation = await verifyProhibition.Verify(player.Name, player.Ip);
 
-            bool resultKnowledgeTest = await knowledgeTest.Start(player);
+        if (accountInformation is not null)
+        {
+            verifyProhibitionView.CreatePlayerTextDrawings(player, accountInformation);
+            verifyProhibitionView.Show(player);
 
-            /* if (resultKnowledgeTest)
-            {
-                player.SendClientMessage($"¡Has aprobado el test de conocimiento! Bienvenido al servidor.");
-            }
-            else
-            {
-                player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
-            } */
+            await Task.Delay(1700);
+            player.Kick();
+            return;
+        }
 
-            /* deleteConversation.DeleteTheGlobalConversation();
+        accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
+        accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => EF.Functions.Like(a.Name, player.Name));
 
-            if (verifyUserName.ObtainVerification(player) is true)
-            {
-                Task<Prohibition> prohibition = databaseContext.Prohibitions.FirstOrDefaultAsync(p => p.IP == player.Ip);
-                Task<Account> account = databaseContext.Accounts.FirstOrDefaultAsync(a => EF.Functions.Like(a.Name, player.Name));
-                await Task.WhenAll(prohibition, account);
+        if (accountInformation.Account is not null)
+        {
+            player.SendClientMessage($"Ya estas registrado.");
+        }
+        else if (await knowledgeTest.Start(player) is false)
+        {
+            player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
 
-                if (player.GetComponent<PlayerData>() is null)
-                    player.AddComponent<PlayerData>();
-
-                PlayerData playerData = player.GetComponent<PlayerData>();
-
-                playerData.Prohibition = prohibition.Result;
-                playerData.Account = account.Result;
-
-                if (verifyProhibition.ObtainVerification(player) is false)
-                {
-
-                    if (playerData.Account is not null)
-                    {
-                    }
-                    else
-                        _ = knowledgeTest.StartRoleTest(player);
-                }
-            } */
+            await Task.Delay(1700);
+            player.Kick();
         }
     }
 }

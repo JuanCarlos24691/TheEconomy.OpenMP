@@ -2,7 +2,7 @@ using SampSharp.Entities.SAMP;
 
 namespace TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 
-public interface IVerifyUserNameUI
+public interface IVerifyUserNameView
 {
     public void CreatePlayerTextDrawings(Player player);
 

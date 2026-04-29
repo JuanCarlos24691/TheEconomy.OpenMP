@@ -17,6 +17,8 @@ using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyUserName;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation;
+using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
+using TheEconomy.Server.Resources.Services.VerifyProhibition;
 
 namespace TheEconomy.Server
 {
@@ -26,7 +28,9 @@ namespace TheEconomy.Server
         {
             services.AddDbContext<DatabaseContext>();
 
-            services.AddSingleton<IVerifyUserNameUI, VerifyUserNameUI>();
+            services.AddSingleton<IVerifyProhibition, VerifyProhibition>();
+            services.AddSingleton<IVerifyProhibitionView, VerifyProhibitionView>();
+            services.AddSingleton<IVerifyUserNameView, VerifyUserNameView>();
             services.AddSingleton<IServerInformation, ServerInformation>();
             services.AddSingleton<IVerifyUserName, VerifyUserName>();
             services.AddSingleton<IVerifyMail, VerifyMail>();

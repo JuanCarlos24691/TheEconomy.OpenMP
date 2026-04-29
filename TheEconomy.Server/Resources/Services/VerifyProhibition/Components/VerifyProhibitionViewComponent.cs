@@ -2,13 +2,13 @@ using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using System;
 
-namespace TheEconomy.Server.Resources.Services.VerifyUserName.Components;
+namespace TheEconomy.Server.Resources.Services.VerifyProhibition.Components;
 
-public class VerifyUserNameUIComp : Component
+public class VerifyProhibitionViewComponent : Component
 {
     public PlayerTextDraw[] PlayerTextDrawings {  get; set; }
 
-    public VerifyUserNameUIComp(PlayerTextDraw[] playerTextDraw)
+    public VerifyProhibitionViewComponent(PlayerTextDraw[] playerTextDraw)
     {
         ArgumentNullException.ThrowIfNull(playerTextDraw);
         PlayerTextDrawings = playerTextDraw;
