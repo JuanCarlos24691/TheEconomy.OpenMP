@@ -14,8 +14,7 @@ public class VerifyProhibition(DatabaseContext databaseContext) : IVerifyProhibi
     public async Task<AccountInformation> Verify(string name, string IP)
     {
         ProhibitionEntity prohibition = await databaseContext.Prohibitions
-            .Where(p => p.IP == IP)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(p => p.IP == IP);
 
         AccountEntity account = await databaseContext.Accounts
             .Where(a => a.Name == name && (a.ProhibitedAccount > 0 || a.ProhibitedAccount == -1))

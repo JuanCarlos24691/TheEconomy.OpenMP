@@ -35,23 +35,19 @@ public class Authenticator(DatabaseContext databaseContext, IColors colors, IDel
         }
 
         accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
-        accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => EF.Functions.Like(a.Name, player.Name));
+        accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
 
         if (accountInformation.Account is not null)
         {
             player.SendClientMessage($"Ya estas registrado.");
             return;
         }
-
-        bool resultKnowledgeTest = await knowledgeTest.Start(player);
-
-        if (resultKnowledgeTest is true)
+        else
         {
-            player.SendClientMessage($"Registrar");
-        }
-        else if (resultKnowledgeTest is false)
-        {
-            player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
+            if (await knowledgeTest.Start(player) is true)
+                player.SendClientMessage($"Registrar");
+            else
+                player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
         }
     }
 }
