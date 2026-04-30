@@ -31,7 +31,7 @@ public class Authenticator(DatabaseContext databaseContext, IColors colors, IDel
 
         AccountInformation accountInformation = await verifyProhibition.Verify(player.Name, player.Ip);
 
-        if (accountInformation is not null)
+        if (accountInformation.Account is not null || accountInformation.Prohibition is not null)
         {
             verifyProhibitionView.CreatePlayerTextDrawings(player, accountInformation);
             verifyProhibitionView.Show(player);
@@ -47,8 +47,16 @@ public class Authenticator(DatabaseContext databaseContext, IColors colors, IDel
         if (accountInformation.Account is not null)
         {
             player.SendClientMessage($"Ya estas registrado.");
+            return;
         }
-        else if (await knowledgeTest.Start(player) is false)
+
+        bool resultKnowledgeTest = await knowledgeTest.Start(player);
+
+        if (resultKnowledgeTest is true)
+        {
+            player.SendClientMessage($"Registrar");
+        }
+        else if (resultKnowledgeTest is false)
         {
             player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
 

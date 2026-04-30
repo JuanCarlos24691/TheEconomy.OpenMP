@@ -3,12 +3,12 @@
     public class ServerInformationEntity
     {
         public Guid UUID { get; set; }
-        public required string Name { get; set; }
-        public required string Mode { get; set; }
-        public required string Language { get; set; }
-        public required string Version { get; set; }
-        public required string WebSite { get; set; }
-        public required string Forum { get; set; }
-        public required string Discord { get; set; }
+        public string? Name { get; set; }
+        public string? Mode { get; set; }
+        public string? Language { get; set; }
+        public string? Version { get; set; }
+        public string? WebSite { get; set; }
+        public string? Forum { get; set; }
+        public string? Discord { get; set; }
     }
 }

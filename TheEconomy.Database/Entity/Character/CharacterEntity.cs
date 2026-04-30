@@ -4,21 +4,21 @@
     {
         public Guid UUID { get; set; }
         public bool Online { get; set; }
-        public required string Name { get; set; }
-        public required string LastName { get; set; }
-        public required int Gender { get; set; }
-        public required DateTime BirthDate { get; set; }
-        public required int Appearance { get; set; }
-        public required int Height { get; set; }
-        public required string EyeColor { get; set; }
-        public required string HairColor { get; set; }
-        public required string SkinColor { get; set; }
-        public required float SpawnX { get; set; }
-        public required float SpawnY { get; set; }
-        public required float SpawnZ { get; set; }
-        public required float Angle { get; set; }
-        public required DateTime FirstConnection { get; set; }
-        public required DateTime LastConnection { get; set; }
+        public string? Name { get; set; }
+        public string? LastName { get; set; }
+        public int Gender { get; set; }
+        public DateTime BirthDate { get; set; }
+        public int Appearance { get; set; }
+        public int Height { get; set; }
+        public string? EyeColor { get; set; }
+        public string? HairColor { get; set; }
+        public string? SkinColor { get; set; }
+        public float SpawnX { get; set; }
+        public float SpawnY { get; set; }
+        public float SpawnZ { get; set; }
+        public float Angle { get; set; }
+        public DateTime FirstConnection { get; set; }
+        public DateTime LastConnection { get; set; }
         public int? StabbingGun { get; set; }
         public int? NumberOfBladedGun { get; set; }
         public int? ShortGun { get; set; }

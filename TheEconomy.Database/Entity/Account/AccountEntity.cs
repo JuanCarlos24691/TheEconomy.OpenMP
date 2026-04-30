@@ -3,9 +3,9 @@
     public class AccountEntity
     {
         public Guid UUID { get; set; }
-        public required string Name { get; set; }
-        public required string Password { get; set; }
-        public required string Mail { get; set; }
+        public string? Name { get; set; }
+        public string? Password { get; set; }
+        public string? Mail { get; set; }
         public int? AdministrativeLevel { get; set; }
         public int? SelectedCharacter { get; set; }
         public int? ProhibitedAccount { get; set; }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using System.Linq;
 using TheEconomy.Database;
 using TheEconomy.Database.Entity.Prohibitions;
 using TheEconomy.Database.Entity.Account;
@@ -13,10 +13,21 @@ public class VerifyProhibition(DatabaseContext databaseContext) : IVerifyProhibi
 {
     public async Task<AccountInformation> Verify(string name, string IP)
     {
-        Task<ProhibitionEntity> prohibition = databaseContext.Prohibitions.FirstOrDefaultAsync(p => p.IP == IP);
-        Task<AccountEntity> account = databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == name && a.ProhibitedAccount > 0);
-        await Task.WhenAll(prohibition, account);
+        ProhibitionEntity prohibition = await databaseContext.Prohibitions
+            .Where(p => p.IP == IP)
+            .FirstOrDefaultAsync();
 
-        return new AccountInformation { Prohibition = prohibition.Result, Account = account.Result };
+        AccountEntity account = await databaseContext.Accounts
+            .Where(a => a.Name == name && (a.ProhibitedAccount > 0 || a.ProhibitedAccount == -1))
+            .Select(a => new AccountEntity
+            {
+                AccountProhibitedBy = a.AccountProhibitedBy,
+                ReasonForProhibition = a.ReasonForProhibition,
+                DateOfProhibition = a.DateOfProhibition,
+                ProhibitedAccount = a.ProhibitedAccount
+            })
+            .FirstOrDefaultAsync();
+
+        return new AccountInformation { Prohibition = prohibition, Account = account };
     }
 }

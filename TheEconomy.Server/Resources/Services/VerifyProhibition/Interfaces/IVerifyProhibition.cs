@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 
