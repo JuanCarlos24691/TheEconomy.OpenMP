@@ -16,16 +16,12 @@ public class Authenticator(DatabaseContext databaseContext, IColors colors, IDel
     [Event]
     public async Task OnPlayerConnect(Player player)
     {
-        await Task.Delay(1700);
         deleteConversation.DeleteTheGlobalConversation();
 
         if (verifyUserName.Verify(player.Name) is false)
         {
             verifyUserNameView.CreatePlayerTextDrawings(player);
             verifyUserNameView.Show(player);
-
-            await Task.Delay(1700);
-            player.Kick();
             return;
         }
 
@@ -35,9 +31,6 @@ public class Authenticator(DatabaseContext databaseContext, IColors colors, IDel
         {
             verifyProhibitionView.CreatePlayerTextDrawings(player, accountInformation);
             verifyProhibitionView.Show(player);
-
-            await Task.Delay(1700);
-            player.Kick();
             return;
         }
 
@@ -59,9 +52,6 @@ public class Authenticator(DatabaseContext databaseContext, IColors colors, IDel
         else if (resultKnowledgeTest is false)
         {
             player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
-
-            await Task.Delay(1700);
-            player.Kick();
         }
     }
 }
