@@ -18,33 +18,56 @@ public class ServerInitialization(IServerInformation serverInformation, Database
     {
         while (reconnectionAttempts < ServerInitializationData.MaxReconnectionAttempts)
         {
-            if (databaseContext.Database.CanConnect())
+            try
             {
-                ApplyServerSettings(serverService);
+                if (databaseContext.Database.CanConnect())
+                {
+                    ApplyServerSettings(serverService);
 
-                StringBuilder builder = new();
-                builder.AppendLine("\n---------------------------------------------------------------------------");
-                builder.AppendLine("\tConfiguración del servidor cargada exitosamente");
-                builder.AppendLine($"\tNombre: {serverInformation.Name}");
-                builder.AppendLine($"\tModo: {serverInformation.Mode}");
-                builder.AppendLine($"\tVersión: v{serverInformation.Version}");
-                builder.AppendLine($"\tWeb: {serverInformation.WebSite}");
-                builder.AppendLine("\tBase de Datos: Online");
-                builder.AppendLine("---------------------------------------------------------------------------\n");
+                    string hostName = string.Format(ServerInitializationData.HostNameFormat, serverInformation.Name, serverInformation.Mode, serverInformation.Version.ToString());
 
-                Console.Write(builder.ToString());
-                break;
+                    StringBuilder builder = new();
+
+                    builder.AppendLine("\n---------------------------------------------------------------------------");
+                    builder.AppendLine();
+                    builder.AppendLine("\tConfiguración del servidor:");
+                    builder.AppendLine();
+                    builder.AppendLine($"\tNombre del servidor: {serverInformation.Name}");
+                    builder.AppendLine($"\tModo de juego: {serverInformation.Mode}");
+                    builder.AppendLine($"\tVersión del servidor: v{serverInformation.Version}");
+                    builder.AppendLine($"\tNombre de dominio: {hostName}");
+                    builder.AppendLine($"\tIdioma(s): {serverInformation.Language}");
+                    builder.AppendLine($"\tPágina Web: {serverInformation.WebSite}");
+                    builder.AppendLine($"\tForo: {serverInformation.Forum}");
+                    builder.AppendLine($"\tDiscord: {serverInformation.Discord}");
+                    builder.AppendLine();
+                    builder.AppendLine("\tBase de datos: La conexión a la base de datos se realizó correctamente");
+                    builder.AppendLine();
+                    builder.AppendLine("\t+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    builder.AppendLine("\t+++++ Desarrollador: Juan Carlos | JuanCarlo24691 ++++");
+                    builder.AppendLine("\t+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    builder.AppendLine();
+                    builder.AppendLine("---------------------------------------------------------------------------\n");
+
+                    Console.Write(builder.ToString());
+                    break;
+                }
+
+                HandleConnectionFailure(serverService);
             }
-
-            HandleConnectionFailure(serverService);
+            catch (Exception ex)
+            {
+                Console.Write($"La conexión a la base de datos ha fallado. Se intentara una reconexión en 5 segundos...\n{ex.Message}");
+                HandleConnectionFailure(serverService);
+            }
         }
     }
 
     private void ApplyServerSettings(IServerService serverService)
     {
-        string hostname = string.Format(ServerInitializationData.HostnameFormat, serverInformation.Name, serverInformation.Mode, serverInformation.Version.ToString());
+        string hostName = string.Format(ServerInitializationData.HostNameFormat, serverInformation.Name, serverInformation.Mode, serverInformation.Version.ToString());
 
-        serverService.SendRconCommand($"name {hostname}");
+        serverService.SendRconCommand($"name {hostName}");
         serverService.SetGameModeText(serverInformation.Mode);
         serverService.SendRconCommand($"language {serverInformation.Language}");
         serverService.SendRconCommand($"website {serverInformation.WebSite}");
@@ -61,7 +84,7 @@ public class ServerInitialization(IServerInformation serverInformation, Database
         }
         else
         {
-            Console.WriteLine("CRITICAL: No se pudo conectar a la base de datos. Cerrando servidor...");
+            Console.WriteLine("No se pudo conectar a la base de datos. Cerrando servidor...");
             serverService.SendRconCommand("exit");
             Environment.Exit(0);
         }

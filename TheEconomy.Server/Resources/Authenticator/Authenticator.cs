@@ -4,14 +4,14 @@ using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Services.DeleteConversation.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
-using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
+using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator;
 
-public class Authenticator(DatabaseContext databaseContext, IColors colors, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameView verifyUserNameView, IVerifyProhibition verifyProhibition, IVerifyProhibitionView verifyProhibitionView, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
+public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameView verifyUserNameView, IVerifyProhibition verifyProhibition, IVerifyProhibitionView verifyProhibitionView, IRegisterAccountView registerAccountView, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
 {
     [Event]
     public async Task OnPlayerConnect(Player player)
@@ -40,14 +40,18 @@ public class Authenticator(DatabaseContext databaseContext, IColors colors, IDel
         if (accountInformation.Account is not null)
         {
             player.SendClientMessage($"Ya estas registrado.");
-            return;
         }
         else
         {
             if (await knowledgeTest.Start(player) is true)
-                player.SendClientMessage($"Registrar");
+            {
+                registerAccountView.CreatePlayerTextDrawings(player);
+                registerAccountView.Show(player);
+            }
             else
+            {
                 player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
+            }
         }
     }
 }

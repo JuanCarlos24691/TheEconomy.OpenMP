@@ -19,6 +19,8 @@ using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyProhibition;
+using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
+using TheEconomy.Server.Resources.RegisterAccount;
 
 namespace TheEconomy.Server
 {
@@ -28,6 +30,7 @@ namespace TheEconomy.Server
         {
             services.AddDbContext<DatabaseContext>();
 
+            services.AddSingleton<IRegisterAccountView, RegisterAccountView>();
             services.AddSingleton<IVerifyProhibition, VerifyProhibition>();
             services.AddSingleton<IVerifyProhibitionView, VerifyProhibitionView>();
             services.AddSingleton<IVerifyUserNameView, VerifyUserNameView>();
