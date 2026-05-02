@@ -2,9 +2,9 @@ using SampSharp.Entities.SAMP;
 
 namespace TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 
-public interface IVerifyUserNameView
+public interface IVerifyUserNameLayout
 {
-    public void CreatePlayerTextDrawings(Player player);
+    public void Create(Player player);
 
     public void Show(Player player);
 

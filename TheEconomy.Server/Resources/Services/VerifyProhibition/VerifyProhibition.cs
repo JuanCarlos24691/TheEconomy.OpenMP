@@ -6,6 +6,7 @@ using TheEconomy.Database.Entity.Account;
 using Microsoft.EntityFrameworkCore;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
+using SampSharp.Entities.SAMP;
 
 namespace TheEconomy.Server.Resources.Services.VerifyProhibition;
 

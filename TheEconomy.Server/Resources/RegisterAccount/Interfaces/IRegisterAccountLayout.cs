@@ -1,11 +1,10 @@
 using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.Components.AccountInformation;
 
 namespace TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 
-public interface IRegisterAccountView
+public interface IRegisterAccountLayout
 {
-    public void CreatePlayerTextDrawings(Player player);
+    public void Create(Player player);
 
     public void Show(Player player);
 

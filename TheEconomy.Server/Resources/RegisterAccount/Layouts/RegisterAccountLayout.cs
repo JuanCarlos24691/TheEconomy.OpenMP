@@ -7,11 +7,11 @@ using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Components;
 
-namespace TheEconomy.Server.Resources.RegisterAccount;
+namespace TheEconomy.Server.Resources.RegisterAccount.Layouts;
 
-public class RegisterAccountView(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : IRegisterAccountView
+public class RegisterAccountLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : IRegisterAccountLayout
 {
-    public void CreatePlayerTextDrawings(Player player)
+    public void Create(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
 
@@ -58,7 +58,7 @@ public class RegisterAccountView(IWorldService worldService, IServerInformation 
         playerTextDraw[2].Proportional = true;
         playerTextDraw[2].Selectable = true;
 
-        dynamic character = GetRandomCharacter();
+        dynamic character = RegisterAccountLayout.GetRandomCharacter();
 
         playerTextDraw[3] = worldService.CreatePlayerTextDraw(player, new Vector2(character.positionX, character.positionY), character.modelId);
         playerTextDraw[3].Font = TextDrawFont.DrawSprite;
@@ -286,16 +286,14 @@ public class RegisterAccountView(IWorldService worldService, IServerInformation 
         playerTextDraw[20].BackColor = 255;
         playerTextDraw[20].Proportional = true;
 
-        player.AddComponent<RegisterAccountViewComponent>((object)playerTextDraw);
+        player.AddComponent<RegisterAccountComponent>((object)playerTextDraw);
     }
 
     public void Show(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        RegisterAccountViewComponent RegisterAccountViewComponent = GetTextDrawOrThrow(player);
-
-        foreach (PlayerTextDraw playerTextdraw in RegisterAccountViewComponent.PlayerTextDrawings.Where(t => t is not null))
+        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw.Show();
     }
 
@@ -303,9 +301,7 @@ public class RegisterAccountView(IWorldService worldService, IServerInformation 
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        RegisterAccountViewComponent RegisterAccountViewComponent = GetTextDrawOrThrow(player);
-
-        foreach (PlayerTextDraw playerTextdraw in RegisterAccountViewComponent.PlayerTextDrawings.Where(t => t is not null))
+        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw.Hide();
     }
 
@@ -313,15 +309,13 @@ public class RegisterAccountView(IWorldService worldService, IServerInformation 
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        RegisterAccountViewComponent RegisterAccountViewComponent = GetTextDrawOrThrow(player);
-
-        foreach (PlayerTextDraw playerTextdraw in RegisterAccountViewComponent.PlayerTextDrawings.Where(t => t is not null))
+        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw.Destroy();
     }
 
-    private RegisterAccountViewComponent GetTextDrawOrThrow(Player player)
+    private RegisterAccountComponent GetRegisterAccountComponent(Player player)
     {
-        return player.GetComponent<RegisterAccountViewComponent>() ?? throw new InvalidOperationException($"The '{nameof(RegisterAccountViewComponent)}' component is not attached to the player");
+        return player.GetComponent<RegisterAccountComponent>() ?? throw new InvalidOperationException($"The '{nameof(RegisterAccountComponent)}' component is not attached to the player");
     }
 
     private static dynamic GetRandomCharacter()

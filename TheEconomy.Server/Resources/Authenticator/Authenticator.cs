@@ -11,7 +11,7 @@ using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator;
 
-public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameView verifyUserNameView, IVerifyProhibition verifyProhibition, IVerifyProhibitionView verifyProhibitionView, IRegisterAccountView registerAccountView, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
+public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameLayout verifyUserNameLayout, IVerifyProhibition verifyProhibition, IVerifyProhibitionLayout verifyProhibitionLayout, IRegisterAccountLayout registerAccountLayout, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
 {
     [Event]
     public async Task OnPlayerConnect(Player player)
@@ -20,8 +20,8 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
 
         if (verifyUserName.Verify(player.Name) is false)
         {
-            verifyUserNameView.CreatePlayerTextDrawings(player);
-            verifyUserNameView.Show(player);
+            verifyUserNameLayout.Create(player);
+            verifyUserNameLayout.Show(player);
             return;
         }
 
@@ -29,8 +29,8 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
 
         if (accountInformation.Account is not null || accountInformation.Prohibition is not null)
         {
-            verifyProhibitionView.CreatePlayerTextDrawings(player, accountInformation);
-            verifyProhibitionView.Show(player);
+            verifyProhibitionLayout.Create(player, accountInformation);
+            verifyProhibitionLayout.Show(player);
             return;
         }
 
@@ -45,8 +45,8 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
         {
             if (await knowledgeTest.Start(player) is true)
             {
-                registerAccountView.CreatePlayerTextDrawings(player);
-                registerAccountView.Show(player);
+                registerAccountLayout.Create(player);
+                registerAccountLayout.Show(player);
             }
             else
             {
