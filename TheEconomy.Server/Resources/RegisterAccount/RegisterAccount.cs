@@ -209,8 +209,8 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                     if (await databaseContext.SaveChangesAsync() == 0)
                     {
+                        registerAccountLayout.Show(player);
                         player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no se pudo crear tu cuenta; por favor, vuelve a intentarlo.");
-                        player.Kick();
                         return;
                     }
 

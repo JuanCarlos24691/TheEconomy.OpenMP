@@ -8,6 +8,10 @@ namespace TheEconomy.Server.Resources.Components.AccountInformation;
 public class AccountInformation : Component
 {
     public ProhibitionEntity Prohibition { get; set; }
+
     public AccountEntity Account { get; set; }
+
     public CharacterEntity Character { get; set; }
+    
+    public bool IsLoggedIn { get; set; }
 }
