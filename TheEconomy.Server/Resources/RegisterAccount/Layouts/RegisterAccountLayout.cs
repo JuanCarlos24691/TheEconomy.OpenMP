@@ -286,14 +286,14 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         playerTextDraw[20].BackColor = 255;
         playerTextDraw[20].Proportional = true;
 
-        player.AddComponent<RegisterAccountComponent>((object)playerTextDraw);
+        player.AddComponent<RegisterAccountLayoutComponent>((object)playerTextDraw);
     }
 
     public void Show(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountComponent(player).PlayerTextDrawings.Where(t => t is not null))
+        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw.Show();
 
         if (player.IsSelectingTextDraw is false)
@@ -304,7 +304,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountComponent(player).PlayerTextDrawings.Where(t => t is not null))
+        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw.Hide();
     }
 
@@ -312,13 +312,13 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountComponent(player).PlayerTextDrawings.Where(t => t is not null))
+        foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw.Destroy();
     }
 
-    public RegisterAccountComponent GetRegisterAccountComponent(Player player)
+    public RegisterAccountLayoutComponent GetRegisterAccountLayoutComponent(Player player)
     {
-        return player.GetComponent<RegisterAccountComponent>() ?? throw new InvalidOperationException($"The '{nameof(RegisterAccountComponent)}' component is not attached to the player");
+        return player.GetComponent<RegisterAccountLayoutComponent>() ?? throw new InvalidOperationException($"The '{nameof(RegisterAccountLayoutComponent)}' component is not attached to the player");
     }
 
     private static dynamic GetRandomCharacter()

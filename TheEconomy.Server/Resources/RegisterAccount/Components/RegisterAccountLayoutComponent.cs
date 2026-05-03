@@ -4,11 +4,11 @@ using System;
 
 namespace TheEconomy.Server.Resources.RegisterAccount.Components;
 
-public class RegisterAccountComponent : Component
+public class RegisterAccountLayoutComponent : Component
 {
     public PlayerTextDraw[] PlayerTextDrawings {  get; set; }
 
-    public RegisterAccountComponent(PlayerTextDraw[] playerTextDraw)
+    public RegisterAccountLayoutComponent(PlayerTextDraw[] playerTextDraw)
     {
         ArgumentNullException.ThrowIfNull(playerTextDraw);
         PlayerTextDrawings = playerTextDraw;

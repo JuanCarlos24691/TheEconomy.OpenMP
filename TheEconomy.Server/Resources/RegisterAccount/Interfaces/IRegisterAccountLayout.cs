@@ -13,5 +13,5 @@ public interface IRegisterAccountLayout
 
     public void Destroy(Player player);
 
-    public RegisterAccountComponent GetRegisterAccountComponent(Player player);
+    public RegisterAccountLayoutComponent GetRegisterAccountLayoutComponent(Player player);
 }

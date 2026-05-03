@@ -14,7 +14,7 @@ public class RegisterAccount(IWorldService worldService, IDialogService dialogSe
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
-        RegisterAccountComponent registerAccountComponent = registerAccountLayout.GetRegisterAccountComponent(player);
+        RegisterAccountLayoutComponent registerAccountComponent = registerAccountLayout.GetRegisterAccountLayoutComponent(player);
 
         if (registerAccountComponent.IsComponentAlive)
         {
