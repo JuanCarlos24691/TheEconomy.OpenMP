@@ -44,7 +44,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                 else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                 {
                     registerAccountLayout.Show(player);
-                    player.PlaySound(1058);
+                    player.PlaySound(1085);
                 }
             }
             else if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[7])
@@ -93,7 +93,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                 }
                 else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                 {
-                    player.PlaySound(1058);
+                    player.PlaySound(1085);
                 }
             }
             else if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[10])
@@ -171,12 +171,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                 }
                 else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                 {
-                    player.PlaySound(1058);
+                    player.PlaySound(1085);
                 }
             }
             else if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[15])
             {
-                registerAccountLayout.Hide(player);
                 player.PlaySound(1085);
 
                 RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
@@ -195,6 +194,8 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                         player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un correo electronico para registrar tu cuenta; por favor, vuelve a intentarlo.");
                         return;
                 }
+
+                registerAccountLayout.Hide(player);
 
                 MessageDialog messageDialog = new($"Completar registro", $"{colors.GetHexadecimal("primaryRed")}Estás a punto de registrar una nueva cuenta\n¿Deseas continuar?", "Continuar", "Cancelar");
                 MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
@@ -222,7 +223,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                 else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                 {
                     registerAccountLayout.Show(player);
-                    player.PlaySound(1058);
+                    player.PlaySound(1085);
                 }
             }
         }
