@@ -136,7 +136,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         playerTextDraw[8].UseBox = true;
         playerTextDraw[8].Proportional = true;
 
-        playerTextDraw[9] = worldService.CreatePlayerTextDraw(player, new Vector2(367.000, 189.400), "........");
+        playerTextDraw[9] = worldService.CreatePlayerTextDraw(player, new Vector2(367.000, 191.000), "........");
         playerTextDraw[9].Font = TextDrawFont.Normal;
         playerTextDraw[9].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[9].TextSize = new Vector2(400.000f, 17.000f);

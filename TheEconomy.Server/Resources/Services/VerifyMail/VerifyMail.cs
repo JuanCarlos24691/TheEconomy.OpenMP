@@ -6,7 +6,7 @@ namespace TheEconomy.Server.Resources.Services.VerifyMail;
 
 public class VerifyMail : IVerifyMail
 {
-    public bool ObtainVerification(string email)
+    public bool Verify(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException("El correo electrónico no puede estar vacío, nulo ni contener espacios en blanco.", nameof(email));

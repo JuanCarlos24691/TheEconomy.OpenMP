@@ -2,6 +2,6 @@
 {
     public interface IVerifyMail
     {
-        public bool ObtainVerification(string email);
+        public bool Verify(string email);
     }
 }

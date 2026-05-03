@@ -16,10 +16,10 @@ public static class KnowledgeTestData
                 Description = $"¿Qué significa In Character (IC)?{footer}",
                 Answers =
                 [
-                    new QuestionAnswer { UUID = 1, Text = "Hablar sobre el clima en la vUUIDa real.", IsCorrect = false },
+                    new QuestionAnswer { UUID = 1, Text = "Hablar sobre el clima en la vida real.", IsCorrect = false },
                     new QuestionAnswer { UUID = 2, Text = "Hablar sobre un evento en el juego.", IsCorrect = true },
-                    new QuestionAnswer { UUID = 3, Text = "Hablar sobre un evento en la vUUIDa real.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 4, Text = "Hablar sobre las noticias en la vUUIDa real.", IsCorrect = false }
+                    new QuestionAnswer { UUID = 3, Text = "Hablar sobre un evento en la vida real.", IsCorrect = false },
+                    new QuestionAnswer { UUID = 4, Text = "Hablar sobre las noticias en la vida real.", IsCorrect = false }
                 ]
             },
             new()
@@ -31,7 +31,7 @@ public static class KnowledgeTestData
                     new QuestionAnswer { UUID = 1, Text = "Interactuar verbalmente con otro jugador dentro del rol.", IsCorrect = false },
                     new QuestionAnswer { UUID = 2, Text = "Usar información de un foro para beneficio en el juego.", IsCorrect = false },
                     new QuestionAnswer { UUID = 3, Text = "Pedir ayuda en el canal de ayuda.", IsCorrect = true },
-                    new QuestionAnswer { UUID = 4, Text = "Hablar sobre las noticias en la vUUIDa real.", IsCorrect = true }
+                    new QuestionAnswer { UUID = 4, Text = "Hablar sobre las noticias en la vida real.", IsCorrect = true }
                 ]
             },
             new()
@@ -42,7 +42,7 @@ public static class KnowledgeTestData
                 [
                     new QuestionAnswer { UUID = 1, Text = "Usar información de un stream de Twitch para beneficio en el juego.", IsCorrect = true },
                     new QuestionAnswer { UUID = 2, Text = "Pegarle a otro jugador con un bate.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 3, Text = "Hablar sobre el clima de la vUUIDa real en el juego.", IsCorrect = false },
+                    new QuestionAnswer { UUID = 3, Text = "Hablar sobre el clima de la vida real en el juego.", IsCorrect = false },
                     new QuestionAnswer { UUID = 4, Text = "Usar información fuera del juego para tomar decisiones dentro del juego.", IsCorrect = true }
                 ]
             },
@@ -52,9 +52,9 @@ public static class KnowledgeTestData
                 Description = $"¿Qué significa PowerGaming (PG)?{footer}",
                 Answers =
                 [
-                    new QuestionAnswer { UUID = 1, Text = "Forzar a otro jugador a hacer algo sin darle la oportunUUIDad de responder.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 2, Text = "Ignorar las herUUIDas de tu personaje después de un accUUIDente.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 3, Text = "Hacer cosas que tu personaje no podría hacer en la vUUIDa real.", IsCorrect = true },
+                    new QuestionAnswer { UUID = 1, Text = "Forzar a otro jugador a hacer algo sin darle la oportunidad de responder.", IsCorrect = false },
+                    new QuestionAnswer { UUID = 2, Text = "Ignorar las herUUIDas de tu personaje después de un accidente.", IsCorrect = false },
+                    new QuestionAnswer { UUID = 3, Text = "Hacer cosas que tu personaje no podría hacer en la vida real.", IsCorrect = true },
                     new QuestionAnswer { UUID = 4, Text = "Todas las anteriores.", IsCorrect = false }
                 ]
             },
@@ -77,8 +77,8 @@ public static class KnowledgeTestData
                 Answers =
                 [
                     new QuestionAnswer { UUID = 1, Text = "Rentar un vehículo.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 2, Text = "Darle las llaves de mi vehículo a un conocUUIDo.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 3, Text = "Robar un coche de la policía o a un indivUUIDuo.", IsCorrect = true },
+                    new QuestionAnswer { UUID = 2, Text = "Darle las llaves de mi vehículo a un conocido.", IsCorrect = false },
+                    new QuestionAnswer { UUID = 3, Text = "Robar un coche de la policía o a un individuo.", IsCorrect = true },
                     new QuestionAnswer { UUID = 4, Text = "Usar un coche robado para fines del rol.", IsCorrect = false }
                 ]
             },
@@ -90,7 +90,7 @@ public static class KnowledgeTestData
                 [
                     new QuestionAnswer { UUID = 1, Text = "Recordar quién te mató y por qué.", IsCorrect = false },
                     new QuestionAnswer { UUID = 2, Text = "No recordar quién te mató y por qué.", IsCorrect = true },
-                    new QuestionAnswer { UUID = 3, Text = "No interactuar con personas o eventos de tu vUUIDa anterior.", IsCorrect = true },
+                    new QuestionAnswer { UUID = 3, Text = "No interactuar con personas o eventos de tu vida anterior.", IsCorrect = true },
                     new QuestionAnswer { UUID = 4, Text = "Todas las anteriores.", IsCorrect = false }
                 ]
             },
@@ -102,7 +102,7 @@ public static class KnowledgeTestData
                 [
                     new QuestionAnswer { UUID = 1, Text = "Matar a un jugador porque te robó.", IsCorrect = false },
                     new QuestionAnswer { UUID = 2, Text = "Matar a un jugador porque te insultó verbalmente.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 3, Text = "Matar a un jugador porque te mató en una vUUIDa anterior.", IsCorrect = true },
+                    new QuestionAnswer { UUID = 3, Text = "Matar a un jugador porque te mató en una vida anterior.", IsCorrect = true },
                     new QuestionAnswer { UUID = 4, Text = "Matar a un jugador porque te cae mal.", IsCorrect = false }
                 ]
             },
@@ -112,7 +112,7 @@ public static class KnowledgeTestData
                 Description = $"¿Qué significa Fail Roleplay (FRP)?{footer}",
                 Answers =
                 [
-                    new QuestionAnswer { UUID = 1, Text = "Ignorar amenazas que ponen en riesgo tu vUUIDa.", IsCorrect = true },
+                    new QuestionAnswer { UUID = 1, Text = "Ignorar amenazas que ponen en riesgo tu vida.", IsCorrect = true },
                     new QuestionAnswer { UUID = 2, Text = "Actuar de manera poco realista en una situación seria.", IsCorrect = true },
                     new QuestionAnswer { UUID = 3, Text = "Usar un vehículo para evadir el rol obligatorio.", IsCorrect = true },
                     new QuestionAnswer { UUID = 4, Text = "Todas las anteriores.", IsCorrect = true }
