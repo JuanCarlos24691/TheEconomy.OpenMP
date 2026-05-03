@@ -1,4 +1,5 @@
 using SampSharp.Entities.SAMP;
+using TheEconomy.Server.Resources.Services.VerifyUserName.Components;
 
 namespace TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 
@@ -11,4 +12,6 @@ public interface IVerifyUserNameLayout
     public void Hide(Player player);
 
     public void Destroy(Player player);
+
+    public VerifyUserNameLayoutComponent GetVerifyUserNameLayoutComponent(Player player);
 }

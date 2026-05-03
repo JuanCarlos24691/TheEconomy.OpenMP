@@ -6,10 +6,11 @@ using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Components;
 using System.Threading.Tasks;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 
 namespace TheEconomy.Server.Resources.RegisterAccount;
 
-public class RegisterAccount(IWorldService worldService, IDialogService dialogService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterAccountLayout registerAccountLayout) : ISystem, IRegisterAccount
+public class RegisterAccount(IWorldService worldService, IDialogService dialogService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors, IBlackBackgroundLayout blackBackgroundLayout, IRegisterAccountLayout registerAccountLayout) : ISystem, IRegisterAccount
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
@@ -18,18 +19,21 @@ public class RegisterAccount(IWorldService worldService, IDialogService dialogSe
 
         if (registerAccountComponent.IsComponentAlive)
         {
-            if (playerTextDraw == registerAccountComponent.PlayerTextDrawings[2])
+            if (playerTextDraw == registerAccountComponent.PlayerTextDrawings[1])
             {
                 registerAccountLayout.Hide(player);
+                player.PlaySound(1085);
 
                 MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryRed")}Cancelar registro de cuenta", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de una nueva cuenta?", "Sí", "No");
                 MessageDialogResponse response = await dialogService.ShowAsync(player, messageDialog);
-                player.PlaySound(1085);
 
                 if (response.Response == DialogResponse.LeftButton)
                 {
+                    blackBackgroundLayout.Hide(player);
+
                     registerAccountLayout.Destroy(player);
                     registerAccountComponent.Destroy();
+
                     player.PlaySound(1085);
                 }
                 else if (response.Response == DialogResponse.RightButtonOrCancel || response.Response == DialogResponse.Disconnected)

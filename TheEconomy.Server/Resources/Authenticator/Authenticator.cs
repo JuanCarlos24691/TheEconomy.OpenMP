@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator;
 
-public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameLayout verifyUserNameLayout, IVerifyProhibition verifyProhibition, IVerifyProhibitionLayout verifyProhibitionLayout, IRegisterAccountLayout registerAccountLayout, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
+public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameLayout verifyUserNameLayout, IVerifyProhibition verifyProhibition, IVerifyProhibitionLayout verifyProhibitionLayout, IBlackBackgroundLayout blackBackgroundLayout, IRegisterAccountLayout registerAccountLayout, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
 {
     [Event]
     public async Task OnPlayerConnect(Player player)
@@ -23,6 +24,7 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
     public async Task Authenticate(Player player)
     {
         deleteConversation.DeleteTheGlobalConversation();
+        blackBackgroundLayout.Show(player);
 
         if (verifyUserName.Verify(player.Name) is false)
         {
@@ -43,7 +45,7 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
         accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
         accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
 
-        if (accountInformation.Account is not null)
+        if (accountInformation.IsComponentAlive && accountInformation.Account is not null)
         {
             player.SendClientMessage($"Ya estas registrado.");
         }
@@ -56,7 +58,7 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
             }
             else
             {
-                player.SendClientMessage($"No has aprobado el test de conocimiento. No podrás acceder al servidor.");
+                _ = Authenticate(player);
             }
         }
     }
