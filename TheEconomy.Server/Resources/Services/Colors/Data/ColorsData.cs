@@ -31,7 +31,11 @@ public static class ColorData
 
             // Verde (Éxito / Dinero)
             { "primaryGreen", new Color(76, 175, 80) },
-            { "secondaryGreen", new Color(225, 255, 222) }
+            { "secondaryGreen", new Color(225, 255, 222) },
+
+            // Gris
+            { "primaryGray", new Color(69, 69, 69) },
+            { "secondaryGray", new Color(115, 115, 115) }
         };
     }
 }

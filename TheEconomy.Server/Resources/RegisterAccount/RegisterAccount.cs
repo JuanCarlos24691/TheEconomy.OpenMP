@@ -1,12 +1,14 @@
-﻿using SampSharp.Entities;
+﻿using System.Threading.Tasks;
+using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Components;
-using System.Threading.Tasks;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
+using TheEconomy.Server.Resources.Components.AccountInformation;
+using System.Text;
 
 namespace TheEconomy.Server.Resources.RegisterAccount;
 
@@ -24,10 +26,13 @@ public class RegisterAccount(IWorldService worldService, IDialogService dialogSe
                 registerAccountLayout.Hide(player);
                 player.PlaySound(1085);
 
-                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryRed")}Cancelar registro de cuenta", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de una nueva cuenta?", "Sí", "No");
-                MessageDialogResponse response = await dialogService.ShowAsync(player, messageDialog);
+                MessageDialog inputDialogResponse = new($"{colors.GetHexadecimal("primaryRed")}Cancelar registro de cuenta", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de una nueva cuenta?", "Sí", "No");
+                MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, inputDialogResponse);
 
-                if (response.Response == DialogResponse.LeftButton)
+                if (messageDialogResponse.Response == DialogResponse.Disconnected)
+                    return;
+
+                if (messageDialogResponse.Response == DialogResponse.LeftButton)
                 {
                     blackBackgroundLayout.Hide(player);
 
@@ -36,9 +41,49 @@ public class RegisterAccount(IWorldService worldService, IDialogService dialogSe
 
                     player.PlaySound(1085);
                 }
-                else if (response.Response == DialogResponse.RightButtonOrCancel || response.Response == DialogResponse.Disconnected)
+                else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                 {
                     registerAccountLayout.Show(player);
+                    player.PlaySound(1058);
+                }
+            }
+            else if (playerTextDraw == registerAccountComponent.PlayerTextDrawings[7])
+            {
+                registerAccountLayout.Hide(player);
+                player.PlaySound(1085);
+
+                AccountInformation accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
+
+                StringBuilder stringBuilder = new();
+
+                stringBuilder.AppendLine($"{colors.GetHexadecimal("primaryWhite")}Hola, {colors.GetHexadecimal("primaryColor")}{player.Name}{colors.GetHexadecimal("primaryWhite")}, ingresa una contraseña para continuar con el registro.\n");
+                stringBuilder.AppendLine($"\t{(string.IsNullOrEmpty(accountInformation.Account.Password) ? colors.GetHexadecimal("primaryWhite") : colors.GetHexadecimal("secondaryGreen"))}1): Contraseña");
+                stringBuilder.AppendLine($"\t{(string.IsNullOrEmpty(accountInformation.Account.Mail) ? colors.GetHexadecimal("primaryWhite") : colors.GetHexadecimal("secondaryGreen"))}2): Correo Electrónico");
+                stringBuilder.AppendLine($"\t{(!string.IsNullOrEmpty(accountInformation.Account.Password) && !string.IsNullOrEmpty(accountInformation.Account.Mail) ? colors.GetHexadecimal("secondaryGreen") : colors.GetHexadecimal("primaryRed"))}3): ¡Listo!");
+                stringBuilder.AppendLine($"{colors.GetHexadecimal("secondaryColor")}La contraseña debe estar entre 8 y 16 caracteres.");
+
+                InputDialog inputDialog = new()
+                {
+                    Caption = "Ingresar contraseña",
+                    Content = stringBuilder.ToString(),
+                    Button1 = "Siguiente",
+                    Button2 = "Atras"
+                };
+
+                InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+
+                if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                    return;
+
+                registerAccountLayout.Show(player);
+
+                if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    accountInformation.Account.Password = inputDialogResponse.InputText;
+                    player.PlaySound(1085);
+                }
+                else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                {
                     player.PlaySound(1058);
                 }
             }
