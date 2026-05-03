@@ -1,4 +1,5 @@
 using SampSharp.Entities.SAMP;
+using TheEconomy.Server.Resources.RegisterAccount.Components;
 
 namespace TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 
@@ -11,4 +12,6 @@ public interface IRegisterAccountLayout
     public void Hide(Player player);
 
     public void Destroy(Player player);
+
+    public RegisterAccountComponent GetRegisterAccountComponent(Player player);
 }

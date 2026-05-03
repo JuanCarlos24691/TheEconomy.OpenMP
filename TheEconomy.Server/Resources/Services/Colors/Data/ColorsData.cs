@@ -9,14 +9,13 @@ public static class ColorData
     {
         return new Dictionary<string, Color>
         {
-            // Azules (Principales)
-            { "primaryColor", new Color(65, 171, 255) },
-            { "secondaryColor", new Color(222, 238, 255) },
+            // Rojo (Principales)
+            { "primaryColor", new Color(255, 65, 65) },
+            { "secondaryColor", new Color(255, 222, 222) },
 
             // Blancos y Grises
             { "primaryWhite", new Color(206, 212, 218) },
             { "secondaryWhite", new Color(233, 236, 239) },
-            { "tertiaryGrey", new Color(222, 226, 230) }, // Cambiado de secondaryColor para evitar duplicado
 
             // Negros
             { "primaryBlack", new Color(33, 37, 41) },

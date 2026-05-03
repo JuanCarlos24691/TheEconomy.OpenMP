@@ -1,28 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SampSharp.Entities;
+﻿using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.Components;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Components;
+using System.Threading.Tasks;
 
 namespace TheEconomy.Server.Resources.RegisterAccount;
 
-public class RegisterAccount(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : ISystem, IRegisterAccount
+public class RegisterAccount(IWorldService worldService, IDialogService dialogService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterAccountLayout registerAccountLayout) : ISystem, IRegisterAccount
 {
     [Event]
-    public void OnPlayerClickTextDraw(Player player)
+    public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
-        player.SendClientMessage("200");
-    }
+        RegisterAccountComponent registerAccountComponent = registerAccountLayout.GetRegisterAccountComponent(player);
 
-    private RegisterAccountComponent GetRegisterAccountComponent(Player player)
-    {
-        return player.GetComponent<RegisterAccountComponent>() ?? throw new InvalidOperationException($"The '{nameof(RegisterAccountComponent)}' component is not attached to the player");
+        if (registerAccountComponent.IsComponentAlive)
+        {
+            if (playerTextDraw == registerAccountComponent.PlayerTextDrawings[2])
+            {
+                registerAccountLayout.Hide(player);
+
+                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryRed")}Cancelar registro de cuenta", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de una nueva cuenta?", "Sí", "No");
+                MessageDialogResponse response = await dialogService.ShowAsync(player, messageDialog);
+                player.PlaySound(1085);
+
+                if (response.Response == DialogResponse.LeftButton)
+                {
+                    registerAccountLayout.Destroy(player);
+                    registerAccountComponent.Destroy();
+                    player.PlaySound(1085);
+                }
+                else if (response.Response == DialogResponse.RightButtonOrCancel || response.Response == DialogResponse.Disconnected)
+                {
+                    registerAccountLayout.Show(player);
+                    player.PlaySound(1058);
+                }
+            }
+        }
     }
 }
 

@@ -295,6 +295,9 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw.Show();
+
+        if (player.IsSelectingTextDraw is false)
+            player.SelectTextDraw(0x393939ff);
     }
 
     public void Hide(Player player)
@@ -313,7 +316,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
             playerTextdraw.Destroy();
     }
 
-    private RegisterAccountComponent GetRegisterAccountComponent(Player player)
+    public RegisterAccountComponent GetRegisterAccountComponent(Player player)
     {
         return player.GetComponent<RegisterAccountComponent>() ?? throw new InvalidOperationException($"The '{nameof(RegisterAccountComponent)}' component is not attached to the player");
     }

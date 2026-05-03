@@ -22,7 +22,6 @@ using TheEconomy.Server.Resources.Services.VerifyProhibition;
 using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Layouts;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Layouts;
-using TheEconomy.Server.Resources.RegisterAccount;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Layouts;
 
 namespace TheEconomy.Server
@@ -34,6 +33,7 @@ namespace TheEconomy.Server
             services.AddDbContext<DatabaseContext>();
 
             services.AddSingleton<IVerifyUserNameLayout, VerifyUserNameLayout>();
+            services.AddSingleton<IVerifyProhibition, VerifyProhibition>();
             services.AddSingleton<IVerifyProhibitionLayout, VerifyProhibitionLayout>();
             services.AddSingleton<IRegisterAccountLayout, RegisterAccountLayout>();
             services.AddSingleton<IServerInformation, ServerInformation>();

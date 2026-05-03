@@ -16,6 +16,12 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
     [Event]
     public async Task OnPlayerConnect(Player player)
     {
+        await Task.Delay(500);
+        await Authenticate(player);
+    }
+
+    public async Task Authenticate(Player player)
+    {
         deleteConversation.DeleteTheGlobalConversation();
 
         if (verifyUserName.Verify(player.Name) is false)
