@@ -201,7 +201,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                     registerCharacterComponent.Character.BirthDate = DateTime.Parse(inputDialogResponse.InputText);
 
-                    registerCharacterLayoutComponent.PlayerTextDrawings[12].Text = registerCharacterComponent.Character.BirthDate.ToString("dd/MM/yyyy");
+                    registerCharacterLayoutComponent.PlayerTextDrawings[15].Text = registerCharacterComponent.Character.BirthDate.ToString("dd/MM/yyyy");
                     player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}La fecha de nacimiento del personaje se establecio correctamente.");
                 }
                 else if (inputDialogResponse.Response == DialogResponse.LeftButton)
