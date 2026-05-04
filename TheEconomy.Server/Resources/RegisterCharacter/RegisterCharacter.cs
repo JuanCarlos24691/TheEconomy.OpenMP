@@ -178,7 +178,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                 InputDialog inputDialog = new()
                 {
                     Caption = $"{colors.GetHexadecimal("primaryColor")}Fecha de nacimiento del Personaje",
-                    Content = $"{colors.GetHexadecimal("primaryWhite")}Debes usar un formato de año/mes/día. Por ejemplo: {colors.GetHexadecimal("primaryGreen")}02/02/2002\n¿Cuando nacio tu personaje?",
+                    Content = $"{colors.GetHexadecimal("primaryWhite")}Debes usar un formato de año/mes/día. Por ejemplo: {colors.GetHexadecimal("primaryGreen")}02/02/2002{colors.GetHexadecimal("primaryWhite")}\n¿Cuando nacio tu personaje?",
                     Button1 = "Siguiente",
                     Button2 = "Atras"
                 };
