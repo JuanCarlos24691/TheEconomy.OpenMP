@@ -11,10 +11,13 @@ using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
 using TheEconomy.Database;
 using TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.RegisterCharacter.Components;
+using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
+using TheEconomy.Server.Resources.Services.VerifyDate.Interfaces;
+using System;
 
 namespace TheEconomy.Server.Resources.RegisterAccount;
 
-public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterCharacterLayout registerCharacterLayout) : ISystem, IRegisterAccount
+public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, IVerifyDate verifyDate, IVerifyUserName verifyUserName, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterCharacterLayout registerCharacterLayout) : ISystem, IRegisterAccount
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
@@ -51,6 +54,162 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                     player.PlaySound(1085);
                 }
             }
+            else if (playerTextDraw == registerCharacterLayoutComponent.PlayerTextDrawings[6])
+            {
+                registerCharacterLayout.Hide(player);
+                player.PlaySound(1085);
+
+                InputDialog inputDialog = new()
+                {
+                    Caption = $"{colors.GetHexadecimal("primaryColor")}Nombre del Personaje",
+                    Content = $"{colors.GetHexadecimal("primaryWhite")}La longitud de caracteres permitidos son de {colors.GetHexadecimal("primaryRed")}4{colors.GetHexadecimal("primaryWhite")} a {colors.GetHexadecimal("primaryGreen")}10{colors.GetHexadecimal("primaryWhite")} caracteres\n¿Como quieres nombrar a tu personaje?",
+                    Button1 = "Siguiente",
+                    Button2 = "Atras"
+                };
+
+                InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+
+                if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                    return;
+
+                registerCharacterLayout.Show(player);
+                player.PlaySound(1085);
+
+                if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    if (string.IsNullOrEmpty(inputDialogResponse.InputText) || !verifyUserName.Verify(inputDialogResponse.InputText))
+                    {
+                        player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes ingresar un nombre válido para tu personaje. Por favor vuelve a intentarlo");
+                        return;
+                    }
+                    else if (inputDialogResponse.InputText.Length < 4 || inputDialogResponse.InputText.Length > 10)
+                    {
+                        registerCharacterLayout.Show(player);
+                        player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La longitud de caracteres permitidos son de 4 a 10 caracteres. Por favor vuelve a intentarlo.");
+                        return;
+                    }
+
+                    registerCharacterComponent.Character.Name = inputDialogResponse.InputText;
+
+                    registerCharacterLayoutComponent.PlayerTextDrawings[7].Text = registerCharacterComponent.Character.Name;
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El nombre del personaje se establecio correctamente.");
+                }
+                else if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación del nombre de tu personaje.");
+                }
+            }
+            else if (playerTextDraw == registerCharacterLayoutComponent.PlayerTextDrawings[8])
+            {
+                registerCharacterLayout.Hide(player);
+                player.PlaySound(1085);
+
+                InputDialog inputDialog = new()
+                {
+                    Caption = $"{colors.GetHexadecimal("primaryColor")}Apellido del Personaje",
+                    Content = $"{colors.GetHexadecimal("primaryWhite")}La longitud de caracteres permitidos son de {colors.GetHexadecimal("primaryRed")}4{colors.GetHexadecimal("primaryWhite")} a {colors.GetHexadecimal("primaryGreen")}10{colors.GetHexadecimal("primaryWhite")} caracteres\n¿Que apellido quieres para tu personaje?",
+                    Button1 = "Siguiente",
+                    Button2 = "Atras"
+                };
+
+                InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+
+                if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                    return;
+
+                registerCharacterLayout.Show(player);
+                player.PlaySound(1085);
+
+                if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    if (string.IsNullOrEmpty(inputDialogResponse.InputText) || !verifyUserName.Verify(inputDialogResponse.InputText))
+                    {
+                        player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes ingresar un nombre válido para tu personaje. Por favor vuelve a intentarlo");
+                        return;
+                    }
+                    else if (inputDialogResponse.InputText.Length < 4 || inputDialogResponse.InputText.Length > 10)
+                    {
+                        player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La longitud de caracteres permitidos son de 4 a 10 caracteres. Por favor vuelve a intentarlo.");
+                        return;
+                    }
+
+                    registerCharacterComponent.Character.LastName = inputDialogResponse.InputText;
+
+                    registerCharacterLayoutComponent.PlayerTextDrawings[9].Text = registerCharacterComponent.Character.LastName;
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El apellido del personaje se establecio correctamente.");
+                }
+                else if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación del apellido de tu personaje.");
+                }
+            }
+            else if (playerTextDraw == registerCharacterLayoutComponent.PlayerTextDrawings[10])
+            {
+                registerCharacterLayout.Hide(player);
+                player.PlaySound(1085);
+
+                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryRed")}Género del Personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Que genero deseas que tenga tu personaje?", "Hombre", "Mujer");
+                MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                if (messageDialogResponse.Response == DialogResponse.Disconnected)
+                    return;
+
+                registerCharacterLayout.Show(player);
+                player.PlaySound(1085);
+
+                if (messageDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    registerCharacterComponent.Character.Gender = 1;
+                    registerCharacterLayoutComponent.PlayerTextDrawings[12].Text = "Hombre";
+                }
+                else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                {
+                    registerCharacterComponent.Character.Gender = 1;
+                    registerCharacterLayoutComponent.PlayerTextDrawings[12].Text = "Mujer";
+                }
+
+                player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El género del personaje se establecio correctamente.");
+            }
+            else if (playerTextDraw == registerCharacterLayoutComponent.PlayerTextDrawings[13])
+            {
+                registerCharacterLayout.Hide(player);
+                player.PlaySound(1085);
+
+                InputDialog inputDialog = new()
+                {
+                    Caption = $"{colors.GetHexadecimal("primaryColor")}Fecha de nacimiento del Personaje",
+                    Content = $"{colors.GetHexadecimal("primaryWhite")}Debes usar un formato de año/mes/día. Por ejemplo: {colors.GetHexadecimal("primaryGreen")}02/02/2002\n¿Cuando nacio tu personaje?",
+                    Button1 = "Siguiente",
+                    Button2 = "Atras"
+                };
+
+                InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+
+                if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                    return;
+
+                registerCharacterLayout.Show(player);
+                player.PlaySound(1085);
+
+                if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    if (string.IsNullOrEmpty(inputDialogResponse.InputText) || !verifyDate.ObtainVerification(inputDialogResponse.InputText) || !DateTime.TryParse(inputDialogResponse.InputText, out _))
+                    {
+                        player.SendClientMessage($"{colors.GetHexadecimal("primaryColor")}La fecha de nacimiento de tu personaje no es válida, el formato correcto es día/mes/año. Por favor vuelve a intentarlo");
+                        return;
+                    }
+
+                    registerCharacterComponent.Character.BirthDate = DateTime.Parse(inputDialogResponse.InputText);
+
+                    registerCharacterLayoutComponent.PlayerTextDrawings[12].Text = registerCharacterComponent.Character.BirthDate.ToString("dd/MM/yyyy");
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}La fecha de nacimiento del personaje se establecio correctamente.");
+                }
+                else if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                {
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación de la fecha de nacimiento de tu personaje.");
+                }
+            }
+
             /* else if (playerTextDraw == registerCharacterLayoutComponent.PlayerTextDrawings[7])
             {
                 registerCharacterLayout.Hide(player);

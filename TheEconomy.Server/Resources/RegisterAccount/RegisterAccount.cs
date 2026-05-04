@@ -6,7 +6,6 @@ using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Components;
-using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
 using TheEconomy.Database;
 
@@ -28,7 +27,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                 registerAccountLayout.Hide(player);
                 player.PlaySound(1085);
 
-                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryRed")}Cancelar registro de cuenta", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de una nueva cuenta?", "Sí", "No");
+                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Cancelar registro de cuenta", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de una nueva cuenta?", "Sí", "No");
                 MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
 
                 if (messageDialogResponse.Response == DialogResponse.Disconnected)
@@ -66,7 +65,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                 InputDialog inputDialog = new()
                 {
-                    Caption = "Ingresar contraseña",
+                    Caption = $"{colors.GetHexadecimal("primaryColor")}Ingresar contraseña",
                     Content = stringBuilder.ToString(),
                     Button1 = "Siguiente",
                     Button2 = "Atras"
@@ -78,10 +77,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                     return;
 
                 registerAccountLayout.Show(player);
+                player.PlaySound(1085);
 
                 if (inputDialogResponse.Response == DialogResponse.LeftButton)
                 {
-                    if (string.IsNullOrEmpty(inputDialogResponse.InputText) && inputDialogResponse.InputText.Length < 8 && inputDialogResponse.InputText.Length > 32)
+                    if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 8 || inputDialogResponse.InputText.Length > 32)
                     {
                         player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes ingresar una contraseña válida antes de continuar.");
                         player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que estas deben tener una longitud entre 8 y 32 caracteres. Por favor vuelve a intentarlo.");
@@ -89,11 +89,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                     }
 
                     registerAccountComponent.Account.Password = inputDialogResponse.InputText;
-                    player.PlaySound(1085);
-                }
-                else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
-                {
-                    player.PlaySound(1085);
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}La contraseña de tu cuenta se establecio correctamente.");
                 }
             }
             else if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[10])
@@ -134,7 +130,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                 InputDialog inputDialog = new()
                 {
-                    Caption = "Ingresar Mail",
+                    Caption = $"{colors.GetHexadecimal("primaryColor")}Ingresar Mail",
                     Content = stringBuilder.ToString(),
                     Button1 = "Siguiente",
                     Button2 = "Atras"
@@ -146,10 +142,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                     return;
 
                 registerAccountLayout.Show(player);
+                player.PlaySound(1085);
 
                 if (inputDialogResponse.Response == DialogResponse.LeftButton)
                 {
-                    if (string.IsNullOrEmpty(inputDialogResponse.InputText) && inputDialogResponse.InputText.Length < 4 && inputDialogResponse.InputText.Length > 319)
+                    if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 4 || inputDialogResponse.InputText.Length > 319)
                     {
                         player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes ingresar un correo electrónico válido antes de continuar.");
                         player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que los correo electrónicos deben tener una longitud entre 4 y 319 caracteres.");
@@ -163,11 +160,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                     }
 
                     registerAccountComponent.Account.Mail = inputDialogResponse.InputText;
-                    player.PlaySound(1085);
-                }
-                else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
-                {
-                    player.PlaySound(1085);
+                    player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Correo Electronico de tu cuenta se establecio correctamente.");
                 }
             }
             else if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[15])
@@ -191,11 +184,13 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                 registerAccountLayout.Hide(player);
 
-                MessageDialog messageDialog = new($"Completar registro", $"{colors.GetHexadecimal("primaryRed")}Estás a punto de registrar una nueva cuenta\n¿Deseas continuar?", "Continuar", "Cancelar");
+                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Completar registro", $"{colors.GetHexadecimal("primaryRed")}Estás a punto de registrar una nueva cuenta\n¿Deseas continuar?", "Continuar", "Cancelar");
                 MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
 
                 if (messageDialogResponse.Response == DialogResponse.Disconnected)
                     return;
+
+                player.PlaySound(1085);
 
                 if (messageDialogResponse.Response == DialogResponse.LeftButton)
                 {
@@ -212,12 +207,10 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                     player.DestroyComponents<RegisterAccountComponent>();
 
                     player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu cuenta fue creada con éxito.");
-                    player.PlaySound(1085);
                 }
                 else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                 {
                     registerAccountLayout.Show(player);
-                    player.PlaySound(1085);
                 }
             }
         }
