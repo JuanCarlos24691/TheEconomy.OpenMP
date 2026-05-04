@@ -159,7 +159,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                 if (messageDialogResponse.Response == DialogResponse.LeftButton)
                 {
-                    registerCharacterComponent.Character.Gender = 1;
+                    registerCharacterComponent.Character.Gender = 0;
                     registerCharacterLayoutComponent.PlayerTextDrawings[12].Text = "Hombre";
                 }
                 else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
