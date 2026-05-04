@@ -25,6 +25,8 @@ using TheEconomy.Server.Resources.Services.VerifyProhibition.Layouts;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Layouts;
 using TheEconomy.Server.Resources.BlackBackground.Layouts;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
+using TheEconomy.Server.Resources.RegisterCharacter.Layouts;
+using TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
 
 namespace TheEconomy.Server
 {
@@ -38,6 +40,7 @@ namespace TheEconomy.Server
             services.AddSingleton<IVerifyProhibition, VerifyProhibition>();
             services.AddSingleton<IBlackBackgroundLayout, BlackBackgroundLayout>();
             services.AddSingleton<IVerifyProhibitionLayout, VerifyProhibitionLayout>();
+            services.AddSingleton<IRegisterCharacterLayout, RegisterCharacterLayout>();
             services.AddSingleton<IRegisterAccountLayout, RegisterAccountLayout>();
             services.AddSingleton<IServerInformation, ServerInformation>();
             services.AddSingleton<IVerifyUserName, VerifyUserName>();

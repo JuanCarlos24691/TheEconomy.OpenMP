@@ -10,10 +10,11 @@ using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Components;
+using TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator;
 
-public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameLayout verifyUserNameLayout, IVerifyProhibition verifyProhibition, IVerifyProhibitionLayout verifyProhibitionLayout, IBlackBackgroundLayout blackBackgroundLayout, IRegisterAccountLayout registerAccountLayout, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
+public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameLayout verifyUserNameLayout, IVerifyProhibition verifyProhibition, IVerifyProhibitionLayout verifyProhibitionLayout, IBlackBackgroundLayout blackBackgroundLayout, IRegisterAccountLayout registerAccountLayout, IRegisterCharacterLayout registerCharacterLayout, KnowledgeTest.KnowledgeTest knowledgeTest) : ISystem
 {
     [Event]
     public async Task OnPlayerConnect(Player player)
@@ -48,7 +49,8 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
 
         if (accountInformation.IsComponentAlive && accountInformation.Account is not null)
         {
-            player.SendClientMessage($"Ya estas registrado.");
+            registerCharacterLayout.Create(player);
+            registerCharacterLayout.Show(player);
         }
         else
         {

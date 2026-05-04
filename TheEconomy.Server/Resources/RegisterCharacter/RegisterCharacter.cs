@@ -9,26 +9,28 @@ using TheEconomy.Server.Resources.RegisterAccount.Components;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
 using TheEconomy.Database;
+using TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
+using TheEconomy.Server.Resources.RegisterCharacter.Components;
 
 namespace TheEconomy.Server.Resources.RegisterAccount;
 
-public class RegisterAccount(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IBlackBackgroundLayout blackBackgroundLayout, IRegisterAccountLayout registerAccountLayout) : ISystem, IRegisterAccount
+public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IBlackBackgroundLayout blackBackgroundLayout, IRegisterCharacterLayout registerCharacterLayout) : ISystem, IRegisterAccount
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
-        RegisterAccountLayoutComponent registerAccountLayoutComponent = registerAccountLayout.GetRegisterAccountLayoutComponent(player);
+        RegisterCharacterLayoutComponent registerCharacterLayoutComponent = registerCharacterLayout.GetRegisterCharacterLayoutComponent(player);
 
-        if (registerAccountLayoutComponent.IsComponentAlive)
+        if (registerCharacterLayoutComponent.IsComponentAlive)
         {
-            RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
+            RegisterCharacterComponent registerCharacterComponent = player.GetComponent<RegisterCharacterComponent>() ?? player.AddComponent<RegisterCharacterComponent>();
 
-            if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[1])
+            if (playerTextDraw == registerCharacterLayoutComponent.PlayerTextDrawings[1])
             {
-                registerAccountLayout.Hide(player);
+                registerCharacterLayout.Hide(player);
                 player.PlaySound(1085);
 
-                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryRed")}Cancelar registro de cuenta", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de una nueva cuenta?", "Sí", "No");
+                MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryRed")}Cancelar registro de Personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el registro de un nuev Personaje?", "Sí", "No");
                 MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
 
                 if (messageDialogResponse.Response == DialogResponse.Disconnected)
@@ -36,23 +38,25 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                 if (messageDialogResponse.Response == DialogResponse.LeftButton)
                 {
-                    registerAccountLayout.Destroy(player);
+                    registerCharacterLayout.Destroy(player);
 
-                    player.AddComponent<RegisterAccountComponent>()?.Destroy();
-                    registerAccountLayoutComponent.Destroy();
+                    player.AddComponent<RegisterCharacterComponent>()?.Destroy();
+                    registerCharacterLayoutComponent.Destroy();
 
                     player.PlaySound(1085);
                 }
                 else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                 {
-                    registerAccountLayout.Show(player);
+                    registerCharacterLayout.Show(player);
                     player.PlaySound(1085);
                 }
             }
-            else if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[7])
+            /* else if (playerTextDraw == registerCharacterLayoutComponent.PlayerTextDrawings[7])
             {
-                registerAccountLayout.Hide(player);
+                registerCharacterLayout.Hide(player);
                 player.PlaySound(1085);
+
+                RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
 
                 StringBuilder stringBuilder = new();
 
@@ -98,6 +102,8 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
             }
             else if (playerTextDraw == registerAccountLayoutComponent.PlayerTextDrawings[10])
             {
+                RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
+
                 if (string.IsNullOrEmpty(registerAccountComponent.Account.Password))
                 {
                     player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No has ingresado una contraseña para tu cuenta. Por favor vuelve a intentarlo.");
@@ -119,6 +125,8 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
             {
                 registerAccountLayout.Hide(player);
                 player.PlaySound(1085);
+
+                RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
 
                 StringBuilder stringBuilder = new();
 
@@ -174,6 +182,8 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
             {
                 player.PlaySound(1085);
 
+                RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
+
                 switch (true)
                 {
                     case bool _ when string.IsNullOrEmpty(registerAccountComponent.Account.Name):
@@ -219,7 +229,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                     registerAccountLayout.Show(player);
                     player.PlaySound(1085);
                 }
-            }
+            } */
         }
     }
 }
