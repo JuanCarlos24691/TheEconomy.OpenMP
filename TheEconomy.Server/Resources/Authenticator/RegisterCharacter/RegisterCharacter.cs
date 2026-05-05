@@ -381,21 +381,21 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                                 player.DestroyComponents<RegisterCharacterComponent>();
                             }
 
-                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
-
-                            if (accountInformation?.Character == null || registerCharacterComponent.Character == null)
-                            {
-                                DestroyRegisterAccountComponents();
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
-                                return;
-                            }
-
                             databaseContext.Characters.Add(registerCharacterComponent.Character);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
                             {
                                 DestroyRegisterAccountComponents();
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no se pudo crear tu cuenta; por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+
+                            if (accountInformation?.Character == null || registerCharacterComponent.Character == null)
+                            {
+                                DestroyRegisterAccountComponents();
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
                                 return;
                             }
 

@@ -220,21 +220,21 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                                 player.DestroyComponents<RegisterAccountComponent>();
                             }
 
-                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
-
-                            if (accountInformation?.Account == null || registerAccountComponent.Account == null)
-                            {
-                                DestroyRegisterAccountComponents();
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación de la Cuenta; por favor, vuelve a intentarlo.");
-                                return;
-                            }
-
                             databaseContext.Accounts.Add(registerAccountComponent.Account);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
                             {
                                 DestroyRegisterAccountComponents();
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no se pudo crear tu cuenta; por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+
+                            if (accountInformation?.Account == null || registerAccountComponent.Account == null)
+                            {
+                                DestroyRegisterAccountComponents();
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación de la Cuenta; por favor, vuelve a intentarlo.");
                                 return;
                             }
 
