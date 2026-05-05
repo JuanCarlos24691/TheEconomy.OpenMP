@@ -22,7 +22,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
         if (registerAccountLayoutComponent is not null && registerAccountLayoutComponent.IsComponentAlive && registerAccountLayoutComponent.PlayerTextDrawings is not null)
         {
-            RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();;
+            RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>(); ;
 
             switch (registerAccountLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
@@ -116,9 +116,9 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                         }
                         else
                         {
-                            registerAccountLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.Correct(registerAccountComponent.Account.Password);
                             registerAccountComponent.ShowPassword = true;
 
+                            registerAccountLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.Correct(registerAccountComponent.Account.Password);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Mostraste la contraseña.");
                         }
                         break;
@@ -172,6 +172,8 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                             }
 
                             registerAccountComponent.Account.Mail = inputDialogResponse.InputText;
+
+                            registerAccountLayoutComponent.PlayerTextDrawings[14].Text = correctTextStrings.Correct(registerAccountComponent.Account.Mail);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Correo Electronico de tu cuenta se establecio correctamente.");
                         }
                         else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
@@ -183,25 +185,26 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                 case 15:
                     {
                         player.PlaySound(1085);
+                        registerAccountComponent.Account.Name = player.Name;
 
                         switch (true)
                         {
                             case bool _ when string.IsNullOrEmpty(registerAccountComponent.Account.Name):
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un nombre de usuario para registrar tu cuenta; por favor, vuelve a intentarlo.");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un nombre de usuario para registrar tu Cuenta; por favor, vuelve a intentarlo.");
                                 return;
 
                             case bool _ when string.IsNullOrEmpty(registerAccountComponent.Account.Password):
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado una contraseña para registrar tu cuenta; por favor, vuelve a intentarlo.");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado una contraseña para registrar tu Cuenta; por favor, vuelve a intentarlo.");
                                 return;
 
                             case bool _ when string.IsNullOrEmpty(registerAccountComponent.Account.Mail):
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un correo electronico para registrar tu cuenta; por favor, vuelve a intentarlo.");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un correo electronico para registrar tu Cuenta; por favor, vuelve a intentarlo.");
                                 return;
                         }
 
                         registerAccountLayout.Hide(player);
 
-                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Completar registro", $"{colors.GetHexadecimal("primaryRed")}Estás a punto de registrar una nueva cuenta\n¿Deseas continuar?", "Continuar", "Cancelar");
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Completar registro", $"{colors.GetHexadecimal("primaryWhite")}Estás a punto de registrar una nueva cuenta\n¿Deseas continuar?", "Continuar", "Cancelar");
                         MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
 
                         if (messageDialogResponse.Response == DialogResponse.Disconnected)
@@ -226,13 +229,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                                 return;
                             }
 
-                            registerAccountComponent.Account.Name = player.Name;
-
                             databaseContext.Accounts.Add(registerAccountComponent.Account);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
                             {
-                                registerAccountLayout.Show(player);
+                                DestroyRegisterAccountComponents();
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no se pudo crear tu cuenta; por favor, vuelve a intentarlo.");
                                 return;
                             }
@@ -243,7 +244,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                         {
                             registerAccountLayout.Show(player);
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la creación de tu cuenta.");
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la creación de tu Cuenta.");
                         }
                         break;
                     }

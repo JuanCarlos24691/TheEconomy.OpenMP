@@ -10,6 +10,7 @@ using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyDate.Interfaces;
+using TheEconomy.Server.Resources.Components.AccountInformation;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter;
 
@@ -325,7 +326,87 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                     }
                 case 28:
                     {
-                        player.DestroyComponents<RegisterCharacterLayoutComponent>();
+                        player.PlaySound(1085);
+
+                        switch (true)
+                        {
+                            case bool _ when string.IsNullOrEmpty(registerCharacterComponent.Character.Name):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un Nombre para poder crear tu Personaje; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when string.IsNullOrEmpty(registerCharacterComponent.Character.LastName):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un Apellido para poder crear tu Personaje; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when registerCharacterComponent.Character.Gender == -1:
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un correo electronico para registrar tu cuenta; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when registerCharacterComponent.Character.BirthDate == default:
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado una Fecha de nacimiento para poder crear tu Personaje; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when string.IsNullOrEmpty(registerCharacterComponent.Character.Height):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado una Estatura para poder crear tu Personaje; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when string.IsNullOrEmpty(registerCharacterComponent.Character.EyeColor):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un Color de Ojos para poder crear tu Personaje; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when string.IsNullOrEmpty(registerCharacterComponent.Character.HairColor):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un Color de Cabello para poder crear tu Personaje; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when string.IsNullOrEmpty(registerCharacterComponent.Character.SkinColor):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un Color de Piel para poder crear tu Personaje; por favor, vuelve a intentarlo.");
+                                return;
+                        }
+
+                        registerCharacterLayout.Hide(player);
+
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Completar registro del Personaje", $"{colors.GetHexadecimal("primaryRed")}Estás a punto de registrar un nuevo Personaje\n¿Deseas continuar?", "Continuar", "Cancelar");
+                        MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                        if (messageDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        player.PlaySound(1085);
+
+                        if (messageDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            void DestroyRegisterAccountComponents()
+                            {
+                                player.DestroyComponents<RegisterCharacterLayoutComponent>();
+                                player.DestroyComponents<RegisterCharacterComponent>();
+                            }
+
+                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+
+                            if (accountInformation?.Character == null || registerCharacterComponent.Character == null)
+                            {
+                                DestroyRegisterAccountComponents();
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            databaseContext.Characters.Add(registerCharacterComponent.Character);
+
+                            if (await databaseContext.SaveChangesAsync() == 0)
+                            {
+                                DestroyRegisterAccountComponents();
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no se pudo crear tu cuenta; por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            DestroyRegisterAccountComponents();
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu Personaje fue creada con éxito.");
+                        }
+                        else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            registerCharacterLayout.Show(player);
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la creación del Personaje.");
+                        }
                         break;
                     }
             }

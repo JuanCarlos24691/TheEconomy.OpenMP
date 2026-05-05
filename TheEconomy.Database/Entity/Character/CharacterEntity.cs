@@ -6,7 +6,7 @@
         public bool Online { get; set; }
         public string? Name { get; set; }
         public string? LastName { get; set; }
-        public int Gender { get; set; }
+        public int Gender { get; set; } = -1;
         public DateTime BirthDate { get; set; }
         public int Appearance { get; set; }
         public string? Height { get; set; }
