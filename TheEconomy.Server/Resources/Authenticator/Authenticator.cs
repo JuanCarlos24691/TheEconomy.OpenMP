@@ -10,12 +10,12 @@ using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
-using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.KnowledgeTest.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator;
 
-public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameLayout verifyUserNameLayout, IVerifyProhibition verifyProhibition, IVerifyProhibitionLayout verifyProhibitionLayout, IBlackBackgroundLayout blackBackgroundLayout, IRegisterAccountLayout registerAccountLayout, IRegisterCharacterLayout registerCharacterLayout, IKnowledgeTest knowledgeTest) : ISystem
+public class Authenticator(DatabaseContext databaseContext, IDeleteConversation deleteConversation, IVerifyUserName verifyUserName, IVerifyUserNameLayout verifyUserNameLayout, IVerifyProhibition verifyProhibition, IVerifyProhibitionLayout verifyProhibitionLayout, IBlackBackgroundLayout blackBackgroundLayout, ILoginLayout loginLayout, IRegisterAccountLayout registerAccountLayout, IKnowledgeTest knowledgeTest) : ISystem
 {
     [Event]
     public async Task OnPlayerConnect(Player player)
@@ -50,8 +50,8 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
 
         if (accountInformation.IsComponentAlive && accountInformation.Account is not null)
         {
-            registerCharacterLayout.Create(player);
-            registerCharacterLayout.Show(player);
+            loginLayout.Create(player);
+            loginLayout.Show(player);
         }
         else
         {

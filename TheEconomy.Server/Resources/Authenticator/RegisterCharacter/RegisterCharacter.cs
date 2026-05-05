@@ -14,7 +14,7 @@ using TheEconomy.Server.Resources.Components.AccountInformation;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter;
 
-public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyDate verifyDate, IVerifyUserName verifyUserName, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterCharacterLayout registerCharacterLayout) : ISystem, IRegisterAccount
+public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyDate verifyDate, IVerifyUserName verifyUserName, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterCharacterLayout registerCharacterLayout) : ISystem
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)

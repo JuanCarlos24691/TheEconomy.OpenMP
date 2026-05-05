@@ -7,7 +7,7 @@ using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 
-namespace TheEconomy.Server.Resources.RegisterCharacter.Layouts;
+namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Layouts;
 
 public class RegisterCharacterLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : IRegisterCharacterLayout
 {
@@ -45,7 +45,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[1].Proportional = true;
         playerTextDraw[1].Selectable = true;
 
-        dynamic character = RegisterCharacterLayout.GetRandomCharacter();
+        dynamic character = GetRandomCharacter();
 
         playerTextDraw[2] = worldService.CreatePlayerTextDraw(player, new Vector2(character.positionX, character.positionY), character.modelId);
         playerTextDraw[2].Font = (TextDrawFont)4;
