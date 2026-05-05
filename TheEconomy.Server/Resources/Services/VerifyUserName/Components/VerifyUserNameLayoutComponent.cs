@@ -17,6 +17,6 @@ public class VerifyUserNameLayoutComponent : Component
 
     protected override void OnDestroyComponent()
     {
-        PlayerTextDrawings?.ToList().ForEach(t => t?.Destroy());
+        PlayerTextDrawings?.Where(t => t != null && t.IsComponentAlive).ToList().ForEach(t => t.Destroy());
     }
 }

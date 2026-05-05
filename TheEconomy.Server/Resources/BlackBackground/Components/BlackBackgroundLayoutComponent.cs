@@ -16,6 +16,7 @@ public class BlackBackgroundLayoutComponent : Component
 
     protected override void OnDestroyComponent()
     {
-        PlayerTextDrawings?.Destroy();
+        if (PlayerTextDrawings != null && PlayerTextDrawings.IsComponentAlive)
+            PlayerTextDrawings.Destroy();
     }
 }
