@@ -1,11 +1,11 @@
 using SampSharp.Entities.SAMP;
 using System;
 using System.Linq;
-using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
-using TheEconomy.Server.Resources.RegisterAccount.Components;
+using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 
 namespace TheEconomy.Server.Resources.RegisterAccount.Layouts;
 
@@ -61,7 +61,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         playerTextDraw[2].Proportional = true;
         playerTextDraw[2].Selectable = false;
 
-        playerTextDraw[3] = worldService.CreatePlayerTextDraw(player, new Vector2(366.000, 135.000), correctTextStrings.ObtainCorrection("Registrar cuenta"));
+        playerTextDraw[3] = worldService.CreatePlayerTextDraw(player, new Vector2(366.000, 135.000), correctTextStrings.Correct("Registrar cuenta"));
         playerTextDraw[3].Font = TextDrawFont.Normal;
         playerTextDraw[3].LetterSize = new Vector2(0.508, 1.950);
         playerTextDraw[3].TextSize = new Vector2(400.000f, 17.000f);
@@ -201,7 +201,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         playerTextDraw[13].UseBox = true;
         playerTextDraw[13].Proportional = true;
 
-        playerTextDraw[14] = worldService.CreatePlayerTextDraw(player, new Vector2(369.000, 212.000), correctTextStrings.ObtainCorrection("Correo Electrónico"));
+        playerTextDraw[14] = worldService.CreatePlayerTextDraw(player, new Vector2(369.000, 212.000), correctTextStrings.Correct("Correo Electrónico"));
         playerTextDraw[14].Font = TextDrawFont.Normal;
         playerTextDraw[14].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[14].TextSize = new Vector2(400.000f, 17.000f);
@@ -251,7 +251,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         playerTextDraw[17].Proportional = true;
         playerTextDraw[17].Selectable = true;
 
-        playerTextDraw[18] = worldService.CreatePlayerTextDraw(player, new Vector2(367.000, 259.000), correctTextStrings.ObtainCorrection("Iniciar sesión"));
+        playerTextDraw[18] = worldService.CreatePlayerTextDraw(player, new Vector2(367.000, 259.000), correctTextStrings.Correct("Iniciar sesión"));
         playerTextDraw[18].Font = TextDrawFont.Normal;
         playerTextDraw[18].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[18].TextSize = new Vector2(400.000f, 17.000f);
@@ -262,7 +262,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         playerTextDraw[18].BackColor = 255;
         playerTextDraw[18].Proportional = true;
 
-        playerTextDraw[19] = worldService.CreatePlayerTextDraw(player, new Vector2(322.000, 318.000), correctTextStrings.ObtainCorrection(serverInformation.WebSite));
+        playerTextDraw[19] = worldService.CreatePlayerTextDraw(player, new Vector2(322.000, 318.000), correctTextStrings.Correct(serverInformation.WebSite));
         playerTextDraw[19].Font = TextDrawFont.Normal;
         playerTextDraw[19].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[19].TextSize = new Vector2(400.000f, 17.000f);

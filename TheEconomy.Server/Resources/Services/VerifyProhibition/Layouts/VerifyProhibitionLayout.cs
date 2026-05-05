@@ -22,20 +22,20 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
         if (accountInformation.Prohibition is not null)
         {
             paragraphs[0] = "Prohibido";
-            paragraphs[0] = correctTextStrings.ObtainCorrection($"Hola {player.Name}, fuiste prohibido del servidor por el administrador {accountInformation.Prohibition.ProhibitedBy}.");
-            paragraphs[1] = correctTextStrings.ObtainCorrection($"Razón: {accountInformation.Prohibition.Reason} - Fecha: {accountInformation.Prohibition.DateOfProhibition}");
-            paragraphs[2] = correctTextStrings.ObtainCorrection($"Sí, quieres apelar a esta decision, puedes contactarnos en el Foro({serverInformation.Forum})");
-            paragraphs[3] = correctTextStrings.ObtainCorrection($"o en nuestro discord({serverInformation.Discord})");
-            paragraphs[4] = correctTextStrings.ObtainCorrection("Tenga en cuenta que no todos pueden apelar a un desbaneo por diversos motivos");
+            paragraphs[0] = correctTextStrings.Correct($"Hola {player.Name}, fuiste prohibido del servidor por el administrador {accountInformation.Prohibition.ProhibitedBy}.");
+            paragraphs[1] = correctTextStrings.Correct($"Razón: {accountInformation.Prohibition.Reason} - Fecha: {accountInformation.Prohibition.DateOfProhibition}");
+            paragraphs[2] = correctTextStrings.Correct($"Sí, quieres apelar a esta decision, puedes contactarnos en el Foro({serverInformation.Forum})");
+            paragraphs[3] = correctTextStrings.Correct($"o en nuestro discord({serverInformation.Discord})");
+            paragraphs[4] = correctTextStrings.Correct("Tenga en cuenta que no todos pueden apelar a un desbaneo por diversos motivos");
         }
         else if (accountInformation.Account is not null)
         {
-            paragraphs[0] = correctTextStrings.ObtainCorrection("Cuenta restringida");
-            paragraphs[0] = correctTextStrings.ObtainCorrection($"Hola {player.Name}, esta cuenta fue prohibida por el administrador {accountInformation.Account.AccountProhibitedBy}.");
-            paragraphs[1] = correctTextStrings.ObtainCorrection($"Razón: {accountInformation.Account.ReasonForProhibition} - Fecha: {accountInformation.Account.DateOfProhibition}{(accountInformation.Account.ProhibitedAccount > 0 ? $" - Días ({accountInformation.Account.ProhibitedAccount})" : "")}");
-            paragraphs[2] = correctTextStrings.ObtainCorrection($"Sí, quieres apelar a esta decision, puedes contactarnos en el Foro({serverInformation.Forum})");
-            paragraphs[3] = correctTextStrings.ObtainCorrection($"o en nuestro discord({serverInformation.Discord})");
-            paragraphs[4] = correctTextStrings.ObtainCorrection("Tenga en cuenta que no todos pueden apelar a un desbaneo por diversos motivos");
+            paragraphs[0] = correctTextStrings.Correct("Cuenta restringida");
+            paragraphs[0] = correctTextStrings.Correct($"Hola {player.Name}, esta cuenta fue prohibida por el administrador {accountInformation.Account.AccountProhibitedBy}.");
+            paragraphs[1] = correctTextStrings.Correct($"Razón: {accountInformation.Account.ReasonForProhibition} - Fecha: {accountInformation.Account.DateOfProhibition}{(accountInformation.Account.ProhibitedAccount > 0 ? $" - Días ({accountInformation.Account.ProhibitedAccount})" : "")}");
+            paragraphs[2] = correctTextStrings.Correct($"Sí, quieres apelar a esta decision, puedes contactarnos en el Foro({serverInformation.Forum})");
+            paragraphs[3] = correctTextStrings.Correct($"o en nuestro discord({serverInformation.Discord})");
+            paragraphs[4] = correctTextStrings.Correct("Tenga en cuenta que no todos pueden apelar a un desbaneo por diversos motivos");
         }
 
         PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[6];

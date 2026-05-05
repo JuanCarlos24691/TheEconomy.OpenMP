@@ -1,11 +1,11 @@
 using SampSharp.Entities.SAMP;
 using System;
 using System.Linq;
-using TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
-using TheEconomy.Server.Resources.RegisterCharacter.Components;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 
 namespace TheEconomy.Server.Resources.RegisterCharacter.Layouts;
 
@@ -61,7 +61,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[2].Proportional = true;
         playerTextDraw[2].Selectable = false;
 
-        playerTextDraw[3] = worldService.CreatePlayerTextDraw(player, new Vector2(366.000, 120.000), correctTextStrings.ObtainCorrection("Crear personaje"));
+        playerTextDraw[3] = worldService.CreatePlayerTextDraw(player, new Vector2(366.000, 120.000), correctTextStrings.Correct("Crear personaje"));
         playerTextDraw[3].Font = (TextDrawFont)1;
         playerTextDraw[3].LetterSize = new Vector2(0.508, 1.950);
         playerTextDraw[3].TextSize = new Vector2(400.000f, 17.000f);
@@ -178,7 +178,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[11].UseBox = true;
         playerTextDraw[11].Proportional = true;
 
-        playerTextDraw[12] = worldService.CreatePlayerTextDraw(player, new Vector2(364.000, 168.000), correctTextStrings.ObtainCorrection("Género"));
+        playerTextDraw[12] = worldService.CreatePlayerTextDraw(player, new Vector2(364.000, 168.000), correctTextStrings.Correct("Género"));
         playerTextDraw[12].Font = (TextDrawFont)1;
         playerTextDraw[12].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[12].TextSize = new Vector2(400.000f, 17.000f);
@@ -217,7 +217,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[14].UseBox = true;
         playerTextDraw[14].Proportional = true;
 
-        playerTextDraw[15] = worldService.CreatePlayerTextDraw(player, new Vector2(370.000, 188.000), correctTextStrings.ObtainCorrection("Fecha de nacimiento"));
+        playerTextDraw[15] = worldService.CreatePlayerTextDraw(player, new Vector2(370.000, 188.000), correctTextStrings.Correct("Fecha de nacimiento"));
         playerTextDraw[15].Font = (TextDrawFont)1;
         playerTextDraw[15].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[15].TextSize = new Vector2(400.000f, 17.000f);
@@ -293,7 +293,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[20].UseBox = true;
         playerTextDraw[20].Proportional = true;
 
-        playerTextDraw[21] = worldService.CreatePlayerTextDraw(player, new Vector2(366.000, 228.000), correctTextStrings.ObtainCorrection("Color de ojos"));
+        playerTextDraw[21] = worldService.CreatePlayerTextDraw(player, new Vector2(366.000, 228.000), correctTextStrings.Correct("Color de ojos"));
         playerTextDraw[21].Font = (TextDrawFont)1;
         playerTextDraw[21].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[21].TextSize = new Vector2(400.000f, 17.000f);
@@ -331,7 +331,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[23].UseBox = true;
         playerTextDraw[23].Proportional = true;
 
-        playerTextDraw[24] = worldService.CreatePlayerTextDraw(player, new Vector2(369.000, 249.000), correctTextStrings.ObtainCorrection("Color de cabello"));
+        playerTextDraw[24] = worldService.CreatePlayerTextDraw(player, new Vector2(369.000, 249.000), correctTextStrings.Correct("Color de cabello"));
         playerTextDraw[24].Font = (TextDrawFont)1;
         playerTextDraw[24].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[24].TextSize = new Vector2(400.000f, 17.000f);
@@ -369,7 +369,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[26].UseBox = true;
         playerTextDraw[26].Proportional = true;
 
-        playerTextDraw[27] = worldService.CreatePlayerTextDraw(player, new Vector2(368.000, 268.000), correctTextStrings.ObtainCorrection("Color de piel"));
+        playerTextDraw[27] = worldService.CreatePlayerTextDraw(player, new Vector2(368.000, 268.000), correctTextStrings.Correct("Color de piel"));
         playerTextDraw[27].Font = (TextDrawFont)1;
         playerTextDraw[27].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[27].TextSize = new Vector2(400.000f, 17.000f);
@@ -430,7 +430,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[31].BackColor = 255;
         playerTextDraw[31].Proportional = true;
 
-        playerTextDraw[32] = worldService.CreatePlayerTextDraw(player, new Vector2(320.000, 318.000), correctTextStrings.ObtainCorrection(serverInformation.WebSite));
+        playerTextDraw[32] = worldService.CreatePlayerTextDraw(player, new Vector2(320.000, 318.000), correctTextStrings.Correct(serverInformation.WebSite));
         playerTextDraw[32].Font = (TextDrawFont)1;
         playerTextDraw[32].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[32].TextSize = new Vector2(400.000f, 17.000f);

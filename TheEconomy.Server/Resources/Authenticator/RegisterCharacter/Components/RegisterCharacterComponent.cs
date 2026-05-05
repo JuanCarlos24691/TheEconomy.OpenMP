@@ -1,7 +1,7 @@
 using SampSharp.Entities;
 using TheEconomy.Database.Entity.Character;
 
-namespace TheEconomy.Server.Resources.RegisterCharacter.Components;
+namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 
 public class RegisterCharacterComponent : Component
 {

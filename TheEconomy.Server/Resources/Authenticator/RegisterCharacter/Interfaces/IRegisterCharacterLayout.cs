@@ -1,7 +1,7 @@
 using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.RegisterCharacter.Components;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 
-namespace TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
+namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 
 public interface IRegisterCharacterLayout
 {

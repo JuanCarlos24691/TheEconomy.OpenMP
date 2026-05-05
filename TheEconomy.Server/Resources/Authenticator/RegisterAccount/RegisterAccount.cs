@@ -5,12 +5,12 @@ using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
-using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
-using TheEconomy.Server.Resources.RegisterAccount.Components;
+using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
 using TheEconomy.Database;
 
-namespace TheEconomy.Server.Resources.RegisterAccount;
+namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount;
 
 public class RegisterAccount(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterAccountLayout registerAccountLayout) : ISystem, IRegisterAccount
 {
@@ -117,7 +117,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                         }
                         else
                         {
-                            registerAccountLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.ObtainCorrection(registerAccountComponent.Account.Password);
+                            registerAccountLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.Correct(registerAccountComponent.Account.Password);
                             registerAccountComponent.ShowPassword = true;
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Mostraste la contraseña.");

@@ -31,7 +31,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         playerTextDraw[0].UseBox = true;
         playerTextDraw[0].Proportional = true;
 
-        playerTextDraw[1] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 124.000), correctTextStrings.ObtainCorrection("Nombre de usuario no válido"));
+        playerTextDraw[1] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 124.000), correctTextStrings.Correct("Nombre de usuario no válido"));
         playerTextDraw[1].Font = TextDrawFont.Normal;
         playerTextDraw[1].LetterSize = new Vector2(0.508333, 1.950000);
         playerTextDraw[1].TextSize = new Vector2(400.000000, 17.000000);
@@ -44,7 +44,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         playerTextDraw[1].UseBox = false;
         playerTextDraw[1].Proportional = true;
 
-        playerTextDraw[2] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 150.000), correctTextStrings.ObtainCorrection("El nombre de usuario con el que entraste al servidor no es válido"));
+        playerTextDraw[2] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 150.000), correctTextStrings.Correct("El nombre de usuario con el que entraste al servidor no es válido"));
         playerTextDraw[2].Font = TextDrawFont.Normal;
         playerTextDraw[2].LetterSize = new Vector2(0.287499, 1.299998);
         playerTextDraw[2].TextSize = new Vector2(400.000000, 17.000000);
@@ -57,7 +57,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         playerTextDraw[2].UseBox = false;
         playerTextDraw[2].Proportional = true;
 
-        playerTextDraw[3] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 162.0000), correctTextStrings.ObtainCorrection("Solo se admiten formatos alfanuméricos. Sí, estás usando un formato de raya al piso, debes saber que ya no es válido"));
+        playerTextDraw[3] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 162.0000), correctTextStrings.Correct("Solo se admiten formatos alfanuméricos. Sí, estás usando un formato de raya al piso, debes saber que ya no es válido"));
         playerTextDraw[3].Font = TextDrawFont.Normal;
         playerTextDraw[3].LetterSize = new Vector2(0.287499, 1.299998);
         playerTextDraw[3].TextSize = new Vector2(400.000000, 17.000000);
@@ -70,7 +70,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         playerTextDraw[3].UseBox = false;
         playerTextDraw[3].Proportional = true;
 
-        playerTextDraw[4] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 174.000), correctTextStrings.ObtainCorrection("Juan#Ospino y $JuanGamer no son nombres de usuario válidos para este servidor"));
+        playerTextDraw[4] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 174.000), correctTextStrings.Correct("Juan#Ospino y $JuanGamer no son nombres de usuario válidos para este servidor"));
         playerTextDraw[4].Font = TextDrawFont.Normal;
         playerTextDraw[4].LetterSize = new Vector2(0.287499, 1.299998);
         playerTextDraw[4].TextSize = new Vector2(400.000000, 17.000000);
@@ -83,7 +83,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         playerTextDraw[4].UseBox = false;
         playerTextDraw[4].Proportional = true;
 
-        playerTextDraw[5] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 185.000), correctTextStrings.ObtainCorrection("Juan24691 y David24691 son algunos nombre de usuarios válidos para usar en este servidor"));
+        playerTextDraw[5] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 185.000), correctTextStrings.Correct("Juan24691 y David24691 son algunos nombre de usuarios válidos para usar en este servidor"));
         playerTextDraw[5].Font = TextDrawFont.Normal;
         playerTextDraw[5].LetterSize = new Vector2(0.287499, 1.299998);
         playerTextDraw[5].TextSize = new Vector2(400.000000, 17.000000);
@@ -96,7 +96,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         playerTextDraw[5].UseBox = false;
         playerTextDraw[5].Proportional = true;
 
-        playerTextDraw[6] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 211.000), correctTextStrings.ObtainCorrection("Por favor, vuelve a ingresar al servidor con un formato de nombre usuario válido."));
+        playerTextDraw[6] = worldService.CreatePlayerTextDraw(player, position: new Vector2(321.000, 211.000), correctTextStrings.Correct("Por favor, vuelve a ingresar al servidor con un formato de nombre usuario válido."));
         playerTextDraw[6].Font = TextDrawFont.Normal;
         playerTextDraw[6].LetterSize = new Vector2(0.287499, 1.299998);
         playerTextDraw[6].TextSize = new Vector2(400.000000, 17.000000);

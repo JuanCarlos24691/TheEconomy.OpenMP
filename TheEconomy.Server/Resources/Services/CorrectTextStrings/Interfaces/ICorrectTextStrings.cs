@@ -2,6 +2,6 @@
 {
     public interface ICorrectTextStrings
     {
-        public string ObtainCorrection(string message, bool replaceSpaces = true);
+        public string Correct(string message, bool replaceSpaces = true);
     }
 }

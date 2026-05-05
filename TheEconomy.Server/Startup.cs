@@ -19,14 +19,15 @@ using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyProhibition;
-using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.RegisterAccount.Layouts;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Layouts;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Layouts;
 using TheEconomy.Server.Resources.BlackBackground.Layouts;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 using TheEconomy.Server.Resources.RegisterCharacter.Layouts;
-using TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
+using TheEconomy.Server.Resources.KnowledgeTest.Interfaces;
 
 namespace TheEconomy.Server
 {
@@ -36,6 +37,7 @@ namespace TheEconomy.Server
         {
             services.AddDbContext<DatabaseContext>();
 
+            services.AddSingleton<IKnowledgeTest, KnowledgeTest>();
             services.AddSingleton<IVerifyUserNameLayout, VerifyUserNameLayout>();
             services.AddSingleton<IVerifyProhibition, VerifyProhibition>();
             services.AddSingleton<IBlackBackgroundLayout, BlackBackgroundLayout>();
@@ -49,8 +51,6 @@ namespace TheEconomy.Server
             services.AddSingleton<ICorrectTextStrings, CorrectTextStrings>();
             services.AddSingleton<IDeleteConversation, DeleteConversation>();
             services.AddSingleton<IColors, Colors>();
-
-            services.AddTransient<KnowledgeTest>();
 
             services.AddSystemsInAssembly();
         }

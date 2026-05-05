@@ -1,7 +1,7 @@
 using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.RegisterAccount.Components;
+using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 
-namespace TheEconomy.Server.Resources.RegisterAccount.Interfaces;
+namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 
 public interface IRegisterAccountLayout
 {

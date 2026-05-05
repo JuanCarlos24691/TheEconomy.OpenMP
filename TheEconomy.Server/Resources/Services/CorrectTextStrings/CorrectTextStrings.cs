@@ -6,7 +6,7 @@ namespace TheEconomy.Server.Resources.Services.CorrectTextStrings;
 
 public class CorrectTextStrings : ICorrectTextStrings
 {
-    public string ObtainCorrection(string message, bool replaceSpaces = true)
+    public string Correct(string message, bool replaceSpaces = true)
     {
         if (string.IsNullOrWhiteSpace(message))
             throw new ArgumentException("El mensaje no puede estar vacío, nulo ni contener espacios en blanco.", nameof(message));

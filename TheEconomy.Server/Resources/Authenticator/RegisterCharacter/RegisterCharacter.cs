@@ -4,14 +4,14 @@ using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
-using TheEconomy.Server.Resources.RegisterAccount.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Database;
-using TheEconomy.Server.Resources.RegisterCharacter.Interfaces;
-using TheEconomy.Server.Resources.RegisterCharacter.Components;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyDate.Interfaces;
 
-namespace TheEconomy.Server.Resources.RegisterCharacter;
+namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter;
 
 public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyDate verifyDate, IVerifyUserName verifyUserName, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterCharacterLayout registerCharacterLayout) : ISystem, IRegisterAccount
 {
@@ -289,7 +289,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                         {
                             registerCharacterComponent.Character.HairColor = listDialogResponse.Item.Text;
 
-                            registerCharacterLayoutComponent.PlayerTextDrawings[24].Text = correctTextStrings.ObtainCorrection(registerCharacterComponent.Character.HairColor);
+                            registerCharacterLayoutComponent.PlayerTextDrawings[24].Text = correctTextStrings.Correct(registerCharacterComponent.Character.HairColor);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Color de Cabello del Personaje se establecio correctamente.");
                         }
                         if (listDialogResponse.Response == DialogResponse.RightButtonOrCancel)
@@ -392,7 +392,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                         }
                         else
                         {
-                            registerAccountLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.ObtainCorrection(registerAccountComponent.Account.Password);
+                            registerAccountLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.Correct(registerAccountComponent.Account.Password);
                             registerAccountComponent.ShowPassword = true;
                         }
                     }

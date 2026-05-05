@@ -2,13 +2,13 @@ using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using System;
 
-namespace TheEconomy.Server.Resources.RegisterCharacter.Components;
+namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 
-public class RegisterCharacterLayoutComponent : Component
+public class RegisterAccountLayoutComponent : Component
 {
     public PlayerTextDraw[] PlayerTextDrawings {  get; set; }
 
-    public RegisterCharacterLayoutComponent(PlayerTextDraw[] playerTextDraw)
+    public RegisterAccountLayoutComponent(PlayerTextDraw[] playerTextDraw)
     {
         ArgumentNullException.ThrowIfNull(playerTextDraw);
         PlayerTextDrawings = playerTextDraw;

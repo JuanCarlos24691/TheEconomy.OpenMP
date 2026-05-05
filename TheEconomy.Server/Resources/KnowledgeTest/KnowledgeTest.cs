@@ -3,24 +3,25 @@ using System.Threading.Tasks;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.KnowledgeTest.Components;
 using TheEconomy.Server.Resources.KnowledgeTest.Data;
+using TheEconomy.Server.Resources.KnowledgeTest.Interfaces;
 using TheEconomy.Server.Resources.KnowledgeTest.Models;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 
 namespace TheEconomy.Server.Resources.KnowledgeTest;
 
-public class KnowledgeTest(IDialogService dialogService, IServerInformation serverInformation, IColors colors)
+public class KnowledgeTest(IDialogService dialogService, IServerInformation serverInformation, IColors colors) : IKnowledgeTest
 {
     private readonly List<RoleQuestion> questions = KnowledgeTestData.GetQuestions(serverInformation.WebSite);
 
     public async Task<bool> Start(Player player)
     {
-        PlayerTestState playerTestState = player.GetComponent<PlayerTestState>() ?? player.AddComponent<PlayerTestState>();
+        KnowledgeTestComponent KnowledgeTestComponent = player.GetComponent<KnowledgeTestComponent>() ?? player.AddComponent<KnowledgeTestComponent>();
 
-        if (playerTestState.Index < questions.Count)
+        if (KnowledgeTestComponent.Index < questions.Count)
         {
-            RoleQuestion currentQuestion = questions[playerTestState.Index];
-            string title = $"{colors.GetHexadecimal("primarycolors")}#{playerTestState.Index + 1}): {currentQuestion.Title}";
+            RoleQuestion currentQuestion = questions[KnowledgeTestComponent.Index];
+            string title = $"{colors.GetHexadecimal("primarycolors")}#{KnowledgeTestComponent.Index + 1}): {currentQuestion.Title}";
 
             TablistDialog roleTestDialog = new(title, "Responder", "", ["ID", "Pregunta", "Respuesta"]);
 
@@ -40,19 +41,19 @@ public class KnowledgeTest(IDialogService dialogService, IServerInformation serv
             if (currentQuestion.Answers[response.ItemIndex].IsCorrect)
             {
                 player.PlaySound(1058);
-                playerTestState.Score++;
+                KnowledgeTestComponent.Score++;
             }
             else
             {
                 player.PlaySound(1085);
             }
 
-            playerTestState.Index++;
+            KnowledgeTestComponent.Index++;
             return await Start(player);
         }
 
-        player.DestroyComponents<PlayerTestState>();
+        player.DestroyComponents<KnowledgeTestComponent>();
 
-        return playerTestState.Score == questions.Count;
+        return KnowledgeTestComponent.Score == questions.Count;
     }
 }
