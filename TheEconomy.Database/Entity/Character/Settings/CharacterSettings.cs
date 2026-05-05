@@ -17,7 +17,7 @@ namespace TheEconomy.Database.Entity.Character.Settings
             builder.Property(c => c.Gender).HasColumnType("tinyint").HasMaxLength(1).IsRequired();
             builder.Property(c => c.BirthDate).HasColumnType("date").IsRequired();
             builder.Property(c => c.Appearance).IsRequired();
-            builder.Property(c => c.Height).IsRequired();
+            builder.Property(c => c.Height).HasMaxLength(24).IsRequired();
             builder.Property(c => c.EyeColor).HasMaxLength(24).IsRequired();
             builder.Property(c => c.HairColor).HasMaxLength(24).IsRequired();
             builder.Property(c => c.SkinColor).HasMaxLength(24).IsRequired();

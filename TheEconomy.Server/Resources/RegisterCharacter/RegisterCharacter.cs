@@ -27,6 +27,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
             switch (registerCharacterLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
                 case 1:
+                case 30:
                     {
                         registerCharacterLayout.Hide(player);
                         player.PlaySound(1085);
@@ -213,6 +214,114 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                         else if (inputDialogResponse.Response == DialogResponse.LeftButton)
                         {
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación de la fecha de nacimiento de tu Personaje.");
+                        }
+                        break;
+                    }
+                case 16:
+                    {
+                        registerCharacterLayout.Hide(player);
+                        player.PlaySound(1085);
+
+                        ListDialog listDialog = new($"{colors.GetHexadecimal("primaryColor")}Estatura del Personaje", "Siguiente", "Cancelar") { "90cm", "100cm", "110cm", "120cm", "130cm", "140cm", "150cm", "160cm", "170cm", "180cm", "190cm", "200cm", "210cm", "220cm", "230cm", "240cm", "250cm" };
+                        ListDialogResponse listDialogResponse = await dialogService.ShowAsync(player, listDialog);
+
+                        if (listDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        registerCharacterLayout.Show(player);
+                        player.PlaySound(1085);
+
+                        if (listDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            registerCharacterComponent.Character.Height = listDialogResponse.Item.Text;
+
+                            registerCharacterLayoutComponent.PlayerTextDrawings[18].Text = registerCharacterComponent.Character.Height;
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}La Estatura del Personaje se establecio correctamente.");
+                        }
+                        if (listDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación de la Estatura de tu Personaje.");
+                        }
+                        break;
+                    }
+                case 19:
+                    {
+                        registerCharacterLayout.Hide(player);
+                        player.PlaySound(1085);
+
+                        ListDialog listDialog = new($"{colors.GetHexadecimal("primaryColor")}Color de Ojos del Personaje", "Siguiente", "Cancelar") { "Marrones", "Negros", "Azules", "Verdes", "Grises" };
+                        ListDialogResponse listDialogResponse = await dialogService.ShowAsync(player, listDialog);
+
+                        if (listDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        registerCharacterLayout.Show(player);
+                        player.PlaySound(1085);
+
+                        if (listDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            registerCharacterComponent.Character.EyeColor = listDialogResponse.Item.Text;
+
+                            registerCharacterLayoutComponent.PlayerTextDrawings[21].Text = registerCharacterComponent.Character.EyeColor;
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Color de Ojos del Personaje se establecio correctamente.");
+                        }
+                        if (listDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación del Color de Ojos de tu Personaje.");
+                        }
+                        break;
+                    }
+                case 22:
+                    {
+                        registerCharacterLayout.Hide(player);
+                        player.PlaySound(1085);
+
+                        ListDialog listDialog = new($"{colors.GetHexadecimal("primaryColor")}Color de Cabello del Personaje", "Siguiente", "Cancelar") { "Negro", "Castaño", "Rubio", "Pelirojo", "Blanco", "Gris", "Azul", "Verde", "Rosa", "Violeta" };
+                        ListDialogResponse listDialogResponse = await dialogService.ShowAsync(player, listDialog);
+
+                        if (listDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        registerCharacterLayout.Show(player);
+                        player.PlaySound(1085);
+
+                        if (listDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            registerCharacterComponent.Character.HairColor = listDialogResponse.Item.Text;
+
+                            registerCharacterLayoutComponent.PlayerTextDrawings[24].Text = correctTextStrings.ObtainCorrection(registerCharacterComponent.Character.HairColor);
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Color de Cabello del Personaje se establecio correctamente.");
+                        }
+                        if (listDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación del Color de Cabello de tu Personaje.");
+                        }
+                        break;
+                    }
+                case 25:
+                    {
+                        registerCharacterLayout.Hide(player);
+                        player.PlaySound(1085);
+
+                        ListDialog listDialog = new($"{colors.GetHexadecimal("primaryColor")}Color de Piel del Personaje", "Siguiente", "Cancelar") { "Blanco", "Moreno", "Negro" };
+                        ListDialogResponse listDialogResponse = await dialogService.ShowAsync(player, listDialog);
+
+                        if (listDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        registerCharacterLayout.Show(player);
+                        player.PlaySound(1085);
+
+                        if (listDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            registerCharacterComponent.Character.SkinColor = listDialogResponse.Item.Text;
+
+                            registerCharacterLayoutComponent.PlayerTextDrawings[27].Text = registerCharacterComponent.Character.SkinColor;
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Color de Piel del Personaje se establecio correctamente.");
+                        }
+                        if (listDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación del Color de Piel de tu Personaje.");
                         }
                         break;
                     }

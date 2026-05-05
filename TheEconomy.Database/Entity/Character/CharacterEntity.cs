@@ -9,7 +9,7 @@
         public int Gender { get; set; }
         public DateTime BirthDate { get; set; }
         public int Appearance { get; set; }
-        public int Height { get; set; }
+        public string? Height { get; set; }
         public string? EyeColor { get; set; }
         public string? HairColor { get; set; }
         public string? SkinColor { get; set; }
