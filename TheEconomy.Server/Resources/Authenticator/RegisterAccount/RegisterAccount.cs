@@ -39,10 +39,8 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            registerAccountLayout?.Destroy(player);
-
                             player.GetComponent<RegisterAccountComponent>()?.Destroy();
-                            registerAccountLayoutComponent?.Destroy();
+                            player.GetComponent<RegisterAccountLayoutComponent>()?.Destroy();
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la creacion de la cuenta.");
                             player.PlaySound(1085);
@@ -215,7 +213,6 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                         {
                             void DestroyRegisterAccountComponents()
                             {
-                                registerAccountLayoutComponent.Destroy();
                                 player.DestroyComponents<RegisterAccountLayoutComponent>();
                                 player.DestroyComponents<RegisterAccountComponent>();
                             }

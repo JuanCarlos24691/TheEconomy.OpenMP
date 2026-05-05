@@ -139,7 +139,7 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyProhibitionLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Show();
+            playerTextdraw?.Show();
     }
 
     public void Hide(Player player)
@@ -147,7 +147,7 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyProhibitionLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Hide();
+            playerTextdraw?.Hide();
     }
 
     public void Destroy(Player player)
@@ -155,7 +155,7 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyProhibitionLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Destroy();
+            playerTextdraw?.Destroy();
     }
 
     public VerifyProhibitionLayoutComponent GetVerifyProhibitionLayoutComponent(Player player)

@@ -281,7 +281,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Show();
+            playerTextdraw?.Show();
 
         if (player.IsSelectingTextDraw is false)
             player.SelectTextDraw(0x393939ff);
@@ -292,7 +292,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Hide();
+            playerTextdraw?.Hide();
     }
 
     public void Destroy(Player player)
@@ -300,7 +300,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Destroy();
+            playerTextdraw?.Destroy();
     }
 
     public RegisterAccountLayoutComponent GetRegisterAccountLayoutComponent(Player player)

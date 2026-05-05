@@ -33,19 +33,19 @@ public class BlackBackgroundLayout(IWorldService worldService) : IBlackBackgroun
     public void Show(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
-        GetBlackBackgroundLayoutComponent(player).PlayerTextDrawings.Show();
+        GetBlackBackgroundLayoutComponent(player)?.PlayerTextDrawings.Show();
     }
 
     public void Hide(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
-        GetBlackBackgroundLayoutComponent(player).PlayerTextDrawings.Hide();
+        GetBlackBackgroundLayoutComponent(player)?.PlayerTextDrawings.Hide();
     }
 
     public void Destroy(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
-        GetBlackBackgroundLayoutComponent(player).PlayerTextDrawings.Destroy();
+        GetBlackBackgroundLayoutComponent(player)?.PlayerTextDrawings.Destroy();
     }
 
     public BlackBackgroundLayoutComponent GetBlackBackgroundLayoutComponent(Player player)

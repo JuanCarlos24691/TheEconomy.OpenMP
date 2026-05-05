@@ -117,7 +117,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyUserNameLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Show();
+            playerTextdraw?.Show();
     }
 
     public void Hide(Player player)
@@ -125,7 +125,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyUserNameLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Hide();
+            playerTextdraw?.Hide();
     }
 
     public void Destroy(Player player)
@@ -133,7 +133,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyUserNameLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Destroy();
+            playerTextdraw?.Destroy();
     }
 
     public VerifyUserNameLayoutComponent GetVerifyUserNameLayoutComponent(Player player)

@@ -449,7 +449,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Show();
+            playerTextdraw?.Show();
 
         if (player.IsSelectingTextDraw is false)
             player.SelectTextDraw(0x393939ff);
@@ -460,7 +460,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Hide();
+            playerTextdraw?.Hide();
     }
 
     public void Destroy(Player player)
@@ -468,7 +468,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         ArgumentNullException.ThrowIfNull(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
-            playerTextdraw.Destroy();
+            playerTextdraw?.Destroy();
     }
 
     public RegisterCharacterLayoutComponent GetRegisterCharacterLayoutComponent(Player player)

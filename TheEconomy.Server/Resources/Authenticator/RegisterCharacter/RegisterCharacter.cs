@@ -40,10 +40,8 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            registerCharacterLayout?.Destroy(player);
-
                             player.GetComponent<RegisterCharacterComponent>()?.Destroy();
-                            registerCharacterLayoutComponent?.Destroy();
+                            player.GetComponent<RegisterCharacterLayoutComponent>()?.Destroy();
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la creacion del personaje.");
                             player.PlaySound(1085);
@@ -323,6 +321,11 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                         {
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la asignación del Color de Piel de tu Personaje.");
                         }
+                        break;
+                    }
+                case 28:
+                    {
+                        player.DestroyComponents<RegisterCharacterLayoutComponent>();
                         break;
                     }
             }
