@@ -9,6 +9,7 @@ using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
 using TheEconomy.Database;
+using TheEconomy.Server.Resources.Components.AccountInformation;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount;
 
@@ -17,11 +18,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
-        RegisterAccountLayoutComponent registerAccountLayoutComponent = registerAccountLayout.GetRegisterAccountLayoutComponent(player);
+        RegisterAccountLayoutComponent registerAccountLayoutComponent = player.GetComponent<RegisterAccountLayoutComponent>();
 
-        if (registerAccountLayoutComponent.IsComponentAlive)
+        if (registerAccountLayoutComponent is not null && registerAccountLayoutComponent.IsComponentAlive && registerAccountLayoutComponent.PlayerTextDrawings is not null)
         {
-            RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
+            RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();;
 
             switch (registerAccountLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
@@ -38,10 +39,10 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            registerAccountLayout.Destroy(player);
+                            registerAccountLayout?.Destroy(player);
 
-                            player.AddComponent<RegisterAccountComponent>()?.Destroy();
-                            registerAccountLayoutComponent.Destroy();
+                            player.GetComponent<RegisterAccountComponent>()?.Destroy();
+                            registerAccountLayoutComponent?.Destroy();
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la creacion de la cuenta.");
                             player.PlaySound(1085);
@@ -212,6 +213,24 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
+                            void DestroyRegisterAccountComponents()
+                            {
+                                registerAccountLayoutComponent.Destroy();
+                                player.DestroyComponents<RegisterAccountLayoutComponent>();
+                                player.DestroyComponents<RegisterAccountComponent>();
+                            }
+
+                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+
+                            if (accountInformation?.Account == null || registerAccountComponent.Account == null)
+                            {
+                                DestroyRegisterAccountComponents();
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación de la Cuenta; por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            registerAccountComponent.Account.Name = player.Name;
+
                             databaseContext.Accounts.Add(registerAccountComponent.Account);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
@@ -221,9 +240,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                                 return;
                             }
 
-                            player.DestroyComponents<RegisterAccountLayoutComponent>();
-                            player.DestroyComponents<RegisterAccountComponent>();
-
+                            DestroyRegisterAccountComponents();
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu cuenta fue creada con éxito.");
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)

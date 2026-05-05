@@ -57,9 +57,6 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
         {
             if (await knowledgeTest.Start(player) is true)
             {
-                RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
-                registerAccountComponent.Account.Name = player.Name;
-
                 registerAccountLayout.Create(player);
                 registerAccountLayout.Show(player);
             }
