@@ -9,6 +9,8 @@ public class RegisterAccountLayoutComponent : Component
 {
     public PlayerTextDraw[] PlayerTextDrawings { get; set; }
 
+    public bool ShowPassword { get; set; }
+
     public RegisterAccountLayoutComponent(PlayerTextDraw[] playerTextDraw)
     {
         ArgumentNullException.ThrowIfNull(playerTextDraw);

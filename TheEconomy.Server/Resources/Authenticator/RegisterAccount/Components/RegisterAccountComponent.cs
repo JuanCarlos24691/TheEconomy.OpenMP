@@ -7,5 +7,5 @@ public class RegisterAccountComponent : Component
 {
     public AccountEntity Account { get; set; } = new AccountEntity();
 
-    public bool ShowPassword { get; set; }
+    public bool ShowResgiterCharacterLayout { get; set; }
 }

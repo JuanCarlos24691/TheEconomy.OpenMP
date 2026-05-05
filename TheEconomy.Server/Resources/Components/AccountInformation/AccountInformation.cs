@@ -11,7 +11,7 @@ public class AccountInformation : Component
 
     public AccountEntity Account { get; set; }
 
-    public CharacterEntity Character { get; set; }
+    public CharacterEntity[] Characters { get; set; }
     
     public bool IsLoggedIn { get; set; }
 }

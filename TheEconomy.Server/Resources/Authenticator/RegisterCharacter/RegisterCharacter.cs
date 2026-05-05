@@ -330,6 +330,10 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                         switch (true)
                         {
+                            case bool _ when player.GetComponent<AccountInformation>().Characters?.Length >= 3:
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu Cuenta ya tiene 3 personajes asociados; por favor, vuelve a intentarlo.");
+                                return;
+
                             case bool _ when string.IsNullOrEmpty(registerCharacterComponent.Character.Name):
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un Nombre para poder crear tu Personaje; por favor, vuelve a intentarlo.");
                                 return;
@@ -365,7 +369,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                         registerCharacterLayout.Hide(player);
 
-                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Completar registro del Personaje", $"{colors.GetHexadecimal("primaryRed")}Estás a punto de registrar un nuevo Personaje\n¿Deseas continuar?", "Continuar", "Cancelar");
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Completar registro del Personaje", $"{colors.GetHexadecimal("primaryWhite")}Estás a punto de registrar un nuevo Personaje\n¿Deseas continuar?", "Continuar", "Cancelar");
                         MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
 
                         if (messageDialogResponse.Response == DialogResponse.Disconnected)
@@ -392,12 +396,14 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                             AccountInformation accountInformation = player.GetComponent<AccountInformation>();
 
-                            if (accountInformation?.Character == null || registerCharacterComponent.Character == null)
+                            if (accountInformation is null || registerCharacterComponent.Character is null)
                             {
                                 DestroyRegisterAccountComponents();
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
                                 return;
                             }
+
+                            accountInformation.Characters = [.. accountInformation.Characters ?? [], registerCharacterComponent.Character];
 
                             DestroyRegisterAccountComponents();
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu Personaje fue creada con éxito.");

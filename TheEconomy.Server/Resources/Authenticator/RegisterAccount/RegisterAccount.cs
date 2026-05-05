@@ -10,10 +10,11 @@ using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
 using TheEconomy.Database;
 using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount;
 
-public class RegisterAccount(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterAccountLayout registerAccountLayout) : ISystem, IRegisterAccount
+public class RegisterAccount(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterAccountLayout registerAccountLayout, IRegisterCharacterLayout registerCharacterLayout) : ISystem, IRegisterAccount
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
@@ -22,7 +23,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
         if (registerAccountLayoutComponent is not null && registerAccountLayoutComponent.IsComponentAlive && registerAccountLayoutComponent.PlayerTextDrawings is not null)
         {
-            RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>(); ;
+            RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
 
             switch (registerAccountLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
@@ -107,16 +108,16 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                             return;
                         }
 
-                        if (registerAccountComponent.ShowPassword)
+                        if (registerAccountLayoutComponent.ShowPassword)
                         {
                             registerAccountLayoutComponent.PlayerTextDrawings[9].Text = new string('.', registerAccountComponent.Account.Password.Length);
-                            registerAccountComponent.ShowPassword = false;
+                            registerAccountLayoutComponent.ShowPassword = false;
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Ocultaste la contraseña.");
                         }
                         else
                         {
-                            registerAccountComponent.ShowPassword = true;
+                            registerAccountLayoutComponent.ShowPassword = true;
 
                             registerAccountLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.Correct(registerAccountComponent.Account.Password);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Mostraste la contraseña.");
@@ -231,15 +232,23 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                             AccountInformation accountInformation = player.GetComponent<AccountInformation>();
 
-                            if (accountInformation?.Account == null || registerAccountComponent.Account == null)
+                            if (accountInformation is null || registerAccountComponent.Account is null)
                             {
                                 DestroyRegisterAccountComponents();
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación de la Cuenta; por favor, vuelve a intentarlo.");
                                 return;
                             }
 
+                            accountInformation.Account = registerAccountComponent.Account;
+
                             DestroyRegisterAccountComponents();
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu cuenta fue creada con éxito.");
+
+                            if (registerAccountComponent.ShowResgiterCharacterLayout)
+                            {
+                                registerCharacterLayout.Create(player);
+                                registerCharacterLayout.Show(player);
+                            }
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                         {
