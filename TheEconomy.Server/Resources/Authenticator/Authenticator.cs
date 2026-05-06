@@ -30,7 +30,7 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
         deleteConversation.DeleteTheGlobalConversation();
         blackBackgroundLayout.Show(player);
 
-        if (verifyUserName.Verify(player.Name) is false)
+        if (verifyUserName.Verify(player.Name) is false || player.Name.Length < 10 || player.Name.Length > 24)
         {
             verifyUserNameLayout.Create(player);
             verifyUserNameLayout.Show(player);
@@ -46,11 +46,11 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
             return;
         }
 
-        accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
-        accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
-
-        if (accountInformation is not null && accountInformation.IsComponentAlive && accountInformation.Account is not null)
+        if (await databaseContext.Accounts.AnyAsync(a => a.Name == player.Name))
         {
+            accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
+            accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
+
             loginLayout.Create(player);
             loginLayout.Show(player);
         }
@@ -58,9 +58,6 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
         {
             if (await knowledgeTest.Start(player) is true)
             {
-                RegisterAccountComponent registerAccountComponent = player.GetComponent<RegisterAccountComponent>() ?? player.AddComponent<RegisterAccountComponent>();
-                registerAccountComponent.ShowResgiterCharacterLayout = true;
-
                 registerAccountLayout.Create(player);
                 registerAccountLayout.Show(player);
 

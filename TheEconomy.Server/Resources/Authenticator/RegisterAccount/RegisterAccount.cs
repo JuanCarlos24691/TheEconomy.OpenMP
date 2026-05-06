@@ -215,40 +215,31 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            void DestroyRegisterAccountComponents()
+                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+                            accountInformation.Account = registerAccountComponent.Account;
+
+                            if (accountInformation.Account is null || registerAccountComponent.Account is null)
                             {
-                                player.DestroyComponents<RegisterAccountLayoutComponent>();
-                                player.DestroyComponents<RegisterAccountComponent>();
+                                DestroyRegisterAccountComponents(player);
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación de la Cuenta; por favor, vuelve a intentarlo.");
+                                return;
                             }
 
                             databaseContext.Accounts.Add(registerAccountComponent.Account);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
                             {
-                                DestroyRegisterAccountComponents();
+                                DestroyRegisterAccountComponents(player);
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no se pudo crear tu cuenta; por favor, vuelve a intentarlo.");
                                 return;
                             }
 
-                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+                            DestroyRegisterAccountComponents(player);
 
-                            if (accountInformation is null || registerAccountComponent.Account is null)
-                            {
-                                DestroyRegisterAccountComponents();
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación de la Cuenta; por favor, vuelve a intentarlo.");
-                                return;
-                            }
+                            registerCharacterLayout.Create(player);
+                            registerCharacterLayout.Show(player);
 
-                            accountInformation.Account = registerAccountComponent.Account;
-
-                            DestroyRegisterAccountComponents();
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu cuenta fue creada con éxito.");
-
-                            if (registerAccountComponent.ShowResgiterCharacterLayout)
-                            {
-                                registerCharacterLayout.Create(player);
-                                registerCharacterLayout.Show(player);
-                            }
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                         {
@@ -259,5 +250,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                     }
             }
         }
+    }
+
+    private static void DestroyRegisterAccountComponents(Player player)
+    {
+        player.DestroyComponents<RegisterAccountLayoutComponent>();
+        player.DestroyComponents<RegisterAccountComponent>();
     }
 }

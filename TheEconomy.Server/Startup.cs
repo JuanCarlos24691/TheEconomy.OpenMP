@@ -30,6 +30,8 @@ using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.KnowledgeTest.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Layouts;
+using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
+using TheEconomy.Server.Resources.Services.IsPlayerConnect;
 
 namespace TheEconomy.Server
 {
@@ -40,6 +42,7 @@ namespace TheEconomy.Server
             services.AddDbContext<DatabaseContext>();
 
             services.AddSingleton<IKnowledgeTest, KnowledgeTest>();
+            services.AddSingleton<IIsPlayerConnect, IsPlayerConnect>();
             services.AddSingleton<IVerifyUserNameLayout, VerifyUserNameLayout>();
             services.AddSingleton<IVerifyProhibition, VerifyProhibition>();
             services.AddSingleton<IBlackBackgroundLayout, BlackBackgroundLayout>();

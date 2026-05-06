@@ -379,17 +379,11 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            void DestroyRegisterAccountComponents()
-                            {
-                                player.DestroyComponents<RegisterCharacterLayoutComponent>();
-                                player.DestroyComponents<RegisterCharacterComponent>();
-                            }
-
                             databaseContext.Characters.Add(registerCharacterComponent.Character);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
                             {
-                                DestroyRegisterAccountComponents();
+                                DestroyRegisterAccountComponents(player);
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no se pudo crear tu cuenta; por favor, vuelve a intentarlo.");
                                 return;
                             }
@@ -398,14 +392,14 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                             if (accountInformation is null || registerCharacterComponent.Character is null)
                             {
-                                DestroyRegisterAccountComponents();
+                                DestroyRegisterAccountComponents(player);
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
                                 return;
                             }
 
                             accountInformation.Characters = [.. accountInformation.Characters ?? [], registerCharacterComponent.Character];
 
-                            DestroyRegisterAccountComponents();
+                            DestroyRegisterAccountComponents(player);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu Personaje fue creada con éxito.");
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
@@ -417,5 +411,11 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                     }
             }
         }
+    }
+
+    private static void DestroyRegisterAccountComponents(Player player)
+    {
+        player.DestroyComponents<RegisterCharacterLayoutComponent>();
+        player.DestroyComponents<RegisterCharacterComponent>();
     }
 }
