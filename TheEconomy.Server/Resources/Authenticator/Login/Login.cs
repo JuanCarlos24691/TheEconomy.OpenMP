@@ -23,6 +23,8 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
 
         if (loginLayoutComponent is not null && loginLayoutComponent.IsComponentAlive && loginLayoutComponent.PlayerTextDrawings is not null)
         {
+            LoginComponent loginComponent = player.GetComponent<LoginComponent>() ?? player.AddComponent<LoginComponent>();
+
             switch (loginLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
                 case 1:
@@ -38,6 +40,7 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
+                            player.GetComponent<LoginComponent>()?.Destroy();
                             player.GetComponent<LoginLayoutComponent>()?.Destroy();
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste el Inicio de sesión.");
@@ -133,5 +136,6 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
     private static void DestroyLoginComponents(Player player)
     {
         player.DestroyComponents<LoginLayoutComponent>();
+        player.DestroyComponents<LoginComponent>();
     }
 }
