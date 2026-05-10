@@ -1,7 +1,10 @@
-﻿namespace TheEconomy.Database.Entity.Account
+﻿using TheEconomy.Database.Entity.Character;
+
+namespace TheEconomy.Database.Entity.Account
 {
     public class AccountEntity
     {
+        public virtual ICollection<CharacterEntity> Characters { get; set; } = [];
         public Guid UUID { get; set; }
         public string? Name { get; set; }
         public string? Password { get; set; }

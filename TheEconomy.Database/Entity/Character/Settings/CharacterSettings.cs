@@ -11,6 +11,8 @@ namespace TheEconomy.Database.Entity.Character.Settings
             builder.HasKey(c => c.UUID);
             builder.HasIndex(c => c.UUID).IsUnique();
             builder.Property(a => a.UUID).HasColumnType("binary(16)");
+            builder.Property(a => a.AUUID).HasColumnType("binary(16)");
+            builder.HasOne(c => c.Account).WithMany(a => a.Characters).HasForeignKey(c => c.AUUID).OnDelete(DeleteBehavior.Cascade);
             builder.Property(c => c.Online).HasColumnType("tinyint").HasDefaultValue(1).HasMaxLength(1).IsRequired();
             builder.Property(c => c.Name).HasMaxLength(12).IsRequired();
             builder.Property(c => c.LastName).HasMaxLength(12).IsRequired();

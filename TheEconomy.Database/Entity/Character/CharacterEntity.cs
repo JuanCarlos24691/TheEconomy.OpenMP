@@ -1,8 +1,12 @@
-﻿namespace TheEconomy.Database.Entity.Character
+﻿using TheEconomy.Database.Entity.Account;
+
+namespace TheEconomy.Database.Entity.Character
 {
     public class CharacterEntity
     {
         public Guid UUID { get; set; }
+        public Guid AUUID { get; set; }
+        public virtual AccountEntity? Account { get; set; }
         public bool Online { get; set; }
         public string? Name { get; set; }
         public string? LastName { get; set; }
