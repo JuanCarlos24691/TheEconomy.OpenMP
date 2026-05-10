@@ -12,6 +12,7 @@ using TheEconomy.Database;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount;
 
@@ -201,6 +202,14 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                             case bool _ when string.IsNullOrEmpty(registerAccountComponent.Account.Mail):
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un correo electronico para registrar tu Cuenta; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when await databaseContext.Accounts.AnyAsync(a => a.Name == registerAccountComponent.Account.Name):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu nombre de Usuario ya se encuentra registrado; por favor, vuelve a intentarlo.");
+                                return;
+
+                            case bool _ when await databaseContext.Accounts.AnyAsync(a => a.Mail == registerAccountComponent.Account.Mail):
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu Correo Electronico ya se encuentra registrado; por favor, vuelve a intentarlo.");
                                 return;
                         }
 
