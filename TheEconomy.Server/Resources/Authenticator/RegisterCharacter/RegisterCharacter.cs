@@ -329,7 +329,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                         switch (true)
                         {
-                            case bool _ when player.GetComponent<AccountInformation>().Characters?.Length >= 3:
+                            case bool _ when player.GetComponent<AccountInformation>().Account.Characters.Count >= 3:
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu Cuenta ya tiene 3 personajes asociados; por favor, vuelve a intentarlo.");
                                 return;
 
@@ -396,7 +396,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                                 return;
                             }
 
-                            accountInformation.Characters = [.. accountInformation.Characters ?? [], registerCharacterComponent.Character];
+                            accountInformation.Account.Characters.Add(registerCharacterComponent.Character);
 
                             DestroyRegisterAccountComponents(player);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu Personaje fue creada con éxito.");

@@ -10,8 +10,6 @@ public class AccountInformation : Component
     public ProhibitionEntity Prohibition { get; set; }
 
     public AccountEntity Account { get; set; }
-
-    public CharacterEntity[] Characters { get; set; }
     
     public bool IsLoggedIn { get; set; }
 }
