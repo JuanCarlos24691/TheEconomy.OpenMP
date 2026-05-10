@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
+using TheEconomy.Database;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
-using TheEconomy.Database;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
+using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount;
 
-public class RegisterAccount(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterAccountLayout registerAccountLayout, IRegisterCharacterLayout registerCharacterLayout) : ISystem
+public class RegisterAccount(DatabaseContext databaseContext, IDialogService dialogService, IVerifyMail verifyMail, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterAccountLayout registerAccountLayout, IRegisterCharacterLayout registerCharacterLayout, IVerifyUserName verifyUserName, IIsPlayerConnect isPlayerConnect, ILoginLayout loginLayout) : ISystem
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
@@ -258,6 +261,69 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                         {
                             registerAccountLayout.Show(player);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la creación de tu Cuenta.");
+                        }
+                        break;
+                    }
+                case 17:
+                    {
+                        registerAccountLayout.Hide(player);
+                        player.PlaySound(1085);
+
+                        InputDialog inputDialog = new()
+                        {
+                            Caption = $"{colors.GetHexadecimal("primaryColor")}Iniciar sesión",
+                            Content = $"{colors.GetHexadecimal("primaryWhite")}¡Ey! {colors.GetHexadecimal("primaryColor")}{player.Name}{colors.GetHexadecimal("primaryWhite")}, Parece que quieres Iniciar sesión en una cuenta diferente\nPor favor, ingresa el nombre de usuario de una cuenta existente continuación para continuar.",
+                            Button1 = "Siguiente",
+                            Button2 = "Atras"
+                        };
+
+                        InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+
+                        if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        registerAccountLayout.Show(player);
+                        player.PlaySound(1085);
+
+                        if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 10 || inputDialogResponse.InputText.Length > 24)
+                            {
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado es inválido");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que este debe tener una longitud de 10 a 24 caracteres");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
+                                return;
+                            }
+                            else if (verifyUserName.Verify(inputDialogResponse.InputText) is false)
+                            {
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado es inválido");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que este debe tener un formato alfanumérico a-Z 0-9");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
+                                return;
+                            }
+                            else if (isPlayerConnect.Verify(inputDialogResponse.InputText))
+                            {
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado ya se encuentra conectado; por favor, vuelve a intentarlo.");
+                                return;
+                            }
+                            else if (await databaseContext.Accounts.AnyAsync(a => a.Name == inputDialogResponse.InputText) is false)
+                            {
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario que ingresaste no coincide con ninguna cuenta existente. Por favor vuelve a intentarlo.");
+                                return;
+                            }
+
+                            DestroyRegisterAccountComponents(player);
+
+                            player.Name = inputDialogResponse.InputText;
+
+                            loginLayout.Create(player);
+                            loginLayout.Show(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Nombre del Usuario se establecio correctamente para su Inicio de sesión.");
+                        }
+                        else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite al registro de una nueva cuenta.");
                         }
                         break;
                     }
