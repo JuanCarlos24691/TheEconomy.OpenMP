@@ -11,12 +11,12 @@ namespace TheEconomy.Database.Entity.Character.Settings
             builder.HasKey(c => c.UUID);
             builder.HasIndex(c => c.UUID).IsUnique();
             builder.Property(a => a.UUID).HasColumnType("binary(16)");
-            builder.Property(c => c.Online).HasColumnType("tinyint").HasMaxLength(1).HasDefaultValue(1).IsRequired();
+            builder.Property(c => c.Online).HasColumnType("tinyint").HasDefaultValue(1).HasMaxLength(1).IsRequired();
             builder.Property(c => c.Name).HasMaxLength(12).IsRequired();
             builder.Property(c => c.LastName).HasMaxLength(12).IsRequired();
             builder.Property(c => c.Gender).HasColumnType("tinyint").HasMaxLength(1).IsRequired();
             builder.Property(c => c.BirthDate).HasColumnType("date").IsRequired();
-            builder.Property(c => c.Appearance).IsRequired();
+            builder.Property(c => c.Appearance).HasDefaultValue(137).IsRequired();
             builder.Property(c => c.Height).HasMaxLength(24).IsRequired();
             builder.Property(c => c.EyeColor).HasMaxLength(24).IsRequired();
             builder.Property(c => c.HairColor).HasMaxLength(24).IsRequired();
