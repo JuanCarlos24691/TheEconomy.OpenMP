@@ -11,15 +11,23 @@ using TheEconomy.Server.Resources.Authenticator.Characters.Components;
 using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
+using SampSharp.Entities.SAMP.Commands;
 
 namespace TheEconomy.Server.Resources.Authenticator.Characters;
 
-public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors) : ISystem
+public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors, IBlackBackgroundLayout blackBackgroundLayout) : ISystem
 {
     [Event]
-    public static void OnGameModeInit(IServerService serverService)
+    public static bool OnPlayerRequestClass(Player player, int classId)
     {
-        serverService.AddPlayerClass(0, new Vector3(0, 0, 3), 0, Weapon.None, 0, Weapon.None, 0, Weapon.None, 0);
+        return false; // aquí sí puedes bloquear comportamiento del selector
+    }
+
+    [PlayerCommand("kill")]
+    public void KillCommand(Player player)
+    {
+        player.Health = 0f;
     }
 
     [Event]
@@ -200,6 +208,12 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryWhite")}¡Enhorabuena! Empezaste a jugar como {colors.GetHexadecimal("primaryGreen")}{characters[charactersComponent.Index].Name} {colors.GetHexadecimal("primaryYellow")}{characters[charactersComponent.Index].LastName}.");
                             player.PlaySound(1085);
 
+                            if (player.IsSelectingTextDraw is true)
+                                player.CancelSelectTextDraw();
+
+                            blackBackgroundLayout.Hide(player);
+
+                            player.SetSpawnInfo(0, characters[charactersComponent.Index].Appearance, new Vector3(characters[charactersComponent.Index].SpawnX, characters[charactersComponent.Index].SpawnY, characters[charactersComponent.Index].SpawnZ), characters[charactersComponent.Index].Angle, Weapon.None, 0, Weapon.None, 0, Weapon.None, 0);
                             player.Spawn();
 
                             DestroyCharactersComponents(player);
@@ -211,6 +225,10 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
                             player.PlaySound(1085);
                         }
+                        break;
+                    }
+                case 15:
+                    {
                         break;
                     }
             }
