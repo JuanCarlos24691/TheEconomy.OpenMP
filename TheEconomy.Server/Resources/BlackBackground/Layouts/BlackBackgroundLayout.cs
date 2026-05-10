@@ -11,7 +11,7 @@ public class BlackBackgroundLayout(IWorldService worldService) : IBlackBackgroun
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        if (player.GetComponent<BlackBackgroundLayoutComponent>() is not null)
+        if (player.GetComponent<BlackBackgroundLayoutComponent>().PlayerTextDrawings is not null)
             return;
 
         PlayerTextDraw playerTextDraw = worldService.CreatePlayerTextDraw(player, position: new Vector2(-5.0f, -5.0f), "_"); 
@@ -28,6 +28,7 @@ public class BlackBackgroundLayout(IWorldService worldService) : IBlackBackgroun
         playerTextDraw.Proportional = true;
 
         player.AddComponent<BlackBackgroundLayoutComponent>(playerTextDraw);
+        Show(player);
     }
 
     public void Show(Player player)

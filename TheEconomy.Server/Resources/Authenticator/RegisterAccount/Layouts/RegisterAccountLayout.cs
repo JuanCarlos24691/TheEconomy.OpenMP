@@ -15,6 +15,9 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        if (player.GetComponent<RegisterAccountLayoutComponent>().PlayerTextDrawings is not null)
+            return;
+
         PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[21];
 
         playerTextDraw[0] = worldService.CreatePlayerTextDraw(player, new Vector2(320.000000, 110.000000), "_");
@@ -274,6 +277,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
         playerTextDraw[19].Proportional = true;
 
         player.AddComponent<RegisterAccountLayoutComponent>((object)playerTextDraw);
+        Show(player);
     }
 
     public void Show(Player player)

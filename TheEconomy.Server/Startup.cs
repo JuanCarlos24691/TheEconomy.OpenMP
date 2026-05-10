@@ -32,6 +32,8 @@ using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Layouts;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect;
+using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.Characters.Layouts;
 
 namespace TheEconomy.Server
 {
@@ -48,6 +50,7 @@ namespace TheEconomy.Server
             services.AddSingleton<IBlackBackgroundLayout, BlackBackgroundLayout>();
             services.AddSingleton<IVerifyProhibitionLayout, VerifyProhibitionLayout>();
             services.AddSingleton<ILoginLayout, LoginLayout>();
+            services.AddSingleton<ICharactersLayout, CharactersLayout>();
             services.AddSingleton<IRegisterCharacterLayout, RegisterCharacterLayout>();
             services.AddSingleton<IRegisterAccountLayout, RegisterAccountLayout>();
             services.AddSingleton<IServerInformation, ServerInformation>();

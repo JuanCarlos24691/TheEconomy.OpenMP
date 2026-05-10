@@ -5,7 +5,6 @@ using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
-using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 using TheEconomy.Server.Resources.Authenticator.Login.Components;
 
 namespace TheEconomy.Server.Resources.Authenticator.Login.Layouts;
@@ -287,6 +286,7 @@ public class LoginLayout(IWorldService worldService, IServerInformation serverIn
         playerTextDraw[18].Selectable = false;
 
         player.AddComponent<LoginLayoutComponent>((object)playerTextDraw);
+        Show(player);
     }
 
     public void Show(Player player)

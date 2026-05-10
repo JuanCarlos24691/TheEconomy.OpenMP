@@ -1,11 +1,12 @@
-using SampSharp.Entities.SAMP;
 using System;
 using System.Linq;
+using SampSharp.Entities.SAMP;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
+using TheEconomy.Server.Resources.Components.AccountInformation;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Layouts;
 
@@ -14,6 +15,15 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
     public void Create(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
+
+        if (player.GetComponent<RegisterCharacterLayoutComponent>().PlayerTextDrawings is not null)
+            return;
+
+        if (player.GetComponent<AccountInformation>()?.Account?.Characters is null)
+        {
+            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para realizar esta acción; por favor, vuelve a intentarlo.");
+            return;
+        }
 
         PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[33];
 
@@ -442,6 +452,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         playerTextDraw[32].Proportional = true;
 
         player.AddComponent<RegisterCharacterLayoutComponent>((object)playerTextDraw);
+        Show(player);
     }
 
     public void Show(Player player)

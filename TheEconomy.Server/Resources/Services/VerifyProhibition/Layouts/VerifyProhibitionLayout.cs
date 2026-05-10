@@ -7,16 +7,20 @@ using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Components;
+using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 
 namespace TheEconomy.Server.Resources.Services.VerifyProhibition.Layouts;
 
-public class VerifyProhibitionLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings) : IVerifyProhibitionLayout
+public class VerifyProhibitionLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : IVerifyProhibitionLayout
 {
     public void Create(Player player, ProhibitionEntity prohibitionEntity, AccountEntity account)
     {
         ArgumentNullException.ThrowIfNull(player);
         ArgumentNullException.ThrowIfNull(prohibitionEntity);
         ArgumentNullException.ThrowIfNull(account);
+
+        if (player.GetComponent<VerifyProhibitionLayoutComponent>().PlayerTextDrawings is not null)
+            return;
 
         string[] paragraphs = new string[5];
 
@@ -133,6 +137,7 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
         playerTextDraw[6].Proportional = true;
 
         player.AddComponent<VerifyProhibitionLayoutComponent>((object)playerTextDraw);
+        Show(player);
     }
 
     public void Show(Player player)

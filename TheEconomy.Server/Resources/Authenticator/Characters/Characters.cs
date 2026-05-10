@@ -14,13 +14,12 @@ using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
-using TheEconomy.Database.Entity.Account;
 
-namespace TheEconomy.Server.Resources.Authenticator.Login;
+namespace TheEconomy.Server.Resources.Authenticator.Characters;
 
-public class Login(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IIsPlayerConnect isPlayerConnect, IVerifyUserName verifyUserName, IColors colors, ILoginLayout loginLayout, IRegisterAccountLayout registerAccountLayout) : ISystem
+public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IIsPlayerConnect isPlayerConnect, IVerifyUserName verifyUserName, IColors colors, ILoginLayout loginLayout, IRegisterAccountLayout registerAccountLayout) : ISystem
 {
-    [Event]
+    /* [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
         LoginLayoutComponent loginLayoutComponent = player.GetComponent<LoginLayoutComponent>();
@@ -232,17 +231,10 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
                             {
                                 DestroyLoginComponents(player);
 
-                                AccountEntity account = await databaseContext.Accounts.Include(a => a.Characters).FirstOrDefaultAsync(a => a.Name == player.Name);
+                                AccountInformation accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
+                                accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
 
-                                if (account is not null)
-                                {
-                                    player.AddComponent(new AccountInformation { Account = account });
-                                    player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Has iniciado sesión correctamente en tu cuenta.");
-                                }
-                                else
-                                {
-                                    player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No se ha podido encontrar tu cuenta en la base de datos; por favor, vuelve a intentarlo.");
-                                }
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Has iniciado sesión correctamente en tu cuenta.");
                             }
                             else
                             {
@@ -330,5 +322,5 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
     {
         player.DestroyComponents<LoginLayoutComponent>();
         player.DestroyComponents<LoginComponent>();
-    }
+    } */
 }

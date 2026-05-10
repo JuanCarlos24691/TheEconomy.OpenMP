@@ -10,8 +10,7 @@ public class DeleteConversation(IWorldService worldService, IColors color) : IDe
 {
     public void DeletePlayerConversation(Player player, string adminName = null)
     {
-        if (player == null)
-            throw new ArgumentNullException(nameof(player), "La entidad player no puede ser nula. Por favor, asegúrese de que se haya inicializado correctamente.");
+        ArgumentNullException.ThrowIfNull(player);
 
         for (int i = 0; i < DeleteConversationData.NumberOfBlankMessages; i++)
         {

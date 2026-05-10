@@ -30,12 +30,10 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
     public async Task Authenticate(Player player)
     {
         deleteConversation.DeleteTheGlobalConversation();
-        blackBackgroundLayout.Show(player);
 
         if (verifyUserName.Verify(player.Name) is false || player.Name.Length < 10 || player.Name.Length > 24)
         {
             verifyUserNameLayout.Create(player);
-            verifyUserNameLayout.Show(player);
             return;
         }
 
@@ -44,22 +42,14 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
         if (account is not null || prohibition is not null)
         {
             verifyProhibitionLayout.Create(player, prohibition, account);
-            verifyProhibitionLayout.Show(player);
             return;
         }
 
-        if (await databaseContext.Accounts.AnyAsync(a => a.Name == player.Name))
-        {
-            loginLayout.Create(player);
-            loginLayout.Show(player);
-        }
-        else
+        if (await databaseContext.Accounts.AnyAsync(a => a.Name == player.Name) == false)
         {
             if (await knowledgeTest.Start(player) is true)
             {
                 registerAccountLayout.Create(player);
-                registerAccountLayout.Show(player);
-
                 player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Superaste el test de rol.");
             }
             else
@@ -67,6 +57,10 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
                 _ = Authenticate(player);
                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No superaste el test de rol. Por favor, vuelve a intentarlo.");
             }
+            
+            return;
         }
+
+        loginLayout.Create(player);
     }
 }
