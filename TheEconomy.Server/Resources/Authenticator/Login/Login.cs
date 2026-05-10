@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Database;
+using TheEconomy.Database.Entity.Account;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Components;
@@ -14,11 +15,11 @@ using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
-using TheEconomy.Database.Entity.Account;
+using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.Login;
 
-public class Login(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IIsPlayerConnect isPlayerConnect, IVerifyUserName verifyUserName, IColors colors, ILoginLayout loginLayout, IRegisterAccountLayout registerAccountLayout) : ISystem
+public class Login(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IIsPlayerConnect isPlayerConnect, IVerifyUserName verifyUserName, IColors colors, ILoginLayout loginLayout, IRegisterAccountLayout registerAccountLayout, ICharactersLayout charactersLayout) : ISystem
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
@@ -44,8 +45,7 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            player.GetComponent<LoginComponent>()?.Destroy();
-                            player.GetComponent<LoginLayoutComponent>()?.Destroy();
+                            DestroyLoginComponents(player);
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste el Inicio de sesión.");
                             player.PlaySound(1085);
@@ -237,6 +237,8 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
                                 if (account is not null)
                                 {
                                     player.AddComponent(new AccountInformation { Account = account });
+                                    charactersLayout.Create(player);
+
                                     player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Has iniciado sesión correctamente en tu cuenta.");
                                 }
                                 else

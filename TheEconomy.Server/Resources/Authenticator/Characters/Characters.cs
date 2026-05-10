@@ -1,41 +1,53 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Database;
+using TheEconomy.Database.Entity.Character;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
-using TheEconomy.Server.Resources.Authenticator.Login.Components;
-using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
-using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
-using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.Characters.Components;
+using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 using TheEconomy.Server.Resources.Components.AccountInformation;
-using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.Characters;
 
-public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IIsPlayerConnect isPlayerConnect, IVerifyUserName verifyUserName, IColors colors, ILoginLayout loginLayout, IRegisterAccountLayout registerAccountLayout) : ISystem
+public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors) : ISystem
 {
-    /* [Event]
+    [Event]
+    public static void OnGameModeInit(IServerService serverService)
+    {
+        serverService.AddPlayerClass(0, new Vector3(0, 0, 3), 0, Weapon.None, 0, Weapon.None, 0, Weapon.None, 0);
+    }
+
+    [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
-        LoginLayoutComponent loginLayoutComponent = player.GetComponent<LoginLayoutComponent>();
+        CharactersLayoutComponent charactersLayoutComponent = player.GetComponent<CharactersLayoutComponent>();
 
-        if (loginLayoutComponent is not null && loginLayoutComponent.IsComponentAlive && loginLayoutComponent.PlayerTextDrawings is not null)
+        if (charactersLayoutComponent is not null && charactersLayoutComponent.IsComponentAlive && charactersLayoutComponent.PlayerTextDrawings is not null)
         {
-            LoginComponent loginComponent = player.GetComponent<LoginComponent>() ?? player.AddComponent<LoginComponent>();
+            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
 
-            switch (loginLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
+            if (accountInformation?.Account?.Characters is null)
+            {
+                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para realizar esta acción; por favor, vuelve a intentarlo.");
+                return;
+            }
+
+            List<CharacterEntity> characters = [.. accountInformation.Account.Characters];
+            CharactersComponent charactersComponent = player.GetComponent<CharactersComponent>() ?? player.AddComponent<CharactersComponent>();
+
+            switch (charactersLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
                 case 1:
                     {
-                        loginLayout.Hide(player);
+                        charactersLayout.Hide(player);
                         player.PlaySound(1085);
 
-                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Cancelar Inicio de sesión", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente desees cancelar el Inicio de sesión?", "Sí", "No");
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Cancelar selección de personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente deseas cancelar la selección de personaje?", "Sí", "No");
                         MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
 
                         if (messageDialogResponse.Response == DialogResponse.Disconnected)
@@ -43,274 +55,161 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            player.GetComponent<LoginComponent>()?.Destroy();
-                            player.GetComponent<LoginLayoutComponent>()?.Destroy();
+                            DestroyCharactersComponents(player);
 
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste el Inicio de sesión.");
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Cancelaste la selección de personaje.");
                             player.PlaySound(1085);
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                         {
-                            loginLayout.Show(player);
+                            charactersLayout.Show(player);
 
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite al Inicio de sesión.");
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
                             player.PlaySound(1085);
                         }
                         break;
                     }
-                case 4:
+                case 5:
                     {
-                        loginLayout.Hide(player);
                         player.PlaySound(1085);
 
-                        InputDialog inputDialog = new()
+                        if (characters.Count > 0 && characters[0] is not null)
                         {
-                            Caption = $"{colors.GetHexadecimal("primaryColor")}Cambio de cuenta",
-                            Content = $"{colors.GetHexadecimal("primaryWhite")}¡Ey! {colors.GetHexadecimal("primaryColor")}{player.Name}{colors.GetHexadecimal("primaryWhite")}, Parece que quieres Iniciar sesión en una cuenta diferente\nPor favor, ingresa el nombre de usuario de una cuenta existente continuación para continuar.",
-                            Button1 = "Siguiente",
-                            Button2 = "Atras"
-                        };
+                            charactersComponent.Index = 0;
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[charactersComponent.Index].Name)}_{correctTextStrings.Correct(characters[charactersComponent.Index].LastName)}";
+                            return;
+                        }
 
-                        InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+                        charactersLayout.Hide(player);
 
-                        if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Crear nuevo personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente deseas crear un nuevo personaje?", "Sí", "No");
+                        MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                        if (messageDialogResponse.Response == DialogResponse.Disconnected)
                             return;
 
-                        loginLayout.Show(player);
-                        player.PlaySound(1085);
-
-                        if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                        if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 10 || inputDialogResponse.InputText.Length > 24)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado es inválido");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que este debe tener una longitud de 10 a 24 caracteres");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (verifyUserName.Verify(inputDialogResponse.InputText) is false)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado es inválido");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que este debe tener un formato alfanumérico a-Z 0-9");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (inputDialogResponse.InputText == player.Name)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Ya estas Iniciando sesión en esa cuenta; por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (isPlayerConnect.Verify(inputDialogResponse.InputText))
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado ya se encuentra conectado; por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (await databaseContext.Accounts.AnyAsync(a => a.Name == inputDialogResponse.InputText) is false)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario que ingresaste no coincide con ninguna cuenta existente. Por favor vuelve a intentarlo.");
-                                return;
-                            }
+                            DestroyCharactersComponents(player);
+                            registerCharacterLayout.Create(player);
 
-                            player.Name = inputDialogResponse.InputText;
-
-                            loginLayoutComponent.PlayerTextDrawings[6].Text = correctTextStrings.Correct(inputDialogResponse.InputText);
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Nombre del Usuario se establecio correctamente para su Inicio de sesión.");
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Ahora estas creando un nuevo personaje.");
+                            player.PlaySound(1085);
                         }
-                        else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                         {
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite al Inicio de sesión.");
+                            charactersLayout.Show(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
+                            player.PlaySound(1085);
                         }
                         break;
                     }
                 case 7:
                     {
-                        loginLayout.Hide(player);
                         player.PlaySound(1085);
 
-                        InputDialog inputDialog = new()
+                        if (characters.Count > 1 && characters[1] is not null)
                         {
-                            Caption = $"{colors.GetHexadecimal("primaryColor")}Contraseña de la Cuenta",
-                            Content = $"{colors.GetHexadecimal("primaryWhite")}Para ingresar a tu cuenta escribe tu Contraseña a continuación:\n\nFecha de ingreso: {colors.GetHexadecimal("primaryColor")}{DateTime.Now}{colors.GetHexadecimal("primaryWhite")}",
-                            Button1 = "Siguiente",
-                            Button2 = "Atras"
-                        };
-
-                        InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
-
-                        if (inputDialogResponse.Response == DialogResponse.Disconnected)
-                            return;
-
-                        loginLayout.Show(player);
-                        player.PlaySound(1085);
-
-                        if (inputDialogResponse.Response == DialogResponse.LeftButton)
-                        {
-                            if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 8 || inputDialogResponse.InputText.Length > 128)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La contraseña de la cuenta es inválida");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que esta debe tener una longitud de 8 a 128 caracteres");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
-                                return;
-                            }
-
-                            loginComponent.Password = inputDialogResponse.InputText;
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}La contraseña de la cuenta se ha establecio correctamente para su Inicio de sesión.");
-                        }
-                        else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
-                        {
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite al Inicio de sesión.");
-                        }
-                        break;
-                    }
-                case 10:
-                    {
-                        if (string.IsNullOrEmpty(loginComponent.Password))
-                        {
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No has ingresado una contraseña para tu cuenta. Por favor vuelve a intentarlo.");
+                            charactersComponent.Index = 1;
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[charactersComponent.Index].Name)}_{correctTextStrings.Correct(characters[charactersComponent.Index].LastName)}";
                             return;
                         }
 
-                        if (loginLayoutComponent.ShowPassword)
-                        {
-                            loginLayoutComponent.PlayerTextDrawings[9].Text = new string('.', loginComponent.Password.Length);
-                            loginLayoutComponent.ShowPassword = false;
+                        charactersLayout.Hide(player);
 
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Ocultaste la contraseña.");
-                        }
-                        else
-                        {
-                            loginLayoutComponent.ShowPassword = true;
-
-                            loginLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.Correct(loginComponent.Password);
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Mostraste la contraseña.");
-                        }
-                        break;
-                    }
-                case 12:
-                    {
-                        player.PlaySound(1085);
-
-                        if (string.IsNullOrEmpty(loginComponent.Password))
-                        {
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado una contraseña para Iniciar Sesión; por favor, vuelve a intentarlo.");
-                            return;
-                        }
-                        else if (loginComponent.Password.Length < 8 || loginComponent.Password.Length > 128)
-                        {
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La contraseña de la cuenta es inválida");
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que esta debe tener una longitud de 8 a 128 caracteres");
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
-                            return;
-                        }
-
-                        loginLayout.Hide(player);
-
-                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Iniciar Sesión", $"{colors.GetHexadecimal("primaryWhite")}Estás a punto de Iniciar Sesión\n¿Deseas continuar?", "Continuar", "Cancelar");
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Crear nuevo personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente deseas crear un nuevo personaje?", "Sí", "No");
                         MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
 
                         if (messageDialogResponse.Response == DialogResponse.Disconnected)
                             return;
 
+                        if (messageDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            DestroyCharactersComponents(player);
+                            registerCharacterLayout.Create(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Ahora estas creando un nuevo personaje.");
+                            player.PlaySound(1085);
+                        }
+                        else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            charactersLayout.Show(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
+                            player.PlaySound(1085);
+                        }
+                        break;
+                    }
+                case 9:
+                    {
                         player.PlaySound(1085);
+
+                        if (characters.Count > 2 && characters[2] is not null)
+                        {
+                            charactersComponent.Index = 2;
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[charactersComponent.Index].Name)}_{correctTextStrings.Correct(characters[charactersComponent.Index].LastName)}";
+                            return;
+                        }
+
+                        charactersLayout.Hide(player);
+
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Crear nuevo personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente deseas crear un nuevo personaje?", "Sí", "No");
+                        MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                        if (messageDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            string password = await databaseContext.Accounts.Where(a => a.Name == player.Name).Select(a => a.Password).FirstOrDefaultAsync();
+                            DestroyCharactersComponents(player);
+                            registerCharacterLayout.Create(player);
 
-                            if (string.IsNullOrEmpty(password))
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No se ha podido encontrar ninguna cuenta que coincida con la contraseña ingresada.");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
-                                return;
-                            }
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Ahora estas creando un nuevo personaje.");
+                            player.PlaySound(1085);
+                        }
+                        else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            charactersLayout.Show(player);
 
-                            PasswordHasher<object> hasher = new();
-                            bool isValidPassword = hasher.VerifyHashedPassword(null, password, loginComponent.Password) == PasswordVerificationResult.Success;
-
-                            if (isValidPassword)
-                            {
-                                DestroyLoginComponents(player);
-
-                                AccountInformation accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
-                                accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
-
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Has iniciado sesión correctamente en tu cuenta.");
-                            }
-                            else
-                            {
-                                loginLayout.Show(player);
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La contraseña ingresada es incorrecta; por favor, vuelve a intentarlo.");
-                            }
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
+                            player.PlaySound(1085);
                         }
                         break;
                     }
-                case 14:
+                case 13:
                     {
-                        player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Esta función aún está en desarrollo.");
-                        break;
-                    }
-                case 16:
-                    {
-                        loginLayout.Hide(player);
                         player.PlaySound(1085);
 
-                        InputDialog inputDialog = new()
+                        if (charactersComponent.Index == -1)
                         {
-                            Caption = $"{colors.GetHexadecimal("primaryColor")}Registrar nueva cuenta",
-                            Content = $"{colors.GetHexadecimal("primaryWhite")}¡Ey! {colors.GetHexadecimal("primaryColor")}{player.Name}{colors.GetHexadecimal("primaryWhite")}, Parece que quieres crear una neuva cuenta\nPor favor, ingresa el nombre de usuario de la nueva cuenta continuación para continuar.",
-                            Button1 = "Siguiente",
-                            Button2 = "Atras"
-                        };
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes seleccionar un personaje primero para poder empezar a jugar.");
+                            return;
+                        }
 
-                        InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+                        charactersLayout.Hide(player);
 
-                        if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Empezar a jugar", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente deseas empezar a jugar con este personaje?", "Sí", "No");
+                        MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                        if (messageDialogResponse.Response == DialogResponse.Disconnected)
                             return;
 
-                        loginLayout.Show(player);
-                        player.PlaySound(1085);
-
-                        if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                        if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 10 || inputDialogResponse.InputText.Length > 24)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado es inválido");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que este debe tener una longitud de 10 a 24 caracteres");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (verifyUserName.Verify(inputDialogResponse.InputText) is false)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado es inválido");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que este debe tener un formato alfanumérico a-Z 0-9");
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (inputDialogResponse.InputText == player.Name)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Ya estas Iniciando sesión en esa cuenta; por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (isPlayerConnect.Verify(inputDialogResponse.InputText))
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}El nombre de usuario ingresado ya se encuentra conectado; por favor, vuelve a intentarlo.");
-                                return;
-                            }
-                            else if (await databaseContext.Accounts.AnyAsync(a => a.Name == inputDialogResponse.InputText) is true)
-                            {
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Ya existe una cuenta con ese nombre de usuario; Por favor vuelve a intentarlo.");
-                                return;
-                            }
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryWhite")}¡Enhorabuena! Empezaste a jugar como {colors.GetHexadecimal("primaryGreen")}{characters[charactersComponent.Index].Name} {colors.GetHexadecimal("primaryYellow")}{characters[charactersComponent.Index].LastName}.");
+                            player.PlaySound(1085);
 
-                            DestroyLoginComponents(player);
-                            player.Name = inputDialogResponse.InputText;
-                            registerAccountLayout.Create(player);
+                            player.Spawn();
 
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Nombre del Usuario se establecio correctamente para su Inicio de sesión.");
+                            DestroyCharactersComponents(player);
                         }
-                        else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                         {
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite al Inicio de sesión.");
+                            charactersLayout.Show(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
+                            player.PlaySound(1085);
                         }
                         break;
                     }
@@ -318,9 +217,8 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
         }
     }
 
-    private static void DestroyLoginComponents(Player player)
+    private static void DestroyCharactersComponents(Player player)
     {
-        player.DestroyComponents<LoginLayoutComponent>();
-        player.DestroyComponents<LoginComponent>();
-    } */
+        player.DestroyComponents<CharactersLayoutComponent>();
+    }
 }

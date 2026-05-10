@@ -10,10 +10,11 @@ using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyDate.Interfaces;
 using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter;
 
-public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyDate verifyDate, IVerifyUserName verifyUserName, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterCharacterLayout registerCharacterLayout) : ISystem
+public class RegisterCharacter(DatabaseContext databaseContext, IDialogService dialogService, IVerifyDate verifyDate, IVerifyUserName verifyUserName, ICorrectTextStrings correctTextStrings, IColors colors, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout) : ISystem
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
@@ -378,6 +379,16 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
+                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+
+                            if (accountInformation?.Account is null || registerCharacterComponent?.Character is null)
+                            {
+                                DestroyRegisterAccountComponents(player);
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            registerCharacterComponent.Character.Account = accountInformation.Account;
                             databaseContext.Characters.Add(registerCharacterComponent.Character);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
@@ -387,16 +398,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                                 return;
                             }
 
-                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
-
-                            if (accountInformation is null || registerCharacterComponent.Character is null)
-                            {
-                                DestroyRegisterAccountComponents(player);
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
-                                return;
-                            }
-
-                            accountInformation.Account.Characters.Add(registerCharacterComponent.Character);
+                            charactersLayout.Create(player);
 
                             DestroyRegisterAccountComponents(player);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu Personaje fue creada con éxito.");

@@ -234,7 +234,7 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
         playerTextDraw[11].Proportional = true;
         playerTextDraw[11].Selectable = true;
 
-        playerTextDraw[12] = worldService.CreatePlayerTextDraw(player, new Vector2(363.000, 258.000), null);
+        playerTextDraw[12] = worldService.CreatePlayerTextDraw(player, new Vector2(363.000, 258.000), correctTextStrings.Correct("Selecciona un personaje"));
         playerTextDraw[12].Font = (TextDrawFont)1;
         playerTextDraw[12].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[12].TextSize = new Vector2(400.000f, 17.000f);
@@ -252,7 +252,7 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
         playerTextDraw[13].Outline = 2;
         playerTextDraw[13].Shadow = 0;
         playerTextDraw[13].Alignment = (TextDrawAlignment)2;
-        playerTextDraw[13].ForeColor = colors.ObtainRGB("secondaryColor");
+        playerTextDraw[13].ForeColor = colors.ObtainRGB("secondaryGreen");
         playerTextDraw[13].BackColor = 255;
         playerTextDraw[13].BoxColor = 9109759;
         playerTextDraw[13].UseBox = true;
@@ -266,7 +266,7 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
         playerTextDraw[14].Outline = 0;
         playerTextDraw[14].Shadow = 0;
         playerTextDraw[14].Alignment = (TextDrawAlignment)2;
-        playerTextDraw[14].ForeColor = colors.ObtainRGB("primaryColor");
+        playerTextDraw[14].ForeColor = colors.ObtainRGB("primaryGreen");
         playerTextDraw[14].BackColor = 255;
         playerTextDraw[14].Proportional = true;
 
@@ -349,7 +349,6 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
             new { modelId = "mdl-1000:police_character", positionX = 121.0f, positionY = 86.0f, letterSizeY = 0.6f, letterSizeX = 10.3f, width = 140.0f, height = 280.0f },
             new { modelId = "mdl-1000:tramp_character", positionX = 90.0f, positionY = 66.0f, letterSizeY = 0.6f, letterSizeX = 10.3f, width = 240.0f, height = 280.0f },
             new { modelId = "mdl-1000:mafia_character", positionX = 88.0f, positionY = 66.0f, letterSizeY = 0.6f, letterSizeX = 10.3f, width = 240.0f, height = 280.0f },
-            new { modelId = "mdl-1000:soldier_character", positionX = 101.0f, positionY = 58.0f, letterSizeY = 0.6f, letterSizeX = 10.3f, width = 240.0f, height = 280.0f }
         ];
 
         Random random = new();
