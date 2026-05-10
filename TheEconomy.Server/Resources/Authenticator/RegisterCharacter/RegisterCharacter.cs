@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
+using TheEconomy.Database;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
-using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
-using TheEconomy.Database;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
