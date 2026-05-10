@@ -1,38 +1,39 @@
-using SampSharp.Entities.SAMP;
 using System;
 using System.Linq;
+using SampSharp.Entities.SAMP;
+using TheEconomy.Database.Entity.Prohibitions;
+using TheEconomy.Database.Entity.Account;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Components;
-using TheEconomy.Server.Resources.Components.AccountInformation;
-using System.Threading.Tasks;
 
 namespace TheEconomy.Server.Resources.Services.VerifyProhibition.Layouts;
 
 public class VerifyProhibitionLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings) : IVerifyProhibitionLayout
 {
-    public void Create(Player player, AccountInformation accountInformation)
+    public void Create(Player player, ProhibitionEntity prohibitionEntity, AccountEntity account)
     {
         ArgumentNullException.ThrowIfNull(player);
-        ArgumentNullException.ThrowIfNull(accountInformation);
+        ArgumentNullException.ThrowIfNull(prohibitionEntity);
+        ArgumentNullException.ThrowIfNull(account);
 
         string[] paragraphs = new string[5];
 
-        if (accountInformation.Prohibition is not null)
+        if (prohibitionEntity is not null)
         {
             paragraphs[0] = "Prohibido";
-            paragraphs[0] = correctTextStrings.Correct($"Hola {player.Name}, fuiste prohibido del servidor por el administrador {accountInformation.Prohibition.ProhibitedBy}.");
-            paragraphs[1] = correctTextStrings.Correct($"Razón: {accountInformation.Prohibition.Reason} - Fecha: {accountInformation.Prohibition.DateOfProhibition}");
+            paragraphs[0] = correctTextStrings.Correct($"Hola {player.Name}, fuiste prohibido del servidor por el administrador {prohibitionEntity.ProhibitedBy}.");
+            paragraphs[1] = correctTextStrings.Correct($"Razón: {prohibitionEntity.Reason} - Fecha: {prohibitionEntity.DateOfProhibition}");
             paragraphs[2] = correctTextStrings.Correct($"Sí, quieres apelar a esta decision, puedes contactarnos en el Foro({serverInformation.Forum})");
             paragraphs[3] = correctTextStrings.Correct($"o en nuestro discord({serverInformation.Discord})");
             paragraphs[4] = correctTextStrings.Correct("Tenga en cuenta que no todos pueden apelar a un desbaneo por diversos motivos");
         }
-        else if (accountInformation.Account is not null)
+        else if (account is not null)
         {
             paragraphs[0] = correctTextStrings.Correct("Cuenta restringida");
-            paragraphs[0] = correctTextStrings.Correct($"Hola {player.Name}, esta cuenta fue prohibida por el administrador {accountInformation.Account.AccountProhibitedBy}.");
-            paragraphs[1] = correctTextStrings.Correct($"Razón: {accountInformation.Account.ReasonForProhibition} - Fecha: {accountInformation.Account.DateOfProhibition}{(accountInformation.Account.ProhibitedAccount > 0 ? $" - Días ({accountInformation.Account.ProhibitedAccount})" : "")}");
+            paragraphs[0] = correctTextStrings.Correct($"Hola {player.Name}, esta cuenta fue prohibida por el administrador {account.AccountProhibitedBy}.");
+            paragraphs[1] = correctTextStrings.Correct($"Razón: {account.ReasonForProhibition} - Fecha: {account.DateOfProhibition}{(account.ProhibitedAccount > 0 ? $" - Días ({account.ProhibitedAccount})" : "")}");
             paragraphs[2] = correctTextStrings.Correct($"Sí, quieres apelar a esta decision, puedes contactarnos en el Foro({serverInformation.Forum})");
             paragraphs[3] = correctTextStrings.Correct($"o en nuestro discord({serverInformation.Discord})");
             paragraphs[4] = correctTextStrings.Correct("Tenga en cuenta que no todos pueden apelar a un desbaneo por diversos motivos");

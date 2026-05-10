@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
-using SampSharp.Entities.SAMP;
-using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Database.Entity.Account;
+using TheEconomy.Database.Entity.Prohibitions;
+
+#nullable enable
 
 namespace TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 
 public interface IVerifyProhibition
 {
-    Task<AccountInformation> Verify(string name,string IP);
+    Task<(ProhibitionEntity? Prohibition, AccountEntity? Account)> Verify(string name, string IP);
 }

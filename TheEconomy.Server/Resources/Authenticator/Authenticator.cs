@@ -1,17 +1,20 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TheEconomy.Database;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
+using TheEconomy.Database;
+using TheEconomy.Database.Entity.Account;
+using TheEconomy.Database.Entity.Prohibitions;
 using TheEconomy.Server.Resources.Services.DeleteConversation.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
-using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 using TheEconomy.Server.Resources.KnowledgeTest.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
+
+#nullable enable
 
 namespace TheEconomy.Server.Resources.Authenticator;
 
@@ -36,11 +39,11 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
             return;
         }
 
-        AccountInformation accountInformation = await verifyProhibition.Verify(player.Name, player.Ip);
+        (ProhibitionEntity? prohibition, AccountEntity? account) = await verifyProhibition.Verify(player.Name, player.Ip);
 
-        if (accountInformation.Account is not null || accountInformation.Prohibition is not null)
+        if (account is not null || prohibition is not null)
         {
-            verifyProhibitionLayout.Create(player, accountInformation);
+            verifyProhibitionLayout.Create(player, prohibition, account);
             verifyProhibitionLayout.Show(player);
             return;
         }
