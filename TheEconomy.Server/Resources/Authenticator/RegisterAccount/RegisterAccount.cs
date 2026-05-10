@@ -205,11 +205,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                                 return;
 
                             case bool _ when await databaseContext.Accounts.AnyAsync(a => a.Name == registerAccountComponent.Account.Name):
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu nombre de Usuario ya se encuentra registrado; por favor, vuelve a intentarlo.");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu nombre de usuario ya se encuentra registrado; por favor, vuelve a intentarlo.");
                                 return;
 
                             case bool _ when await databaseContext.Accounts.AnyAsync(a => a.Mail == registerAccountComponent.Account.Mail):
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu Correo Electronico ya se encuentra registrado; por favor, vuelve a intentarlo.");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu correo electrónico ya se encuentra registrado; por favor, vuelve a intentarlo.");
                                 return;
                         }
 
