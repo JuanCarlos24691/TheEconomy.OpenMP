@@ -172,7 +172,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                             registerCharacterLayoutComponent.PlayerTextDrawings[12].Text = "Mujer";
                         }
 
-                        player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El género del Personaje se establecio correctamente.");
+                        player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}El Género del Personaje se establecio correctamente.");
 
                         break;
                     }
@@ -343,7 +343,7 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                                 return;
 
                             case bool _ when registerCharacterComponent.Character.Gender == -1:
-                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un correo electronico para registrar tu cuenta; por favor, vuelve a intentarlo.");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado un Género para registrar tu cuenta; por favor, vuelve a intentarlo.");
                                 return;
 
                             case bool _ when registerCharacterComponent.Character.BirthDate == default:
