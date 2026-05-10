@@ -18,7 +18,7 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        if (player.GetComponent<CharactersLayoutComponent>().PlayerTextDrawings is not null)
+        if (player.GetComponent<CharactersLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
         AccountInformation accountInformation = player.GetComponent<AccountInformation>();

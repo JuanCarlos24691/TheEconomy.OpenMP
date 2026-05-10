@@ -16,7 +16,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        if (player.GetComponent<RegisterCharacterLayoutComponent>().PlayerTextDrawings is not null)
+        if (player.GetComponent<RegisterCharacterLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
         if (player.GetComponent<AccountInformation>()?.Account?.Characters is null)

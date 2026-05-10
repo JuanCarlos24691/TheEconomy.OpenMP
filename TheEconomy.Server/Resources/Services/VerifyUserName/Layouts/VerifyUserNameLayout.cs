@@ -13,7 +13,7 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        if (player.GetComponent<VerifyUserNameLayoutComponent>().PlayerTextDrawings is not null)
+        if (player.GetComponent<VerifyUserNameLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
         PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[6];

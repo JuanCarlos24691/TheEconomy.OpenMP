@@ -15,7 +15,7 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        if (player.GetComponent<RegisterAccountLayoutComponent>().PlayerTextDrawings is not null)
+        if (player.GetComponent<RegisterAccountLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
         PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[21];

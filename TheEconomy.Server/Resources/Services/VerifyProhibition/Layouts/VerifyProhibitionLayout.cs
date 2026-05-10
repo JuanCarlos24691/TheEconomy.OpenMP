@@ -19,7 +19,7 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
         ArgumentNullException.ThrowIfNull(prohibitionEntity);
         ArgumentNullException.ThrowIfNull(account);
 
-        if (player.GetComponent<VerifyProhibitionLayoutComponent>().PlayerTextDrawings is not null)
+        if (player.GetComponent<VerifyProhibitionLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
         string[] paragraphs = new string[5];

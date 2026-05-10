@@ -15,6 +15,9 @@ public class LoginLayout(IWorldService worldService, IServerInformation serverIn
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        if (player.GetComponent<LoginLayoutComponent>()?.PlayerTextDrawings is not null)
+            return;
+
         PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[19];
 
         playerTextDraw[0] = worldService.CreatePlayerTextDraw(player, new Vector2(320.000000, 110.000000), "_");
