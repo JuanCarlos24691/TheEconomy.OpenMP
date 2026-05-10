@@ -11,6 +11,7 @@ using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
 using TheEconomy.Database;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount;
 
@@ -88,7 +89,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                         if (inputDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 8 || inputDialogResponse.InputText.Length > 32)
+                            if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 8 || inputDialogResponse.InputText.Length > 128)
                             {
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes ingresar una contraseña válida antes de continuar.");
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que estas deben tener una longitud entre 8 y 32 caracteres. Por favor vuelve a intentarlo.");
@@ -215,7 +216,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+                            AccountInformation accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
                             accountInformation.Account = registerAccountComponent.Account;
 
                             if (accountInformation.Account is null || registerAccountComponent.Account is null)
@@ -224,6 +225,9 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación de la Cuenta; por favor, vuelve a intentarlo.");
                                 return;
                             }
+
+                            PasswordHasher<object> hasher = new();
+                            registerAccountComponent.Account.Password = hasher.HashPassword(null, registerAccountComponent.Account.Password!);
 
                             databaseContext.Accounts.Add(registerAccountComponent.Account);
 

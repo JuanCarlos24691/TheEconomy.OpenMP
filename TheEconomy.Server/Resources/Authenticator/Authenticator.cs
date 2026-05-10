@@ -9,7 +9,6 @@ using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.BlackBackground.Interfaces;
-using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 using TheEconomy.Server.Resources.KnowledgeTest.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
@@ -48,9 +47,6 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
 
         if (await databaseContext.Accounts.AnyAsync(a => a.Name == player.Name))
         {
-            accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
-            accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
-
             loginLayout.Create(player);
             loginLayout.Show(player);
         }

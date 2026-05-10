@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Linq;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 using TheEconomy.Database;
@@ -11,6 +12,7 @@ using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
 using TheEconomy.Server.Resources.Components.AccountInformation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace TheEconomy.Server.Resources.Authenticator.Login;
 
@@ -129,6 +131,129 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
                         }
                         break;
                     }
+                case 7:
+                    {
+                        loginLayout.Hide(player);
+                        player.PlaySound(1085);
+
+                        InputDialog inputDialog = new()
+                        {
+                            Caption = $"{colors.GetHexadecimal("primaryColor")}Contraseña de la Cuenta",
+                            Content = $"{colors.GetHexadecimal("primaryWhite")}$Para ingresar a tu cuenta escribe tu Contraseña a continuación:\n\nFecha de ingreso: {colors.GetHexadecimal("primaryColor")}{DateTime.Now}{colors.GetHexadecimal("primaryWhite")}",
+                            Button1 = "Siguiente",
+                            Button2 = "Atras"
+                        };
+
+                        InputDialogResponse inputDialogResponse = await dialogService.ShowAsync(player, inputDialog);
+
+                        if (inputDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        loginLayout.Show(player);
+                        player.PlaySound(1085);
+
+                        if (inputDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            if (string.IsNullOrEmpty(inputDialogResponse.InputText) || inputDialogResponse.InputText.Length < 8 || inputDialogResponse.InputText.Length > 128)
+                            {
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La contraseña de la cuenta es inválida");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que esta debe tener una longitud de 8 a 128 caracteres");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            loginComponent.Password = inputDialogResponse.InputText;
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}La contraseña de la cuenta se ha establecio correctamente para su Inicio de sesión.");
+                        }
+                        else if (inputDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite al Inicio de sesión.");
+                        }
+                        break;
+                    }
+                case 10:
+                    {
+                        if (string.IsNullOrEmpty(loginComponent.Password))
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No has ingresado una contraseña para tu cuenta. Por favor vuelve a intentarlo.");
+                            return;
+                        }
+
+                        if (loginLayoutComponent.ShowPassword)
+                        {
+                            loginLayoutComponent.PlayerTextDrawings[9].Text = new string('.', loginComponent.Password.Length);
+                            loginLayoutComponent.ShowPassword = false;
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Ocultaste la contraseña.");
+                        }
+                        else
+                        {
+                            loginLayoutComponent.ShowPassword = true;
+
+                            loginLayoutComponent.PlayerTextDrawings[9].Text = correctTextStrings.Correct(loginComponent.Password);
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Mostraste la contraseña.");
+                        }
+                        break;
+                    }
+                case 12:
+                    {
+                        player.PlaySound(1085);
+
+                        if (string.IsNullOrEmpty(loginComponent.Password))
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que no tienes asignado una contraseña para Iniciar Sesión; por favor, vuelve a intentarlo.");
+                            return;
+                        }
+                        else if (loginComponent.Password.Length < 8 || loginComponent.Password.Length > 128)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La contraseña de la cuenta es inválida");
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Recuerda que esta debe tener una longitud de 8 a 128 caracteres");
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
+                            return;
+                        }
+
+                        loginLayout.Hide(player);
+
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Iniciar Sesión", $"{colors.GetHexadecimal("primaryWhite")}Estás a punto de Iniciar Sesión\n¿Deseas continuar?", "Continuar", "Cancelar");
+                        MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                        if (messageDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        player.PlaySound(1085);
+
+                        if (messageDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            string password = await databaseContext.Accounts.Where(a => a.Name == player.Name).Select(a => a.Password).FirstOrDefaultAsync();
+
+                            if (string.IsNullOrEmpty(password))
+                            {
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No se ha podido encontrar ninguna cuenta que coincida con la contraseña ingresada.");
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Por favor, vuelve a intentarlo.");
+                                return;
+                            }
+
+                            PasswordHasher<object> hasher = new();
+                            bool isValidPassword = hasher.VerifyHashedPassword(null, password, loginComponent.Password) == PasswordVerificationResult.Success;
+
+                            if (isValidPassword)
+                            {
+                                DestroyLoginComponents(player);
+
+                                AccountInformation accountInformation = player.GetComponent<AccountInformation>() ?? player.AddComponent<AccountInformation>();
+                                accountInformation.Account = await databaseContext.Accounts.FirstOrDefaultAsync(a => a.Name == player.Name);
+
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Has iniciado sesión correctamente en tu cuenta.");
+                            }
+                            else
+                            {
+                                loginLayout.Show(player);
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}La contraseña ingresada es incorrecta; por favor, vuelve a intentarlo.");
+                            }
+                        }
+                        break;
+                    }
+
             }
         }
     }

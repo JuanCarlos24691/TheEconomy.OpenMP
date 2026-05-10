@@ -146,7 +146,7 @@ public class LoginLayout(IWorldService worldService, IServerInformation serverIn
         playerTextDraw[8].Proportional = true;
         playerTextDraw[8].Selectable = false;
 
-        playerTextDraw[9] = worldService.CreatePlayerTextDraw(player, new Vector2(367.000, 187.400), "........");
+        playerTextDraw[9] = worldService.CreatePlayerTextDraw(player, new Vector2(367.000, 188.900), "........");
         playerTextDraw[9].Font = (TextDrawFont)1;
         playerTextDraw[9].LetterSize = new Vector2(0.287499, 1.299998);
         playerTextDraw[9].TextSize = new Vector2(400.000000f, 17.000000f);

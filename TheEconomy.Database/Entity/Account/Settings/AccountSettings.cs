@@ -13,7 +13,7 @@ namespace TheEconomy.Database.Entity.Account.Settings
             builder.Property(a => a.UUID).HasColumnType("binary(16)");
             builder.HasIndex(a => a.Name).IsUnique();
             builder.Property(a => a.Name).HasMaxLength(24).IsRequired();
-            builder.Property(a => a.Password).HasMaxLength(128).IsRequired();
+            builder.Property(a => a.Password).HasColumnType("text").IsRequired();
             builder.Property(a => a.Mail).HasMaxLength(319).IsRequired();
             builder.Property(a => a.AdministrativeLevel).HasMaxLength(5).IsRequired(false).HasDefaultValue(0);
             builder.Property(a => a.SelectedCharacter).HasMaxLength(2).IsRequired(false);
