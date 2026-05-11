@@ -27,8 +27,8 @@ namespace TheEconomy.Database.Entity.Character.Settings
             builder.Property(c => c.SpawnY).HasDefaultValue(-1260.7579).IsRequired();
             builder.Property(c => c.SpawnZ).HasDefaultValue(23.9486).IsRequired();
             builder.Property(c => c.Angle).HasDefaultValue(271.7634).IsRequired();
-            builder.Property(c => c.FirstConnection).HasColumnType("date").IsRequired();
-            builder.Property(c => c.LastConnection).HasColumnType("date").IsRequired();
+            builder.Property(c => c.FirstConnection).HasColumnType("datetime").IsRequired().HasDefaultValueSql("GETDATE()");
+            builder.Property(c => c.LastConnection).HasColumnType("datetime").IsRequired().HasDefaultValueSql("GETDATE()");
         }
     }
 }
