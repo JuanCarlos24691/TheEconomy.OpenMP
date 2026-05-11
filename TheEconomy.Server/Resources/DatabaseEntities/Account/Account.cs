@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using SampSharp.Entities;
@@ -17,8 +18,9 @@ public class Account(ISaveAccountRecord saveAccountRecord) : ISystem
         if (accountComponent == null || !accountComponent.IsComponentAlive || accountComponent?.Account is null || !accountComponent.IsLoggedIn)
             return;
 
-        accountComponent.Account.SelectedCharacter = -1;
+        accountComponent.Account.Characters.ElementAt(accountComponent.Account.SelectedCharacter).LastConnection = DateTime.UtcNow;
         accountComponent.Account.Characters.ToList().ForEach(c => c.Online = false);
+        accountComponent.Account.SelectedCharacter = -1;
 
         await saveAccountRecord.Save(player);
     }
