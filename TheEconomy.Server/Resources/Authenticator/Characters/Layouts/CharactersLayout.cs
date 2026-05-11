@@ -7,7 +7,7 @@ using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
-using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 using TheEconomy.Server.Resources.Authenticator.Characters.Components;
 
 namespace TheEconomy.Server.Resources.Authenticator.Characters.Layouts;
@@ -21,15 +21,15 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
         if (player.GetComponent<CharactersLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
-        AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+        AccountComponent accountComponent = player.GetComponent<AccountComponent>();
 
-        if (accountInformation?.Account?.Characters is null)
+        if (accountComponent?.Account?.Characters is null)
         {
             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para realizar esta acción; por favor, vuelve a intentarlo.");
             return;
         }
 
-        List<CharacterEntity> characters = [.. accountInformation.Account.Characters];
+        List<CharacterEntity> characters = [.. accountComponent.Account.Characters];
 
         PlayerTextDraw[] playerTextDraw = new PlayerTextDraw[19];
 

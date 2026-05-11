@@ -15,11 +15,12 @@ namespace TheEconomy.Database.Entity.Account.Settings
             builder.Property(a => a.Name).HasMaxLength(24).IsRequired();
             builder.Property(a => a.Password).HasColumnType("text").IsRequired();
             builder.Property(a => a.Mail).HasMaxLength(319).IsRequired();
-            builder.Property(a => a.AdministrativeLevel).HasMaxLength(5).IsRequired(false).HasDefaultValue(0);
-            builder.Property(a => a.SelectedCharacter).HasMaxLength(2).IsRequired(false);
-            builder.Property(a => a.AccountProhibitedBy).HasMaxLength(24).IsRequired(false);
-            builder.Property(a => a.ReasonForProhibition).HasMaxLength(128).IsRequired(false);
-            builder.Property(a => a.DateOfProhibition).HasColumnType("date").IsRequired(false);
+            builder.Property(a => a.AdministrativeLevel).HasMaxLength(5).HasDefaultValue(0);
+            builder.Property(a => a.SelectedCharacter).HasMaxLength(2);
+            builder.Property(a => a.ProhibitedAccount).HasDefaultValue(0);
+            builder.Property(a => a.AccountProhibitedBy).HasMaxLength(24);
+            builder.Property(a => a.ReasonForProhibition).HasMaxLength(128);
+            builder.Property(a => a.DateOfProhibition).HasColumnType("date");
         }
     }
 }

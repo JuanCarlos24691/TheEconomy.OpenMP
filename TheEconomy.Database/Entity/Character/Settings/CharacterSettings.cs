@@ -23,18 +23,12 @@ namespace TheEconomy.Database.Entity.Character.Settings
             builder.Property(c => c.EyeColor).HasMaxLength(24).IsRequired();
             builder.Property(c => c.HairColor).HasMaxLength(24).IsRequired();
             builder.Property(c => c.SkinColor).HasMaxLength(24).IsRequired();
-            builder.Property(c => c.SpawnX).HasDefaultValue(0.0).IsRequired();
-            builder.Property(c => c.SpawnY).HasDefaultValue(0.0).IsRequired();
-            builder.Property(c => c.SpawnZ).HasDefaultValue(0.0).IsRequired();
-            builder.Property(c => c.Angle).HasDefaultValue(0.0).IsRequired();
+            builder.Property(c => c.SpawnX).HasDefaultValue(2243.8772).IsRequired();
+            builder.Property(c => c.SpawnY).HasDefaultValue(-1260.7579).IsRequired();
+            builder.Property(c => c.SpawnZ).HasDefaultValue(23.9486).IsRequired();
+            builder.Property(c => c.Angle).HasDefaultValue(271.7634).IsRequired();
             builder.Property(c => c.FirstConnection).HasColumnType("date").IsRequired();
             builder.Property(c => c.LastConnection).HasColumnType("date").IsRequired();
-            builder.Property(c => c.StabbingGun).IsRequired(false);
-            builder.Property(c => c.NumberOfBladedGun).IsRequired(false);
-            builder.Property(c => c.ShortGun).IsRequired(false);
-            builder.Property(c => c.ShortGunAmmunition).IsRequired(false);
-            builder.Property(c => c.LongGun).IsRequired(false);
-            builder.Property(c => c.LongGunAmmunition).IsRequired(false);
         }
     }
 }

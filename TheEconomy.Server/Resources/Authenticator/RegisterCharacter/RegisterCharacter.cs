@@ -9,7 +9,7 @@ using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyDate.Interfaces;
-using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter;
@@ -328,9 +328,11 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                     {
                         player.PlaySound(1085);
 
+                        AccountComponent accountComponent = player.GetComponent<AccountComponent>();
+
                         switch (true)
                         {
-                            case bool _ when player.GetComponent<AccountInformation>().Account.Characters.Count >= 3:
+                            case bool _ when accountComponent.Account.Characters.Count >= 3:
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu Cuenta ya tiene 3 personajes asociados; por favor, vuelve a intentarlo.");
                                 return;
 
@@ -379,16 +381,14 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
-
-                            if (accountInformation?.Account is null || registerCharacterComponent?.Character is null)
+                            if (accountComponent?.Account is null || registerCharacterComponent?.Character is null)
                             {
                                 DestroyRegisterAccountComponents(player);
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para finalizar la creación del Personaje; por favor, vuelve a intentarlo.");
                                 return;
                             }
 
-                            registerCharacterComponent.Character.Account = accountInformation.Account;
+                            registerCharacterComponent.Character.Account = accountComponent.Account;
                             databaseContext.Characters.Add(registerCharacterComponent.Character);
 
                             if (await databaseContext.SaveChangesAsync() == 0)
@@ -398,9 +398,11 @@ public class RegisterCharacter(DatabaseContext databaseContext, IDialogService d
                                 return;
                             }
 
+                            DestroyRegisterAccountComponents(player);
+
+                            accountComponent.IsLoggedIn = true;
                             charactersLayout.Create(player);
 
-                            DestroyRegisterAccountComponents(player);
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu Personaje fue creada con éxito.");
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)

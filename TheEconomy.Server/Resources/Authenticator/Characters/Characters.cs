@@ -3,31 +3,52 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
+using SampSharp.Entities.SAMP.Commands;
 using TheEconomy.Database;
 using TheEconomy.Database.Entity.Character;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Characters.Components;
 using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
-using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
-using TheEconomy.Server.Resources.BlackBackground.Interfaces;
-using SampSharp.Entities.SAMP.Commands;
+using TheEconomy.Server.Resources.PlayerApparence.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.Characters;
 
-public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors, IBlackBackgroundLayout blackBackgroundLayout) : ISystem
+public class Characters(IWorldService worldService, DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors, ISetSpawnParameters setSpawnParameters) : ISystem
 {
-    [Event]
-    public static bool OnPlayerRequestClass(Player player, int classId)
-    {
-        return false; // aquí sí puedes bloquear comportamiento del selector
-    }
-
     [PlayerCommand("kill")]
     public void KillCommand(Player player)
     {
         player.Health = 0f;
+    }
+
+    [PlayerCommand("nrg")]
+    public void OnNrgCommand(Player player)
+    {
+        var pos = player.Position;
+        var angle = player.Angle;
+
+        // Calcular posición frente al jugador (2 unidades adelante)
+        var spawnX = pos.X + (float)(Math.Sin(angle * Math.PI / 180.0) * 2);
+        var spawnY = pos.Y + (float)(Math.Cos(angle * Math.PI / 180.0) * 2);
+        var spawnZ = pos.Z;
+
+        // Crear la NRG-500 (Model ID: 522) usando IWorldService
+        var vehicle = worldService.CreateVehicle(
+            VehicleModelType.NRG500,  // 522
+            position: new Vector3(spawnX, spawnY, spawnZ),
+            rotation: angle,
+            color1: -1,          // color aleatorio
+            color2: -1,
+            respawnDelay: 60     // segundos para auto-despawnear si está vacío
+        );
+
+        // Meter al jugador en el asiento del conductor
+        player.PutInVehicle(vehicle, 0);
+
+        player.SendClientMessage(Color.GreenYellow, "✔ NRG-500 spawneada!");
     }
 
     [Event]
@@ -37,16 +58,15 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
         if (charactersLayoutComponent is not null && charactersLayoutComponent.IsComponentAlive && charactersLayoutComponent.PlayerTextDrawings is not null)
         {
-            AccountInformation accountInformation = player.GetComponent<AccountInformation>();
+            AccountComponent accountComponent = player.GetComponent<AccountComponent>();
 
-            if (accountInformation?.Account?.Characters is null)
+            if (accountComponent?.Account?.Characters is null)
             {
                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para realizar esta acción; por favor, vuelve a intentarlo.");
                 return;
             }
 
-            List<CharacterEntity> characters = [.. accountInformation.Account.Characters];
-            CharactersComponent charactersComponent = player.GetComponent<CharactersComponent>() ?? player.AddComponent<CharactersComponent>();
+            List<CharacterEntity> characters = [.. accountComponent.Account.Characters];
 
             switch (charactersLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
@@ -83,8 +103,8 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (characters.Count > 0 && characters[0] is not null)
                         {
-                            charactersComponent.Index = 0;
-                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[charactersComponent.Index].Name)}_{correctTextStrings.Correct(characters[charactersComponent.Index].LastName)}";
+                            accountComponent.Account.SelectedCharacter = 0;
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].LastName)}";
                             return;
                         }
 
@@ -119,8 +139,8 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (characters.Count > 1 && characters[1] is not null)
                         {
-                            charactersComponent.Index = 1;
-                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[charactersComponent.Index].Name)}_{correctTextStrings.Correct(characters[charactersComponent.Index].LastName)}";
+                            accountComponent.Account.SelectedCharacter = 1;
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].LastName)}";
                             return;
                         }
 
@@ -155,8 +175,8 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (characters.Count > 2 && characters[2] is not null)
                         {
-                            charactersComponent.Index = 2;
-                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[charactersComponent.Index].Name)}_{correctTextStrings.Correct(characters[charactersComponent.Index].LastName)}";
+                            accountComponent.Account.SelectedCharacter = 2;
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].LastName)}";
                             return;
                         }
 
@@ -189,7 +209,7 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                     {
                         player.PlaySound(1085);
 
-                        if (charactersComponent.Index == -1)
+                        if (accountComponent?.Account?.SelectedCharacter is null)
                         {
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes seleccionar un personaje primero para poder empezar a jugar.");
                             return;
@@ -205,18 +225,10 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            player.SendClientMessage($"{colors.GetHexadecimal("primaryWhite")}¡Enhorabuena! Empezaste a jugar como {colors.GetHexadecimal("primaryGreen")}{characters[charactersComponent.Index].Name} {colors.GetHexadecimal("primaryYellow")}{characters[charactersComponent.Index].LastName}.");
-                            player.PlaySound(1085);
-
-                            if (player.IsSelectingTextDraw is true)
-                                player.CancelSelectTextDraw();
-
-                            blackBackgroundLayout.Hide(player);
-
-                            player.SetSpawnInfo(0, characters[charactersComponent.Index].Appearance, new Vector3(characters[charactersComponent.Index].SpawnX, characters[charactersComponent.Index].SpawnY, characters[charactersComponent.Index].SpawnZ), characters[charactersComponent.Index].Angle, Weapon.None, 0, Weapon.None, 0, Weapon.None, 0);
-                            player.Spawn();
-
                             DestroyCharactersComponents(player);
+                            setSpawnParameters.Spawn(player, characters[accountComponent.Account.SelectedCharacter], true);
+
+                            player.PlaySound(1085);
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
                         {

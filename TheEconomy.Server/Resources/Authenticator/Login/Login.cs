@@ -13,9 +13,9 @@ using TheEconomy.Server.Resources.Authenticator.Login.Components;
 using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
-using TheEconomy.Server.Resources.Components.AccountInformation;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
+using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 
 namespace TheEconomy.Server.Resources.Authenticator.Login;
 
@@ -232,13 +232,15 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
                             {
                                 DestroyLoginComponents(player);
 
-                                AccountEntity account = await databaseContext.Accounts.Include(a => a.Characters).FirstOrDefaultAsync(a => a.Name == player.Name);
+                                AccountEntity accountEntity = await databaseContext.Accounts.Include(a => a.Characters).FirstOrDefaultAsync(a => a.Name == player.Name);
 
-                                if (account is not null)
+                                if (accountEntity is not null)
                                 {
-                                    player.AddComponent(new AccountInformation { Account = account });
-                                    charactersLayout.Create(player);
+                                    AccountComponent accountComponent = player.GetComponent<AccountComponent>() ?? player.AddComponent<AccountComponent>();
+                                    accountComponent.Account = accountEntity;
+                                    accountComponent.IsLoggedIn = true;
 
+                                    charactersLayout.Create(player);
                                     player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Has iniciado sesión correctamente en tu cuenta.");
                                 }
                                 else

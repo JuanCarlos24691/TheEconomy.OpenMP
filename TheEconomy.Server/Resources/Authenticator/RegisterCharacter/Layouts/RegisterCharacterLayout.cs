@@ -6,7 +6,7 @@ using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
-using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Layouts;
 
@@ -19,7 +19,7 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
         if (player.GetComponent<RegisterCharacterLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
-        if (player.GetComponent<AccountInformation>()?.Account?.Characters is null)
+        if (player.GetComponent<AccountComponent>()?.Account?.Characters is null)
         {
             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Parece que tu entidad no cuenta con los componentes necesarios para realizar esta acción; por favor, vuelve a intentarlo.");
             return;

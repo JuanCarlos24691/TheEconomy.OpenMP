@@ -11,7 +11,7 @@ using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
 using TheEconomy.Server.Resources.Services.VerifyMail.Interfaces;
-using TheEconomy.Server.Resources.Components.AccountInformation;
+using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Interfaces;
@@ -242,9 +242,11 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                             if (await databaseContext.SaveChangesAsync() > 0)
                             {
-                                player.AddComponent(new AccountInformation { Account = registerAccountComponent.Account });
-                                charactersLayout.Create(player);
+                                AccountComponent accountComponent = player.GetComponent<AccountComponent>() ?? player.AddComponent<AccountComponent>();
+                                accountComponent.Account = registerAccountComponent.Account;
+                                accountComponent.IsLoggedIn = true;
 
+                                charactersLayout.Create(player);
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu cuenta fue creada con éxito.");
                             }
                             else

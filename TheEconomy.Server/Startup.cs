@@ -34,6 +34,10 @@ using TheEconomy.Server.Resources.Services.IsPlayerConnect.Interfaces;
 using TheEconomy.Server.Resources.Services.IsPlayerConnect;
 using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Characters.Layouts;
+using TheEconomy.Server.Resources.PlayerApparence;
+using TheEconomy.Server.Resources.PlayerApparence.Interfaces;
+using TheEconomy.Server.Resources.DatabaseEntities.Account.Interfaces;
+using TheEconomy.Server.Resources.DatabaseEntities.Account;
 
 namespace TheEconomy.Server
 {
@@ -43,6 +47,8 @@ namespace TheEconomy.Server
         {
             services.AddDbContext<DatabaseContext>();
 
+            services.AddSingleton<ISaveAccountRecord, SaveAccountRecord>();
+            services.AddSingleton<ISetSpawnParameters, SetSpawnParameters>();
             services.AddSingleton<IKnowledgeTest, KnowledgeTest>();
             services.AddSingleton<IIsPlayerConnect, IsPlayerConnect>();
             services.AddSingleton<IVerifyUserNameLayout, VerifyUserNameLayout>();

@@ -1,9 +1,9 @@
 ﻿using TheEconomy.Database.Entity.Account;
 using SampSharp.Entities;
 
-namespace TheEconomy.Server.Resources.Components.AccountInformation;
+namespace TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 
-public class AccountInformation : Component
+public class AccountComponent : Component
 {
     public AccountEntity Account { get; set; }
     
