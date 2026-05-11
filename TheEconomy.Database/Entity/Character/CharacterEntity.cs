@@ -23,11 +23,5 @@ namespace TheEconomy.Database.Entity.Character
         public float Angle { get; set; }
         public DateTime FirstConnection { get; set; }
         public DateTime LastConnection { get; set; }
-        public int? StabbingGun { get; set; }
-        public int? NumberOfBladedGun { get; set; }
-        public int? ShortGun { get; set; }
-        public int? ShortGunAmmunition { get; set; }
-        public int? LongGun { get; set; }
-        public int? LongGunAmmunition { get; set; }
     }
 }
