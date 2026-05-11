@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
-using SampSharp.Entities.SAMP.Commands;
 using TheEconomy.Database;
 using TheEconomy.Database.Entity.Character;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
@@ -16,58 +15,8 @@ using TheEconomy.Server.Resources.PlayerApparence.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.Characters;
 
-public class Characters(IWorldService worldService, DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors, ISetSpawnParameters setSpawnParameters) : ISystem
+public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors, ISetSpawnParameters setSpawnParameters) : ISystem
 {
-    [PlayerCommand("kill")]
-    public void KillCommand(Player player)
-    {
-        player.Health = 0f;
-    }
-
-    [PlayerCommand("nrg")]
-    public void OnNrgCommand(Player player)
-    {
-        var pos = player.Position;
-        var angle = player.Angle;
-
-        // Calcular posición frente al jugador (2 unidades adelante)
-        var spawnX = pos.X + (float)(Math.Sin(angle * Math.PI / 180.0) * 2);
-        var spawnY = pos.Y + (float)(Math.Cos(angle * Math.PI / 180.0) * 2);
-        var spawnZ = pos.Z;
-
-        // Crear la NRG-500 (Model ID: 522) usando IWorldService
-        var vehicle = worldService.CreateVehicle(
-            VehicleModelType.NRG500,  // 522
-            position: new Vector3(spawnX, spawnY, spawnZ),
-            rotation: angle,
-            color1: -1,          // color aleatorio
-            color2: -1,
-            respawnDelay: 60     // segundos para auto-despawnear si está vacío
-        );
-
-        // Meter al jugador en el asiento del conductor
-        player.PutInVehicle(vehicle, 0);
-
-        player.SendClientMessage(Color.GreenYellow, "✔ NRG-500 spawneada!");
-    }
-
-    [PlayerCommand("test")]
-    public void OnTestAccountCommand(Player player)
-    {
-        var accountComponent = player.GetComponent<AccountComponent>();
-
-        if (accountComponent == null || !accountComponent.IsLoggedIn || accountComponent.Account == null)
-        {
-            player.SendClientMessage(Color.Red, "No tienes una cuenta activa.");
-            return;
-        }
-
-        // Cambiar el nivel administrativo como prueba
-        accountComponent.Account.AdministrativeLevel++;
-
-        player.SendClientMessage(Color.GreenYellow, $"Nivel admin cambiado a: {accountComponent.Account.AdministrativeLevel} (se guardará en 1s)");
-    }
-
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
@@ -229,7 +178,7 @@ public class Characters(IWorldService worldService, DatabaseContext databaseCont
                     {
                         player.PlaySound(1085);
 
-                        if (accountComponent?.Account?.SelectedCharacter is null)
+                        if (accountComponent?.Account?.SelectedCharacter == -1)
                         {
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes seleccionar un personaje primero para poder empezar a jugar.");
                             return;
@@ -261,6 +210,41 @@ public class Characters(IWorldService worldService, DatabaseContext databaseCont
                     }
                 case 15:
                     {
+                        player.PlaySound(1085);
+
+                        switch (true)
+                        {
+                            case bool _ when accountComponent?.Account?.SelectedCharacter == -1:
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes seleccionar un personaje primero para poder borrarlo; por favor, vuelve a intentarlo.");
+                                return;
+                            case bool _ when characters[accountComponent.Account.SelectedCharacter].Online == true:
+                                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No puedes eliminar un personaje que se encuentra jugando actualmente; por favor, vuelve a intentarlo.");
+                                return;
+                        }
+
+                        charactersLayout.Hide(player);
+
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Eliminar personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente deseas eliminar este personaje?", "Sí", "No");
+                        MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                        if (messageDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        if (messageDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            databaseContext.Characters.Remove(characters[accountComponent.Account.SelectedCharacter]);
+
+                            charactersLayout.Destroy(player);
+                            charactersLayout.Create(player);
+                            player.PlaySound(1085);
+                        }
+                        else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            charactersLayout.Show(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
+                            player.PlaySound(1085);
+                        }
                         break;
                     }
             }

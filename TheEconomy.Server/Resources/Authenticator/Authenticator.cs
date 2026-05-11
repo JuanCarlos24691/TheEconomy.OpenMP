@@ -55,7 +55,7 @@ public class Authenticator(DatabaseContext databaseContext, IDeleteConversation 
             else
             {
                 _ = Authenticate(player);
-                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No superaste el test de rol. Por favor, vuelve a intentarlo.");
+                player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No superaste el test de rol; por favor, vuelve a intentarlo.");
             }
             
             return;
