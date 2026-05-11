@@ -6,7 +6,7 @@ using TheEconomy.Server.Resources.PlayerApparence.Interfaces;
 
 namespace TheEconomy.Server.Resources.PlayerApparence;
 
-public class SetSpawnParameters(IBlackBackgroundLayout blackBackgroundLayout) : ISetSpawnParameters
+public class SetSpawnParameters : ISetSpawnParameters
 {
     public void Spawn(Player player, CharacterEntity character, bool forceSpawn = false)
     {
@@ -15,7 +15,6 @@ public class SetSpawnParameters(IBlackBackgroundLayout blackBackgroundLayout) : 
 
         player.CancelSelectTextDraw();
         player.ToggleSpectating(false);
-        blackBackgroundLayout.Hide(player);
 
         player.SetSpawnInfo(0, character.Appearance, new Vector3(character.SpawnX, character.SpawnY, character.SpawnZ), character.Angle);
 
