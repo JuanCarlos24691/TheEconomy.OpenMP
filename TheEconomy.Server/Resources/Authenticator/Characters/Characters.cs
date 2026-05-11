@@ -51,6 +51,23 @@ public class Characters(IWorldService worldService, DatabaseContext databaseCont
         player.SendClientMessage(Color.GreenYellow, "✔ NRG-500 spawneada!");
     }
 
+    [PlayerCommand("test")]
+    public void OnTestAccountCommand(Player player)
+    {
+        var accountComponent = player.GetComponent<AccountComponent>();
+
+        if (accountComponent == null || !accountComponent.IsLoggedIn || accountComponent.Account == null)
+        {
+            player.SendClientMessage(Color.Red, "No tienes una cuenta activa.");
+            return;
+        }
+
+        // Cambiar el nivel administrativo como prueba
+        accountComponent.Account.AdministrativeLevel++;
+
+        player.SendClientMessage(Color.GreenYellow, $"Nivel admin cambiado a: {accountComponent.Account.AdministrativeLevel} (se guardará en 1s)");
+    }
+
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
     {
@@ -190,6 +207,9 @@ public class Characters(IWorldService worldService, DatabaseContext databaseCont
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
+                            characters.ForEach(c => c.Online = false);
+                            characters[accountComponent.Account.SelectedCharacter].Online = true;
+
                             DestroyCharactersComponents(player);
                             registerCharacterLayout.Create(player);
 
