@@ -7,11 +7,11 @@ using TheEconomy.Server.Resources.Services.VerifyProhibition.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyProhibition.Components;
-using TheEconomy.Server.Resources.Services.Colors.Interfaces;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 
 namespace TheEconomy.Server.Resources.Services.VerifyProhibition.Layouts;
 
-public class VerifyProhibitionLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : IVerifyProhibitionLayout
+public class VerifyProhibitionLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IBlackBackgroundLayout blackBackgroundLayout) : IVerifyProhibitionLayout
 {
     public void Create(Player player, ProhibitionEntity prohibitionEntity, AccountEntity account)
     {
@@ -144,6 +144,8 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Show(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetVerifyProhibitionLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Show();
     }
@@ -152,6 +154,8 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Hide(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetVerifyProhibitionLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Hide();
     }
@@ -159,6 +163,8 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
     public void Destroy(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
+
+        blackBackgroundLayout.Hide(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyProhibitionLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();

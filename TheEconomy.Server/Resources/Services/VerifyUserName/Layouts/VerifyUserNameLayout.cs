@@ -1,13 +1,14 @@
 using SampSharp.Entities.SAMP;
 using System;
 using System.Linq;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Components;
 using TheEconomy.Server.Resources.Services.VerifyUserName.Interfaces;
 
 namespace TheEconomy.Server.Resources.Services.VerifyUserName.Layouts;
 
-public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextStrings correctTextStrings) : IVerifyUserNameLayout
+public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextStrings correctTextStrings, IBlackBackgroundLayout blackBackgroundLayout) : IVerifyUserNameLayout
 {
     public void Create(Player player)
     {
@@ -117,6 +118,8 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Show(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetVerifyUserNameLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Show();
     }
@@ -125,6 +128,8 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Hide(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetVerifyUserNameLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Hide();
     }
@@ -132,6 +137,8 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
     public void Destroy(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
+
+        blackBackgroundLayout.Hide(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetVerifyUserNameLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();

@@ -6,10 +6,11 @@ using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Login.Components;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.Login.Layouts;
 
-public class LoginLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : ILoginLayout
+public class LoginLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors, IBlackBackgroundLayout blackBackgroundLayout) : ILoginLayout
 {
     public void Create(Player player)
     {
@@ -296,6 +297,8 @@ public class LoginLayout(IWorldService worldService, IServerInformation serverIn
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Show(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetLoginLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Show();
 
@@ -307,6 +310,8 @@ public class LoginLayout(IWorldService worldService, IServerInformation serverIn
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Hide(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetLoginLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Hide();
     }
@@ -314,6 +319,8 @@ public class LoginLayout(IWorldService worldService, IServerInformation serverIn
     public void Destroy(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
+
+        blackBackgroundLayout.Hide(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetLoginLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();

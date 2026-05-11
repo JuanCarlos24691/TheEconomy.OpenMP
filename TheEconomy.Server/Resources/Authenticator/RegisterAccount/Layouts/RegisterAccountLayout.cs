@@ -6,10 +6,11 @@ using TheEconomy.Server.Resources.Services.CorrectTextStrings.Interfaces;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterAccount.Components;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterAccount.Layouts;
 
-public class RegisterAccountLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : IRegisterAccountLayout
+public class RegisterAccountLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors, IBlackBackgroundLayout blackBackgroundLayout) : IRegisterAccountLayout
 {
     public void Create(Player player)
     {
@@ -284,6 +285,8 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Show(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Show();
 
@@ -295,6 +298,8 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Hide(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Hide();
     }
@@ -302,6 +307,8 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     public void Destroy(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
+
+        blackBackgroundLayout.Hide(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();

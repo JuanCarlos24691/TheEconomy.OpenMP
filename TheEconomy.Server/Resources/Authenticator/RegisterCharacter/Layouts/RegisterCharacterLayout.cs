@@ -7,10 +7,11 @@ using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Components;
 using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Layouts;
 
-public class RegisterCharacterLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : IRegisterCharacterLayout
+public class RegisterCharacterLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors, IBlackBackgroundLayout blackBackgroundLayout) : IRegisterCharacterLayout
 {
     public void Create(Player player)
     {
@@ -459,6 +460,8 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Show(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetRegisterCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Show();
 
@@ -470,6 +473,8 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Hide(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetRegisterCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Hide();
     }
@@ -477,6 +482,8 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
     public void Destroy(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
+
+        blackBackgroundLayout.Hide(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetRegisterCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();

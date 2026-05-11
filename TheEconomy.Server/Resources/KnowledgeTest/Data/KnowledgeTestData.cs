@@ -53,7 +53,7 @@ public static class KnowledgeTestData
                 Answers =
                 [
                     new QuestionAnswer { UUID = 1, Text = "Forzar a otro jugador a hacer algo sin darle la oportunidad de responder.", IsCorrect = false },
-                    new QuestionAnswer { UUID = 2, Text = "Ignorar las herUUIDas de tu personaje después de un accidente.", IsCorrect = false },
+                    new QuestionAnswer { UUID = 2, Text = "Ignorar las heridas de tu personaje después de un accidente.", IsCorrect = false },
                     new QuestionAnswer { UUID = 3, Text = "Hacer cosas que tu personaje no podría hacer en la vida real.", IsCorrect = true },
                     new QuestionAnswer { UUID = 4, Text = "Todas las anteriores.", IsCorrect = false }
                 ]

@@ -9,10 +9,11 @@ using TheEconomy.Server.Resources.Services.Colors.Interfaces;
 using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 using TheEconomy.Server.Resources.Authenticator.Characters.Components;
+using TheEconomy.Server.Resources.BlackBackground.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.Characters.Layouts;
 
-public class CharactersLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors) : ICharactersLayout
+public class CharactersLayout(IWorldService worldService, IServerInformation serverInformation, ICorrectTextStrings correctTextStrings, IColors colors, IBlackBackgroundLayout blackBackgroundLayout) : ICharactersLayout
 {
     public void Create(Player player)
     {
@@ -314,6 +315,8 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Show(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetCharactersLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Show();
 
@@ -325,6 +328,8 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
     {
         ArgumentNullException.ThrowIfNull(player);
 
+        blackBackgroundLayout.Hide(player);
+
         foreach (PlayerTextDraw playerTextdraw in GetCharactersLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Hide();
     }
@@ -332,6 +337,8 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
     public void Destroy(Player player)
     {
         ArgumentNullException.ThrowIfNull(player);
+
+        blackBackgroundLayout.Hide(player);
 
         foreach (PlayerTextDraw playerTextdraw in GetCharactersLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
