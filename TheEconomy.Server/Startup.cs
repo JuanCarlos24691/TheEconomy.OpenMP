@@ -38,6 +38,8 @@ using TheEconomy.Server.Resources.PlayerApparence;
 using TheEconomy.Server.Resources.PlayerApparence.Interfaces;
 using TheEconomy.Server.Resources.DatabaseEntities.Account.Interfaces;
 using TheEconomy.Server.Resources.DatabaseEntities.Account;
+using TheEconomy.Server.Resources.Authenticator.EditCharacter.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.EditCharacter.Layouts;
 
 namespace TheEconomy.Server
 {
@@ -47,6 +49,7 @@ namespace TheEconomy.Server
         {
             services.AddDbContext<DatabaseContext>();
 
+            services.AddSingleton<IEditCharacterLayout, EditCharacterLayout>();
             services.AddSingleton<ISaveAccountRecord, SaveAccountRecord>();
             services.AddSingleton<ISetSpawnParameters, SetSpawnParameters>();
             services.AddSingleton<IKnowledgeTest, KnowledgeTest>();
