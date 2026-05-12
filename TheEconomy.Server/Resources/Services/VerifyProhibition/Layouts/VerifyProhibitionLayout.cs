@@ -164,10 +164,11 @@ public class VerifyProhibitionLayout(IWorldService worldService, IServerInformat
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        blackBackgroundLayout.Hide(player);
-
         foreach (PlayerTextDraw playerTextdraw in GetVerifyProhibitionLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
+
+        player.DestroyComponents<VerifyProhibitionLayoutComponent>();
+        blackBackgroundLayout.Hide(player);
     }
 
     public VerifyProhibitionLayoutComponent GetVerifyProhibitionLayoutComponent(Player player)

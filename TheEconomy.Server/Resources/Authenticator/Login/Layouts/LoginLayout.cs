@@ -320,10 +320,11 @@ public class LoginLayout(IWorldService worldService, IServerInformation serverIn
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        blackBackgroundLayout.Hide(player);
-
         foreach (PlayerTextDraw playerTextdraw in GetLoginLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
+
+        player.DestroyComponents<LoginLayoutComponent>();
+        blackBackgroundLayout.Hide(player);
     }
 
     public LoginLayoutComponent GetLoginLayoutComponent(Player player)

@@ -138,10 +138,11 @@ public class VerifyUserNameLayout(IWorldService worldService, ICorrectTextString
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        blackBackgroundLayout.Hide(player);
-
         foreach (PlayerTextDraw playerTextdraw in GetVerifyUserNameLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
+
+        player.DestroyComponents<VerifyUserNameLayoutComponent>();
+        blackBackgroundLayout.Hide(player);
     }
 
     public VerifyUserNameLayoutComponent GetVerifyUserNameLayoutComponent(Player player)

@@ -14,7 +14,7 @@ public class BlackBackgroundLayout(IWorldService worldService) : IBlackBackgroun
         if (player.GetComponent<BlackBackgroundLayoutComponent>()?.PlayerTextDrawings is not null)
             return;
 
-        PlayerTextDraw playerTextDraw = worldService.CreatePlayerTextDraw(player, position: new Vector2(-5.0f, -5.0f), "_"); 
+        PlayerTextDraw playerTextDraw = worldService.CreatePlayerTextDraw(player, position: new Vector2(-5.0f, -5.0f), "_");
         playerTextDraw.Font = TextDrawFont.Normal;
         playerTextDraw.LetterSize = new Vector2(0.0f, 55.0f);
         playerTextDraw.TextSize = new Vector2(645.0f, 0.0f);
@@ -47,6 +47,7 @@ public class BlackBackgroundLayout(IWorldService worldService) : IBlackBackgroun
     {
         ArgumentNullException.ThrowIfNull(player);
         GetBlackBackgroundLayoutComponent(player)?.PlayerTextDrawings.Destroy();
+        player.DestroyComponents<BlackBackgroundLayoutComponent>();
     }
 
     public BlackBackgroundLayoutComponent GetBlackBackgroundLayoutComponent(Player player)

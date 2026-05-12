@@ -477,10 +477,11 @@ public class EditCharacterLayout(IWorldService worldService, IServerInformation 
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        blackBackgroundLayout.Hide(player);
-
         foreach (PlayerTextDraw playerTextdraw in GetEditCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
+
+        player.DestroyComponents<EditCharacterLayoutComponent>();
+        blackBackgroundLayout.Hide(player);
     }
 
     public EditCharacterLayoutComponent GetEditCharacterLayoutComponent(Player player)

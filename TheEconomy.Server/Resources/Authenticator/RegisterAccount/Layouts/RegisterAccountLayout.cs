@@ -308,10 +308,11 @@ public class RegisterAccountLayout(IWorldService worldService, IServerInformatio
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        blackBackgroundLayout.Hide(player);
-
         foreach (PlayerTextDraw playerTextdraw in GetRegisterAccountLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
+
+        player.DestroyComponents<RegisterAccountLayoutComponent>();
+        blackBackgroundLayout.Hide(player);
     }
 
     public RegisterAccountLayoutComponent GetRegisterAccountLayoutComponent(Player player)

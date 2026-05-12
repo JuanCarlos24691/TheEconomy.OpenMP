@@ -483,10 +483,11 @@ public class RegisterCharacterLayout(IWorldService worldService, IServerInformat
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        blackBackgroundLayout.Hide(player);
-
         foreach (PlayerTextDraw playerTextdraw in GetRegisterCharacterLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
+
+        player.DestroyComponents<RegisterCharacterLayoutComponent>();
+        blackBackgroundLayout.Hide(player);
     }
 
     public RegisterCharacterLayoutComponent GetRegisterCharacterLayoutComponent(Player player)

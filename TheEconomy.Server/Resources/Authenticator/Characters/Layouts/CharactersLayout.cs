@@ -338,10 +338,11 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
     {
         ArgumentNullException.ThrowIfNull(player);
 
-        blackBackgroundLayout.Hide(player);
-
         foreach (PlayerTextDraw playerTextdraw in GetCharactersLayoutComponent(player).PlayerTextDrawings.Where(t => t is not null))
             playerTextdraw?.Destroy();
+
+        player.DestroyComponents<CharactersLayoutComponent>();
+        blackBackgroundLayout.Hide(player);
     }
 
     public CharactersLayoutComponent GetCharactersLayoutComponent(Player player)
