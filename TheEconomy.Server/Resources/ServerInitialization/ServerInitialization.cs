@@ -16,12 +16,13 @@ public class ServerInitialization(IServerInformation serverInformation, Database
     [Event]
     public void OnGameModeInit(IServerService serverService)
     {
-        while (reconnectionAttempts < ServerInitializationData.MaxReconnectionAttempts)
+        try
         {
-            try
+            while (reconnectionAttempts < ServerInitializationData.MaxReconnectionAttempts)
             {
                 if (databaseContext.Database.CanConnect())
                 {
+                    serverInformation.Initialize();
                     ApplyServerSettings(serverService);
 
                     string hostName = string.Format(ServerInitializationData.HostNameFormat, serverInformation.Name, serverInformation.Mode, serverInformation.Version.ToString());
@@ -55,11 +56,11 @@ public class ServerInitialization(IServerInformation serverInformation, Database
 
                 HandleConnectionFailure(serverService);
             }
-            catch (Exception ex)
-            {
-                Console.Write($"La conexión a la base de datos ha fallado. Se intentara una reconexión en 5 segundos...\n{ex.Message}");
-                HandleConnectionFailure(serverService);
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.Write($"La conexión a la base de datos ha fallado. Se intentara una reconexión en 5 segundos...\n{ex.Message}");
+            HandleConnectionFailure(serverService);
         }
     }
 

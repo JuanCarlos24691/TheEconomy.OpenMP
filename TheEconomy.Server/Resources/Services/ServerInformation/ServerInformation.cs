@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Configuration;
 using TheEconomy.Database;
+using TheEconomy.Database.Entity.ServerInformation;
 using TheEconomy.Server.Resources.Services.ServerInformation.Interfaces;
 
-namespace TheEconomy.Server.Resources.Services.ServerInformation;
-
-public class ServerInformation : IServerInformation
+public class ServerInformation(DatabaseContext databaseContext) : IServerInformation
 {
     public string Name { get; set; }
     public string Mode { get; set; }
@@ -16,29 +15,12 @@ public class ServerInformation : IServerInformation
     public string Forum { get; set; }
     public string Discord { get; set; }
 
-    public string GetAppSetting(string key, string defaultValue)
+    public void Initialize()
     {
-        if (string.IsNullOrWhiteSpace(key))
-            throw new ArgumentException("La clave no puede ser nula, estar vacía ni contener solo espacios en blanco.", nameof(key));
-
-        if (string.IsNullOrWhiteSpace(defaultValue))
-            throw new ArgumentException("El valor por defecto no puede ser nulo, estar vacío ni contener solo espacios en blanco.", nameof(defaultValue));
-
-        string value = ConfigurationManager.AppSettings[key];
-
-        if (string.IsNullOrWhiteSpace(value))
-            return defaultValue;
-
-        return value;
-    }
-
-    public ServerInformation(DatabaseContext databaseContext)
-    {
-        List<Database.Entity.ServerInformation.ServerInformationEntity> serverInformation = [.. databaseContext.ServerInformation];
+        List<ServerInformationEntity> serverInformation = [.. databaseContext.ServerInformation];
 
         if (serverInformation.Count is not 0)
         {
-            // load the information from the database
             Name = serverInformation[0].Name;
             Mode = serverInformation[0].Mode;
             Language = serverInformation[0].Language;
@@ -49,7 +31,6 @@ public class ServerInformation : IServerInformation
         }
         else
         {
-            // load the information from the App.config
             Name = GetAppSetting("name", "unknown");
             Mode = GetAppSetting("mode", "unknown");
             Language = GetAppSetting("language", "unknown");
@@ -58,7 +39,7 @@ public class ServerInformation : IServerInformation
             Forum = GetAppSetting("forum", "forum.unknown.com");
             Discord = GetAppSetting("discord", "www.discord.gg/unknown");
 
-            Database.Entity.ServerInformation.ServerInformationEntity InsertServerInformationRecord = new()
+            databaseContext.Add(new ServerInformationEntity
             {
                 Name = Name,
                 Mode = Mode,
@@ -67,10 +48,21 @@ public class ServerInformation : IServerInformation
                 WebSite = WebSite,
                 Forum = Forum,
                 Discord = Discord
-            };
+            });
 
-            databaseContext.Add(InsertServerInformationRecord);
             databaseContext.SaveChanges();
         }
+    }
+
+    public string GetAppSetting(string key, string defaultValue)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            throw new ArgumentException("La clave no puede ser nula.", nameof(key));
+
+        if (string.IsNullOrWhiteSpace(defaultValue))
+            throw new ArgumentException("El valor por defecto no puede ser nulo.", nameof(defaultValue));
+
+        string value = ConfigurationManager.AppSettings[key];
+        return string.IsNullOrWhiteSpace(value) ? defaultValue : value;
     }
 }

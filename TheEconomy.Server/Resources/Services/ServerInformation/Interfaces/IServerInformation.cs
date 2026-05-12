@@ -4,6 +4,7 @@ namespace TheEconomy.Server.Resources.Services.ServerInformation.Interfaces
 {
     public interface IServerInformation
     {
+        void Initialize();
         public string Name { get; set; }
         public string Mode { get; set; }
         public string Language { get; set; }
