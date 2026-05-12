@@ -157,9 +157,6 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            charactersEntity.ForEach(c => c.Online = false);
-                            charactersEntity[accountComponent.Account.SelectedCharacter].Online = true;
-
                             DestroyCharactersComponents(player);
                             registerCharacterLayout.Create(player);
 
@@ -230,6 +227,9 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
                             DestroyCharactersComponents(player);
+
+                            charactersEntity.ForEach(c => c.Online = false);
+                            charactersEntity[accountComponent.Account.SelectedCharacter].Online = true;
                             setSpawnParameters.Spawn(player, charactersEntity[accountComponent.Account.SelectedCharacter], true);
 
                             player.PlaySound(1085);
