@@ -12,10 +12,11 @@ using TheEconomy.Server.Resources.Authenticator.Characters.Interfaces;
 using TheEconomy.Server.Resources.DatabaseEntities.Account.Components;
 using TheEconomy.Server.Resources.Authenticator.RegisterCharacter.Interfaces;
 using TheEconomy.Server.Resources.PlayerApparence.Interfaces;
+using TheEconomy.Server.Resources.Authenticator.EditCharacter.Interfaces;
 
 namespace TheEconomy.Server.Resources.Authenticator.Characters;
 
-public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors, ISetSpawnParameters setSpawnParameters) : ISystem
+public class Characters(DatabaseContext databaseContext, IDialogService dialogService, ICorrectTextStrings correctTextStrings, IRegisterCharacterLayout registerCharacterLayout, ICharactersLayout charactersLayout, IColors colors, ISetSpawnParameters setSpawnParameters, IEditCharacterLayout editCharacterLayout) : ISystem
 {
     [Event]
     public async Task OnPlayerClickPlayerTextDraw(Player player, PlayerTextDraw playerTextDraw)
@@ -32,7 +33,7 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                 return;
             }
 
-            List<CharacterEntity> characters = [.. accountComponent.Account.Characters];
+            List<CharacterEntity> charactersEntity = [.. accountComponent.Account.Characters];
 
             switch (charactersLayoutComponent.PlayerTextDrawings.IndexOf(playerTextDraw))
             {
@@ -67,10 +68,10 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                     {
                         player.PlaySound(1085);
 
-                        if (characters.Count > 0 && characters[0] is not null)
+                        if (charactersEntity.Count > 0 && charactersEntity[0] is not null)
                         {
                             accountComponent.Account.SelectedCharacter = 0;
-                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].LastName)}";
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(charactersEntity[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(charactersEntity[accountComponent.Account.SelectedCharacter].LastName)}";
                             return;
                         }
 
@@ -103,10 +104,10 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                     {
                         player.PlaySound(1085);
 
-                        if (characters.Count > 1 && characters[1] is not null)
+                        if (charactersEntity.Count > 1 && charactersEntity[1] is not null)
                         {
                             accountComponent.Account.SelectedCharacter = 1;
-                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].LastName)}";
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(charactersEntity[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(charactersEntity[accountComponent.Account.SelectedCharacter].LastName)}";
                             return;
                         }
 
@@ -139,10 +140,10 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                     {
                         player.PlaySound(1085);
 
-                        if (characters.Count > 2 && characters[2] is not null)
+                        if (charactersEntity.Count > 2 && charactersEntity[2] is not null)
                         {
                             accountComponent.Account.SelectedCharacter = 2;
-                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(characters[accountComponent.Account.SelectedCharacter].LastName)}";
+                            charactersLayoutComponent.PlayerTextDrawings[12].Text = $"{correctTextStrings.Correct(charactersEntity[accountComponent.Account.SelectedCharacter].Name)}_{correctTextStrings.Correct(charactersEntity[accountComponent.Account.SelectedCharacter].LastName)}";
                             return;
                         }
 
@@ -156,13 +157,47 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            characters.ForEach(c => c.Online = false);
-                            characters[accountComponent.Account.SelectedCharacter].Online = true;
+                            charactersEntity.ForEach(c => c.Online = false);
+                            charactersEntity[accountComponent.Account.SelectedCharacter].Online = true;
 
                             DestroyCharactersComponents(player);
                             registerCharacterLayout.Create(player);
 
                             player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Ahora estas creando un nuevo personaje.");
+                            player.PlaySound(1085);
+                        }
+                        else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
+                        {
+                            charactersLayout.Show(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Volvite a la selección de personaje.");
+                            player.PlaySound(1085);
+                        }
+                        break;
+                    }
+                case 11:
+                    {
+                        player.PlaySound(1085);
+
+                        if (accountComponent?.Account?.SelectedCharacter == -1)
+                        {
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes seleccionar un personaje primero para poder editarlo.");
+                            return;
+                        }
+
+                        charactersLayout.Hide(player);
+
+                        MessageDialog messageDialog = new($"{colors.GetHexadecimal("primaryColor")}Editar personaje", $"{colors.GetHexadecimal("primaryWhite")}¿Realmente deseas editar este personaje?", "Sí", "No");
+                        MessageDialogResponse messageDialogResponse = await dialogService.ShowAsync(player, messageDialog);
+
+                        if (messageDialogResponse.Response == DialogResponse.Disconnected)
+                            return;
+
+                        if (messageDialogResponse.Response == DialogResponse.LeftButton)
+                        {
+                            DestroyCharactersComponents(player);
+                            editCharacterLayout.Create(player, charactersEntity[accountComponent.Account.SelectedCharacter]);
+
                             player.PlaySound(1085);
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
@@ -195,7 +230,7 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
                             DestroyCharactersComponents(player);
-                            setSpawnParameters.Spawn(player, characters[accountComponent.Account.SelectedCharacter], true);
+                            setSpawnParameters.Spawn(player, charactersEntity[accountComponent.Account.SelectedCharacter], true);
 
                             player.PlaySound(1085);
                         }
@@ -217,7 +252,7 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
                             case bool _ when accountComponent?.Account?.SelectedCharacter == -1:
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}Debes seleccionar un personaje primero para poder borrarlo; por favor, vuelve a intentarlo.");
                                 return;
-                            case bool _ when characters[accountComponent.Account.SelectedCharacter].Online == true:
+                            case bool _ when charactersEntity[accountComponent.Account.SelectedCharacter].Online == true:
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryRed")}No puedes eliminar un personaje que se encuentra jugando actualmente; por favor, vuelve a intentarlo.");
                                 return;
                         }
@@ -232,7 +267,7 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                         if (messageDialogResponse.Response == DialogResponse.LeftButton)
                         {
-                            databaseContext.Characters.Remove(characters[accountComponent.Account.SelectedCharacter]);
+                            databaseContext.Characters.Remove(charactersEntity[accountComponent.Account.SelectedCharacter]);
 
                             charactersLayout.Destroy(player);
                             charactersLayout.Create(player);

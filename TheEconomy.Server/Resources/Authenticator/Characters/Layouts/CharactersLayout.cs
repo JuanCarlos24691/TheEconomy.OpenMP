@@ -235,7 +235,7 @@ public class CharactersLayout(IWorldService worldService, IServerInformation ser
         playerTextDraw[11].Proportional = true;
         playerTextDraw[11].Selectable = true;
 
-        playerTextDraw[12] = worldService.CreatePlayerTextDraw(player, new Vector2(363.000, 258.000), correctTextStrings.Correct("Selecciona un personaje"));
+        playerTextDraw[12] = worldService.CreatePlayerTextDraw(player, new Vector2(363.000, 258.000), accountComponent.Account.SelectedCharacter == -1 ? correctTextStrings.Correct("Selecciona un personaje") : correctTextStrings.Correct($"{characters[accountComponent.Account.SelectedCharacter].Name}_{characters[accountComponent.Account.SelectedCharacter].LastName}"));
         playerTextDraw[12].Font = (TextDrawFont)1;
         playerTextDraw[12].LetterSize = new Vector2(0.287, 1.299);
         playerTextDraw[12].TextSize = new Vector2(400.000f, 17.000f);
