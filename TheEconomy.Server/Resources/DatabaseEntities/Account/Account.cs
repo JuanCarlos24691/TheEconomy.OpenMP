@@ -13,7 +13,6 @@ public class Account(ISaveAccountRecord saveAccountRecord) : ISystem
 {
     [Event]
     public async Task OnPlayerDisconnect(Player player, DisconnectReason reason)
-
     {
         AccountComponent accountComponent = player.GetComponent<AccountComponent>();
 

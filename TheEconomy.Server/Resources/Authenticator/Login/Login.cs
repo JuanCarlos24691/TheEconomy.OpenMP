@@ -236,9 +236,7 @@ public class Login(DatabaseContext databaseContext, IDialogService dialogService
 
                                 if (accountEntity is not null)
                                 {
-                                    AccountComponent accountComponent = player.GetComponent<AccountComponent>() ?? player.AddComponent<AccountComponent>();
-                                    accountComponent.Account = accountEntity;
-                                    accountComponent.IsLoggedIn = true;
+                                    player.AddComponent(new AccountComponent { Account = accountEntity, IsLoggedIn = true });
 
                                     charactersLayout.Create(player);
                                     player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Has iniciado sesión correctamente en tu cuenta.");

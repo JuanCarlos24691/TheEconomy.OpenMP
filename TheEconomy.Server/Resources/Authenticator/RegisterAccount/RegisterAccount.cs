@@ -242,9 +242,7 @@ public class RegisterAccount(DatabaseContext databaseContext, IDialogService dia
 
                             if (await databaseContext.SaveChangesAsync() > 0)
                             {
-                                AccountComponent accountComponent = player.GetComponent<AccountComponent>() ?? player.AddComponent<AccountComponent>();
-                                accountComponent.Account = registerAccountComponent.Account;
-                                accountComponent.IsLoggedIn = true;
+                                player.AddComponent(new AccountComponent { Account = registerAccountComponent.Account, IsLoggedIn = true });
 
                                 charactersLayout.Create(player);
                                 player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Tu cuenta fue creada con éxito.");
