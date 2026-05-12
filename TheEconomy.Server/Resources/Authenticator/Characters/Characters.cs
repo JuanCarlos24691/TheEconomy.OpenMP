@@ -236,6 +236,8 @@ public class Characters(DatabaseContext databaseContext, IDialogService dialogSe
 
                             charactersLayout.Destroy(player);
                             charactersLayout.Create(player);
+
+                            player.SendClientMessage($"{colors.GetHexadecimal("primaryGreen")}Personaje eliminado correctamente.");
                             player.PlaySound(1085);
                         }
                         else if (messageDialogResponse.Response == DialogResponse.RightButtonOrCancel)
